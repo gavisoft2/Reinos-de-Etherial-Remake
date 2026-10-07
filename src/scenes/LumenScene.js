@@ -9,7 +9,7 @@ export class LumenScene extends Phaser.Scene {
   this.load.svg("new_gremio",A+"gremio.svg");
  }
  create(){
-  // LUMEN V18 — urbanismo, plaza y acceso sur sobre la nueva base.
+  // LUMEN V19 — capital completa: murallas, distritos, jardines, canales y detalles urbanos.
   const W=720,H=1780;
   this.physics.world.setBounds(0,0,W,H);
   this.cameras.main.setBounds(0,0,W,H);
@@ -77,6 +77,43 @@ export class LumenScene extends Phaser.Scene {
   [[245,350],[475,350],[245,1125],[475,1125]].forEach(([x,y],i)=>{this.add.rectangle(x,y,5,74,0x41372b,1).setDepth(36);const flag=this.add.graphics().setDepth(37);flag.fillStyle(i%2?0x274f72:0x315d7c,1);flag.fillTriangle(x+3,y-35,x+43,y-25,x+3,y+8);flag.lineStyle(2,0xc6a55f,1);flag.lineBetween(x+4,y-34,x+4,y+8);});
   const label=(x,y,t)=>this.add.text(x,y,t,{fontFamily:"Georgia",fontSize:"12px",color:"#dfcfaa",stroke:"#172019",strokeThickness:3}).setOrigin(.5).setDepth(45);
   label(145,390,"POSADA");label(575,390,"MERCADO");label(145,940,"HERRERÍA");label(575,940,"GREMIO");label(360,70,"TEMPLO DE LUMEN");
+  // Muralla perimetral y torres
+  const walls=this.add.graphics().setDepth(8);
+  walls.fillStyle(0x55564f,1);walls.fillRect(0,0,34,H);walls.fillRect(W-34,0,34,H);
+  walls.lineStyle(4,0x9a8b68,.75);walls.lineBetween(34,0,34,H);walls.lineBetween(W-34,0,W-34,H);
+  [120,620,1120,1580].forEach(y=>{walls.fillStyle(0x696a61,1);walls.fillRoundedRect(2,y,62,82,12);walls.fillRoundedRect(656,y,62,82,12);walls.lineStyle(3,0xb39a67,.7);walls.strokeRoundedRect(2,y,62,82,12);walls.strokeRoundedRect(656,y,62,82,12);});
+
+  // Callejones secundarios conectando los distritos
+  const alleys=this.add.graphics().setDepth(5);
+  [[34,335,205,62],[481,335,205,62],[34,870,205,62],[481,870,205,62],[34,1215,205,58],[481,1215,205,58]].forEach(r=>{alleys.fillStyle(0x625f56,1);alleys.fillRoundedRect(...r,16);alleys.lineStyle(2,0x92805d,.5);alleys.strokeRoundedRect(...r,16);});
+
+  // Canales decorativos y pequeños puentes de piedra
+  const water=this.add.graphics().setDepth(7);
+  water.fillStyle(0x31545c,.95);water.fillRoundedRect(72,610,82,310,24);water.fillRoundedRect(566,610,82,310,24);
+  water.lineStyle(4,0x718b86,.7);water.strokeRoundedRect(72,610,82,310,24);water.strokeRoundedRect(566,610,82,310,24);
+  [[113,675],[113,835],[607,675],[607,835]].forEach(([x,y])=>{water.fillStyle(0x82796a,1);water.fillRoundedRect(x-53,y-13,106,26,8);water.lineStyle(2,0xb59a67,.7);water.strokeRoundedRect(x-53,y-13,106,26,8);});
+
+  // Jardines de la plaza y vegetación limpia generada para esta versión
+  const garden=this.add.graphics().setDepth(16);
+  [[110,300],[610,300],[110,1160],[610,1160]].forEach(([x,y])=>{garden.fillStyle(0x274f36,1);garden.fillCircle(x,y,42);garden.fillStyle(0x3f7048,1);garden.fillCircle(x-17,y-8,24);garden.fillCircle(x+17,y-5,25);garden.fillStyle(0x755b3d,1);garden.fillRect(x-5,y+26,10,34);});
+  [[195,650],[525,650],[195,790],[525,790]].forEach(([x,y])=>{garden.fillStyle(0x395c3f,1);garden.fillRoundedRect(x-28,y-18,56,36,16);garden.fillStyle(0xc8a85d,.9);garden.fillCircle(x-12,y-3,3);garden.fillCircle(x+9,y+5,3);garden.fillCircle(x+18,y-6,3);});
+
+  // Puestos comerciales nuevos integrados al distrito del mercado
+  const stalls=this.add.graphics().setDepth(28);
+  [[525,585],[600,585],[525,625],[600,625]].forEach(([x,y],i)=>{stalls.fillStyle(0x60472f,1);stalls.fillRoundedRect(x-28,y-12,56,28,5);stalls.fillStyle(i%2?0x315b78:0x8a6237,1);stalls.fillTriangle(x-32,y-14,x+32,y-14,x,y-38);stalls.lineStyle(2,0xd0ad67,.7);stalls.lineBetween(x-30,y-14,x+30,y-14);});
+
+  // Braseros y luz cálida alrededor de la plaza
+  [[278,610],[442,610],[278,830],[442,830],[330,1190],[390,1190]].forEach(([x,y])=>{this.add.circle(x,y,22,0xffb75c,.08).setDepth(39);this.add.rectangle(x,y+12,12,20,0x44362a,1).setDepth(40);this.add.circle(x,y,6,0xffc56a,.95).setDepth(41);});
+
+  // Identidad de distritos
+  label(112,104,"BARRIO DEL TEMPLO");label(608,104,"JARDINES REALES");
+  label(112,1310,"FORJA Y ARTESANOS");label(608,1310,"DISTRITO DEL GREMIO");
+  this.add.text(360,1565,"AVENIDA REAL",{fontFamily:"Georgia",fontSize:"13px",color:"#c9b788",stroke:"#172019",strokeThickness:3}).setOrigin(.5).setDepth(45);
+
+  // Sombra suave de borde para dar profundidad al recinto amurallado
+  this.add.rectangle(360,20,650,24,0x0c120f,.35).setDepth(9);
+  this.add.rectangle(360,1758,650,24,0x0c120f,.35).setDepth(9);
+
   this.cameras.main.scrollY=260;
  }
  addObstacle(x,y,w,h){const z=this.obstacles.create(x,y,null).setVisible(false);z.body.setSize(w,h);z.refreshBody();return z}
