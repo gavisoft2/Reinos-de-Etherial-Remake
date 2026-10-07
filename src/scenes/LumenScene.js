@@ -269,8 +269,8 @@ export class LumenScene extends Phaser.Scene {
   [[155,555],[565,555],[155,970],[565,970]].forEach(([x,y],i)=>{
     v11.fillStyle(0x4b504d,.86); v11.fillCircle(x,y,42);
     v11.lineStyle(2,0xb79a54,.64); v11.strokeCircle(x,y,42);
-    v11.fillStyle(0x315c34,.90); v11.fillCircle(x,y,28);
-    this.add.image(x,y-13,i%2?"p_arbol_01":"p_arbol_02").setScale(.16).setDepth(y+2);
+    this.add.image(x,y-10,i%2?"p_arbol_01":"p_arbol_02").setScale(.20).setDepth(y+2);
+    this.add.image(x+(i%2?-22:22),y+13,"p_maceta").setScale(.25).setDepth(y+3);
     this.add.image(x+(i%2?-38:38),y+10,"p_farol").setScale(.28).setDepth(y+3);
   });
   // Cruces de piedra unen ambas mitades de la capital.
@@ -298,11 +298,11 @@ export class LumenScene extends Phaser.Scene {
     v12.lineStyle(5,0x77705d,.82); v12.lineBetween(x1,y1,x2,y2);
     v12.lineStyle(2,0xb79a54,.60); v12.lineBetween(x1,y1,x2,y2);
   });
-  // Jardines ceremoniales que enmarcan el templo sin tapar NPCs.
+  // Jardines ceremoniales con props reales, evitando óvalos verdes tipo placeholder.
   [[255,345],[465,345],[235,455],[485,455]].forEach(([x,y],i)=>{
-    v12.fillStyle(0x315c34,.90); v12.fillEllipse(x,y,76,31);
-    v12.lineStyle(2,0x9b895d,.66); v12.strokeEllipse(x,y,76,31);
-    this.add.image(x+(i%2?13:-13),y-12,i%2?"p_arbol_02":"p_arbol_01").setScale(.16).setDepth(y+4);
+    this.add.image(x,y-10,i%2?"p_arbol_02":"p_arbol_01").setScale(.22).setDepth(y+2);
+    this.add.image(x+(i%2?-28:28),y+12,"p_maceta").setScale(.30).setDepth(y+3);
+    this.add.image(x+(i%2?30:-30),y+13,"p_banco").setScale(.24).setDepth(y+3);
   });
   // Iluminación ceremonial alrededor del monumento.
   [[290,445],[430,445],[290,575],[430,575]].forEach(([x,y])=>{
