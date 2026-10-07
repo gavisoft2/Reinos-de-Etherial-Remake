@@ -19,13 +19,18 @@ export class LumenScene extends Phaser.Scene {
   this.physics.world.setBounds(0,0,720,1780);this.inHuntZone=false;this.safeZone=true;this.zoneName="Lumen";this.deathCount=0;this.respawnProtection=false; this.obstacles=this.physics.add.staticGroup();
   // Base continua: elimina el efecto de mosaico/cuadricula del suelo.
   this.add.rectangle(360,890,720,1780,0x484d4a,1).setDepth(-30);
-  // MASTER CITY ART — capa principal coherente de Lumen.
-  this.add.image(360,640,"lumen_map").setDisplaySize(720,1280).setAlpha(.94).setDepth(-29);
-  // Extensión sur neutra para la zona de cacería, sin mosaicos repetidos.
-  this.add.image(360,1510,"t_hierba").setDisplaySize(720,540).setAlpha(.48).setDepth(-29);
+  // FINAL CITY RESET — lumen_master queda fuera: tenía horneado el diseño antiguo.
+  this.add.image(360,640,"t_suelo_01").setDisplaySize(720,1280).setAlpha(.72).setDepth(-29);
+  this.add.image(360,1510,"t_hierba").setDisplaySize(720,540).setAlpha(.62).setDepth(-29);
+  const finalRoad=this.add.graphics().setDepth(-27);
+  finalRoad.fillStyle(0x777266,.82); finalRoad.fillRect(255,0,210,1280);
+  finalRoad.lineStyle(3,0xb59655,.55); finalRoad.lineBetween(255,0,255,1280); finalRoad.lineBetween(465,0,465,1280);
   // Plaza de Lumen limpia: colisión de fuente; el aspecto visual usa el asset dedicado.
   this.addObstacle(360,468,205,74);
-  // La arquitectura, jardines, caminos y mobiliario visual vienen del mapa maestro.
+  // Composición limpia con props independientes.
+  [[290,350],[430,350],[285,610],[435,610],[285,900],[435,900],[285,1160],[435,1160]].forEach(([x,y])=>this.add.image(x,y,"p_farol").setScale(.38).setDepth(y));
+  [[70,420,"p_arbol_01"],[650,420,"p_arbol_02"],[70,900,"p_arbol_03"],[650,900,"p_arbol_01"],[75,1160,"p_arbol_02"],[645,1160,"p_arbol_03"]].forEach(([x,y,k])=>this.add.image(x,y,k).setScale(.62).setDepth(y));
+  this.add.image(360,470,"p_estatua_fuente").setScale(.72).setDepth(470);
   // EDIFICIOS DE LUMEN — el mapa maestro aporta el arte; estas huellas conservan colisiones.
   [[118,300],[602,300],[125,760],[595,760],[360,190]].forEach(([x,y])=>this.addObstacle(x,y+45,175,78));
   [["npc_mira",135,560,"Mira"],["npc_guardia",270,625,"Guardia"],["npc_aldric",585,560,"Aldric"],["npc_borin",135,850,"Borin"]].forEach(a=>{this.add.image(a[1],a[2],a[0]).setScale(.52).setDepth(a[2]);this.add.text(a[1],a[2]+62,a[3],{fontFamily:"Georgia",fontSize:"13px",color:"#fff2c7",stroke:"#000",strokeThickness:4}).setOrigin(.5).setDepth(a[2]+2)});
