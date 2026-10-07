@@ -10,7 +10,7 @@ export class LumenScene extends Phaser.Scene {
   this.load.image("lumen_map",A+"maps/lumen_master.png");
   ["inventario","tienda","habilidades","misiones","mapa","configuracion"].forEach(n=>this.load.image("ui_"+n,A+"ui/icons/"+n+".png"));
   this.load.image("enemy_slime",A+"enemies/slime.png");this.load.image("enemy_wolf",A+"enemies/lobo_salvaje.png");this.load.image("enemy_goblin",A+"enemies/goblin.png");this.load.image("enemy_skeleton",A+"enemies/esqueleto.png");this.load.image("enemy_orc",A+"enemies/orco.png");
-  this.load.image("loot_gel",A+"effects/curacion.png");this.load.image("fx_arrow",A+"effects/flecha.png");this.load.image("fx_multi",A+"effects/flecha_multiple.png");this.load.image("fx_explosive",A+"effects/flecha_explosiva.png");
+  this.load.image("loot_gel",A+"effects/curacion.png");this.load.image("fx_arrow",A+"effects/flecha.png");this.load.image("fx_multi",A+"effects/flecha_multiple.png");this.load.image("fx_explosive",A+"effects/flecha_explosiva.png");this.load.image("fx_arrow_storm",A+"effects/circulo_magico.png");
  }
  create(){
   // Limpia el fondo gris/cuadriculado heredado del sprite sheet.
@@ -326,16 +326,16 @@ export class LumenScene extends Phaser.Scene {
   this.time.delayedCall(4200,()=>{this.dialogueBox?.destroy();this.dialogueText?.destroy();this.dialogueBox=null;this.dialogueText=null});
  }
  castSafeSkill(i){
-  if(!this.skillReady[i])return;const costs=[15,25,30],cooldowns=[2500,5000,6500];if(this.mana<costs[i]){this.showDialogue("No tienes suficiente maná.");return;}
+  if(!this.skillReady[i])return;const costs=[15,25,30,40],cooldowns=[2500,5000,6500,10000];if(this.mana<costs[i]){this.showDialogue("No tienes suficiente maná.");return;}
   const groups=[this.slimes,this.wolves,this.goblins,this.skeletons,this.orcs],targets=[];groups.forEach(g=>g?.getChildren().forEach(e=>{if(e.active&&Phaser.Math.Distance.Between(this.player.x,this.player.y,e.x,e.y)<260)targets.push(e)}));if(!targets.length){this.showDialogue("No hay enemigos al alcance.");return;}
   this.mana-=costs[i];this.skillReady[i]=false;this.time.delayedCall(cooldowns[i],()=>this.skillReady[i]=true);
-  const count=[1,3,4][i],mult=[1.6,1.05,1.25][i],key=["fx_arrow","fx_multi","fx_explosive"][i];
-  targets.slice(0,count).forEach((t,n)=>this.time.delayedCall(n*80,()=>{if(!t.active)return;const p=this.add.image(this.player.x,this.player.y-18,key).setDisplaySize(i===2?58:46,i===2?34:20).setDepth(9000);this.tweens.add({targets:p,x:t.x,y:t.y,duration:190,onComplete:()=>{p.destroy();if(!t.active)return;const dmg=Math.floor(this.attackPower*mult);t.hp=Math.max(1,t.hp-dmg);if(t.hpBar)t.hpBar.width=Math.max(2,t.hpBar.width*(t.hp/t.maxHp));this.showCombatText(t.x,t.y-75,"-"+dmg,"#ffd86a");}})}); 
+  const count=[1,3,4,6][i],mult=[1.6,1.05,1.25,1.4][i],key=["fx_arrow","fx_multi","fx_explosive","fx_arrow_storm"][i];
+  targets.slice(0,count).forEach((t,n)=>this.time.delayedCall(n*80,()=>{if(!t.active)return;const p=this.add.image(this.player.x,this.player.y-18,key).setDisplaySize(i===3?72:(i===2?58:46),i===3?72:(i===2?34:20)).setDepth(9000);this.tweens.add({targets:p,x:t.x,y:t.y,duration:190,onComplete:()=>{p.destroy();if(!t.active)return;const dmg=Math.floor(this.attackPower*mult);t.hp=Math.max(1,t.hp-dmg);if(t.hpBar)t.hpBar.width=Math.max(2,t.hpBar.width*(t.hp/t.maxHp));this.showCombatText(t.x,t.y-75,"-"+dmg,"#ffd86a");}})}); 
  }
  makeControls(){
   const base=this.add.circle(110,1160,72,0x08100b,.55).setStrokeStyle(3,0xb99b64,.6).setInteractive().setScrollFactor(0).setDepth(6000), knob=this.add.circle(110,1160,30,0x65736a,.8).setScrollFactor(0).setDepth(6001);
   const reset=()=>{this.move.x=this.move.y=0;knob.setPosition(110,1160)};base.on("pointermove",p=>{if(!p.isDown)return;let dx=p.x-110,dy=p.y-1160,d=Math.hypot(dx,dy)||1,m=Math.min(48,d);dx=dx/d*m;dy=dy/d*m;knob.setPosition(110+dx,1160+dy);this.move={x:dx/48,y:dy/48}});base.on("pointerup",reset);base.on("pointerout",reset);
-  [["gabriel_attack_01",610,1160],["gabriel_skill_01",520,1080],["gabriel_skill_02",600,1050],["gabriel_skill_03",675,1090]].forEach((a,i)=>{const b=this.add.circle(a[1],a[2],i?34:52,i?0x234c34:0x64251f,.9).setStrokeStyle(3,0xd1aa63,.8).setInteractive().setScrollFactor(0).setDepth(6000);this.add.image(a[1],a[2],a[0]).setDisplaySize(i?46:66,i?54:76).setScrollFactor(0).setDepth(6001);b.on("pointerdown",()=>{this.player.setTexture(a[0]);if(i===0)this.attackNearest();else this.castSafeSkill(i-1)});b.on("pointerup",()=>this.player.play("gabriel_idle"))});
+  [["gabriel_attack_01",610,1160],["gabriel_skill_01",500,1095],["gabriel_skill_02",565,1045],["gabriel_skill_03",635,1060],["gabriel_skill_03",680,1125]].forEach((a,i)=>{const b=this.add.circle(a[1],a[2],i?34:52,i?0x234c34:0x64251f,.9).setStrokeStyle(3,0xd1aa63,.8).setInteractive().setScrollFactor(0).setDepth(6000);this.add.image(a[1],a[2],a[0]).setDisplaySize(i?46:66,i?54:76).setScrollFactor(0).setDepth(6001);b.on("pointerdown",()=>{this.player.setTexture(a[0]);if(i===0)this.attackNearest();else this.castSafeSkill(i-1)});b.on("pointerup",()=>this.player.play("gabriel_idle"))});
  }
  update(){
   if(!this.player)return;
