@@ -26,9 +26,9 @@ const hero=this.add.container(360,660);hero.add([this.add.ellipse(0,42,72,20,0x0
  this.tweens.add({targets:haze,x:{from:320,to:400},alpha:{from:.018,to:.055},duration:6200,yoyo:true,repeat:-1,ease:"Sine.easeInOut"});
  for(let i=0;i<16;i++){const leaf=this.add.ellipse(Phaser.Math.Between(30,690),Phaser.Math.Between(180,1000),Phaser.Math.Between(3,7),Phaser.Math.Between(2,5),0x8ea05f,.42).setDepth(120);leaf.setRotation(Phaser.Math.FloatBetween(0,3.14));this.tweens.add({targets:leaf,x:leaf.x+Phaser.Math.Between(45,120),y:leaf.y+Phaser.Math.Between(30,100),rotation:leaf.rotation+3.1,alpha:0,duration:Phaser.Math.Between(3500,7000),delay:Phaser.Math.Between(0,2500),repeat:-1})}
  // Indicador de interacción contextual pensado para pulgar derecho.
- const interact=this.add.container(665,985).setScrollFactor(0).setDepth(5002);interact.add([this.add.circle(0,0,29,0x202a22,.9).setStrokeStyle(3,0xc7a35e,.8),this.add.text(0,0,"E",{fontFamily:"Georgia",fontSize:"17px",color:"#f5e3b5"}).setOrigin(.5)]);this.tweens.add({targets:interact,scale:{from:.96,to:1.06},duration:900,yoyo:true,repeat:-1});
+ const interact=this.add.container(665,985).setScrollFactor(0).setDepth(5002);interact.add([this.add.circle(0,0,29,0x202a22,.9).setStrokeStyle(3,0xc7a35e,.8),this.add.text(0,0,"✦",{fontFamily:"Georgia",fontSize:"17px",color:"#f5e3b5"}).setOrigin(.5)]);this.tweens.add({targets:interact,scale:{from:.96,to:1.06},duration:900,yoyo:true,repeat:-1});
  // Controles táctiles funcionales: joystick, ataque y habilidades para celular/Telegram.
- this.move={x:0,y:0};this.physics.add.existing(hero);hero.body.setCircle(28).setOffset(-28,-28);hero.body.setCollideWorldBounds(true);
+ this.move={x:0,y:0};this.physics.world.setBounds(20,120,680,1030);this.physics.add.existing(hero);hero.body.setCircle(28).setOffset(-28,-28);hero.body.setCollideWorldBounds(true);
  const joyBase=this.add.circle(118,1165,74,0x080d0a,.52).setStrokeStyle(3,0xb69a65,.55).setScrollFactor(0).setDepth(5000).setInteractive();
  const joy=this.add.circle(118,1165,31,0x657069,.72).setStrokeStyle(2,0xd0bea0,.65).setScrollFactor(0).setDepth(5001);
  const resetJoy=()=>{this.move.x=0;this.move.y=0;joy.setPosition(118,1165)};
