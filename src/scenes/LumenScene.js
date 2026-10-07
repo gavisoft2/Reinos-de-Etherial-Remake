@@ -177,7 +177,9 @@ export class LumenScene extends Phaser.Scene {
   }catch(e){}
  }
  restoreQuestState(){
-  if(this.fifthQuest){this.questText.setText("LA AMENAZA ORCA\\nDerrota Orcos  "+Math.min(6,this.orcsKilled)+"/6");this.spawnOrcs();this.questMarker?.setText("…");}\n  else if(this.fourthQuest){this.questText.setText("LOS MUERTOS CAMINAN\\nDerrota Esqueletos  "+Math.min(5,this.skeletonsKilled)+"/5");this.spawnSkeletons();this.questMarker?.setText("…");}\n  else if(this.thirdQuest){this.questText.setText("SAQUEADORES VERDES\nDerrota Goblins  "+Math.min(4,this.goblinsKilled)+"/4");this.spawnGoblins();this.questMarker?.setText("…");}
+  if(this.fifthQuest){this.questText.setText("LA AMENAZA ORCA\\nDerrota Orcos  "+Math.min(6,this.orcsKilled)+"/6");this.spawnOrcs();this.questMarker?.setText("…");}
+  else if(this.fourthQuest){this.questText.setText("LOS MUERTOS CAMINAN\\nDerrota Esqueletos  "+Math.min(5,this.skeletonsKilled)+"/5");this.spawnSkeletons();this.questMarker?.setText("…");}
+  else if(this.thirdQuest){this.questText.setText("SAQUEADORES VERDES\nDerrota Goblins  "+Math.min(4,this.goblinsKilled)+"/4");this.spawnGoblins();this.questMarker?.setText("…");}
   else if(this.secondQuest){this.questText.setText("PELIGRO EN EL BOSQUE\nDerrota Lobos  "+Math.min(3,this.wolvesKilled)+"/3");this.spawnWolves();this.questMarker?.setText("…");}
   else if(this.questDone){this.questText.setText("PRIMERA CACERÍA\nDerrota Slimes  "+Math.min(3,this.slimesKilled)+"/3");this.questMarker?.setText("…");}
  }
