@@ -8,6 +8,7 @@ export class LumenScene extends Phaser.Scene {
   ["arbol_01","arbol_02","arbol_03","farol","banco","puesto","bandera","estatua_fuente"].forEach(n=>this.load.image("p_"+n,A+"props/"+n+".png"));
   ["suelo_01","suelo_02","suelo_03","suelo_04","hierba"].forEach(n=>this.load.image("t_"+n,A+"tiles/"+n+".png"));
   this.load.image("lumen_map",A+"maps/lumen_master.png");
+  this.load.image("lumen_statue_plaza",A+"buildings/lumen/lumen_statue_plaza.png");
   ["inventario","tienda","habilidades","misiones","mapa","configuracion"].forEach(n=>this.load.image("ui_"+n,A+"ui/icons/"+n+".png"));
   this.load.image("enemy_slime",A+"enemies/slime.png");this.load.image("enemy_wolf",A+"enemies/lobo_salvaje.png");this.load.image("enemy_goblin",A+"enemies/goblin.png");this.load.image("enemy_skeleton",A+"enemies/esqueleto.png");this.load.image("enemy_orc",A+"enemies/orco.png");
   this.load.image("loot_gel",A+"effects/curacion.png");
@@ -23,7 +24,7 @@ export class LumenScene extends Phaser.Scene {
    const tile=this.add.image(x+39,y+36,"t_"+(["suelo_01","suelo_02","suelo_03","suelo_04"][(x/78+y/72)%4|0])).setDisplaySize(92,86).setAlpha(.24).setDepth(-28);
    tile.setBlendMode(Phaser.BlendModes.SOFT_LIGHT);tile.setAngle(((x+y)/72)%2?0:180);
   }
-  this.add.image(360,455,"p_estatua_fuente").setScale(2.7).setDepth(455); this.addObstacle(360,470,150,70);
+  this.add.image(360,455,"lumen_statue_plaza").setDisplaySize(420,420).setDepth(455); this.addObstacle(360,500,190,95);
   [["b_posada",130,300],["b_mercado",590,300],["b_herreria",135,690],["b_gremio",585,690],["b_templo",360,190]].forEach(a=>{this.add.image(a[1],a[2],a[0]).setScale(1.42).setDepth(a[2]);this.addObstacle(a[1],a[2]+45,175,78)});
   [[45,390,"p_arbol_01"],[675,390,"p_arbol_02"],[50,780,"p_arbol_03"],[670,780,"p_arbol_01"],[65,940,"p_arbol_02"],[655,940,"p_arbol_03"]].forEach(a=>{this.add.image(a[0]+5,a[1]+13,a[2]).setTint(0x000000).setAlpha(.18).setScale(1.15,.42).setDepth(a[1]-2);this.add.image(a[0],a[1],a[2]).setScale(1.25).setDepth(a[1])});
   [["npc_mira",150,555,"Mira"],["npc_guardia",275,570,"Guardia"],["npc_aldric",560,555,"Aldric"],["npc_borin",155,845,"Borin"]].forEach(a=>{this.add.image(a[1],a[2],a[0]).setScale(.62).setDepth(a[2]);this.add.text(a[1],a[2]+62,a[3],{fontFamily:"Georgia",fontSize:"13px",color:"#fff2c7",stroke:"#000",strokeThickness:4}).setOrigin(.5).setDepth(a[2]+2)});
