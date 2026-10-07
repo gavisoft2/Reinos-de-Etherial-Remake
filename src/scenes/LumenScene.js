@@ -49,6 +49,27 @@ export class LumenScene extends Phaser.Scene {
   this.add.image(645,610,"p_puesto").setScale(.72).setDepth(610);
   // Macetas y barriles rompen la simetría artificial.
   [[90,520],[630,520],[92,790],[628,790],[105,1010],[615,1010]].forEach(([x,y],i)=>this.add.image(x,y,i%2?"p_maceta":"p_barril_01").setScale(.42).setDepth(y));
+  // VISUAL PASS SAFE V2 — detalles dibujados por Phaser, sin modificar PNGs.
+  // Bordes de avenida y pequeñas plazas laterales para romper la cuadrícula.
+  const decor=this.add.graphics().setDepth(-24);
+  decor.lineStyle(3,0xb89545,.38);
+  decor.strokeRoundedRect(238,600,244,620,26);
+  decor.lineStyle(2,0x315f91,.34);
+  decor.strokeRoundedRect(246,608,228,604,22);
+  // Rosetones pequeños de mármol en cruces de calle.
+  [[360,790],[360,990],[360,1190]].forEach(([x,y])=>{
+    decor.lineStyle(3,0xb89545,.62); decor.strokeCircle(x,y,34);
+    decor.lineStyle(2,0x315f91,.55); decor.strokeCircle(x,y,24);
+    decor.lineBetween(x-24,y,x+24,y); decor.lineBetween(x,y-24,x,y+24);
+  });
+  // Sombras suaves bajo edificios para integrarlos mejor con el mármol.
+  [[118,330,210,70],[602,330,210,70],[125,790,205,70],[595,790,205,70],[360,235,250,75]].forEach(([x,y,w,h])=>{
+    this.add.ellipse(x,y,w,h,0x1c1a16,.16).setDepth(250);
+  });
+  // Maceteros y faroles en accesos a los distritos.
+  [[220,690],[500,690],[220,910],[500,910],[220,1120],[500,1120]].forEach(([x,y],i)=>{
+    this.add.image(x,y,i%2===0?"p_maceta":"p_farol").setScale(i%2===0?.34:.42).setDepth(y);
+  });
   // Estatua monumental completa: pedestal + figura central, sin usar el recorte roto anterior.
   this.add.rectangle(360,432,72,72,0x8e8775,1).setStrokeStyle(3,0xd1c29b,.9).setDepth(438);
   const monument=this.add.image(360,365,"npc_guardia").setScale(1.15).setTint(0xc8c1ae).setDepth(439);
