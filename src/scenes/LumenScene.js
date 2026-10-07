@@ -38,8 +38,8 @@ export class LumenScene extends Phaser.Scene {
   this.playerName=this.add.text(360,830,"Gabriel · Arquero",{fontFamily:"Georgia",fontSize:"15px",color:"#fff1c4",stroke:"#000",strokeThickness:4}).setOrigin(.5).setDepth(901);
   this.anims.create({key:"gabriel_idle",frames:["gabriel_idle_01","gabriel_idle_02"].map(key=>({key})),frameRate:3,repeat:-1});
   this.anims.create({key:"gabriel_walk",frames:["gabriel_walk_01","gabriel_walk_02","gabriel_walk_03","gabriel_walk_04"].map(key=>({key})),frameRate:8,repeat:-1});
-  this.player.play("gabriel_idle");this.move={x:0,y:0};this.questDone=false;this.slimeQuest=false;this.slimesKilled=0;this.level=1;this.xp=0;this.xpNeed=100;this.gold=0;this.playerHp=100;this.maxHp=100;this.attackReady=true;this.inventory={slimeGel:0};this.equipment={weapon:"Arco del Aprendiz",armor:"Cuero de Lumen"};this.attackPower=15;this.defense=2;this.potions=1;this.gearBonus={attack:0,defense:0};this.inventoryOpen=false;this.inventorySlots=20;this.maxInventorySlots=60;this.baseSlotPrice=100;this.inventoryItems=[];this.gearDrops=0;this.selectedItem=null;this.shopOpen=false;this.npcTargets=[];this.spawnSlimes();
-  this.npcTargets.push({name:"Aldric",x:560,y:555,r:88});
+  this.player.play("gabriel_idle");this.move={x:0,y:0};this.questDone=false;this.slimeQuest=false;this.slimesKilled=0;this.level=1;this.xp=0;this.xpNeed=100;this.gold=0;this.playerHp=100;this.maxHp=100;this.attackReady=true;this.inventory={slimeGel:0};this.equipment={weapon:"Arco del Aprendiz",armor:"Cuero de Lumen"};this.attackPower=15;this.defense=2;this.potions=1;this.gearBonus={attack:0,defense:0};this.inventoryOpen=false;this.inventorySlots=20;this.maxInventorySlots=60;this.baseSlotPrice=100;this.inventoryItems=[];this.gearDrops=0;this.selectedItem=null;this.shopOpen=false;this.questRewardClaimed=false;this.npcTargets=[];this.spawnSlimes();
+  this.npcTargets.push({name:"Aldric",x:560,y:555,r:88});this.questMarker=this.add.text(560,495,"!",{fontFamily:"Georgia",fontSize:"30px",color:"#ffd75a",stroke:"#4a3210",strokeThickness:4}).setOrigin(.5).setDepth(9000);this.tweens.add({targets:this.questMarker,y:487,duration:650,yoyo:true,repeat:-1});
   this.makeHud();this.makeControls();this.makeInteractButton();this.makeInventory();this.makeShop();this.seedInventory();
  }
  removeSheetBackground(key){
@@ -91,7 +91,7 @@ export class LumenScene extends Phaser.Scene {
  killSlime(s){
   s.disableBody(true,true);s.hpBg.destroy();s.hpBar.destroy();this.slimesKilled++;this.gainXp(25);this.gold+=Phaser.Math.Between(4,9);if(Phaser.Math.Between(1,100)<=65){this.spawnLootDrop(s.x,s.y);if(Phaser.Math.Between(1,100)<=18)this.spawnGearDrop(s.x+18,s.y);}
   this.goldText?.setText("Oro "+this.gold);this.updateInventoryHud();
-  if(this.slimeQuest){this.questText.setText("PRIMERA CACERÍA\\nDerrota Slimes  "+Math.min(this.slimesKilled,3)+"/3"+(this.slimesKilled>=3?" ✓":""));if(this.slimesKilled===3)this.showDialogue("Misión completada: Primera Cacería. +75 EXP");}
+  if(this.slimeQuest){this.questText.setText("PRIMERA CACERÍA\\nDerrota Slimes  "+Math.min(this.slimesKilled,3)+"/3"+(this.slimesKilled>=3?" ✓":""));if(this.slimesKilled===3){this.showDialogue("Misión completada: Primera Cacería. Regresa con Aldric.");this.questText.setText("PRIMERA CACERÍA\nRegresa con Aldric");}}
  }
  gainXp(amount){
   this.xp+=amount;
@@ -219,6 +219,12 @@ export class LumenScene extends Phaser.Scene {
  tryInteract(){
   const a=this.npcTargets[0],d=Phaser.Math.Distance.Between(this.player.x,this.player.y,a.x,a.y);
   if(d>115){this.showDialogue("Acércate a Aldric para hablar con él.");return}
+  if(this.questDone&&this.slimesKilled>=3&&!this.questRewardClaimed){
+   this.questRewardClaimed=true;this.questMarker?.setVisible(false);this.gold+=75;this.potions+=2;this.gainXp(50);this.goldText?.setText("Oro "+this.gold);this.updateInventoryHud();
+   this.questText.setText("PRIMERA CACERÍA  ✓\nRecompensa recibida");
+   this.showDialogue("Aldric: Buen trabajo, Gabriel. Recompensa: 75 Oro, 50 EXP y 2 Pociones.");
+   return;
+  }
   if(!this.questDone){
    this.questDone=true;this.questText.setText("EL INICIO DE UNA LEYENDA\nHabla con Aldric  1/1 ✓");
    this.showDialogue("Aldric: Bienvenido a Lumen, Gabriel. La ciudad necesita arqueros capaces. Ve hacia la salida sur y derrota 3 Slimes.");
