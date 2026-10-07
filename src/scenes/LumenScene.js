@@ -108,11 +108,11 @@ export class LumenScene extends Phaser.Scene {
   [[310,265,100],[310,285,100],[75,825,95],[550,825,95]].forEach(([x,y,w])=>{
     this.add.rectangle(x+w/2,y,w,12,0xd9ceb5,.92).setStrokeStyle(1,0x9f874d,.55).setDepth(y);
   });
-  // Fuentes menores laterales para repetir el lenguaje visual de la plaza central.
+  // Fuentes laterales con asset real para eliminar placeholders geométricos.
   [[115,1030],[605,1030]].forEach(([x,y])=>{
-    this.add.ellipse(x,y,86,40,0xd9ceb5,.96).setStrokeStyle(3,0xb89545,.70).setDepth(y);
-    this.add.ellipse(x,y-3,65,25,0x4d91aa,.78).setDepth(y+1);
-    this.add.circle(x,y-12,9,0xe7ddc7,1).setDepth(y+2);
+    const basin=this.add.image(x,y,"p_estatua_fuente").setScale(.30).setDepth(y+2);
+    const waterGlow=this.add.ellipse(x,y+18,72,24,0x4d91aa,.18).setDepth(y+1);
+    this.tweens.add({targets:waterGlow,alpha:{from:.10,to:.24},scaleX:{from:.92,to:1.05},duration:1800,yoyo:true,repeat:-1});
   });
   // Lámparas dobles y bancos en zonas de descanso.
   [[155,1180],[565,1180],[155,1320],[565,1320]].forEach(([x,y])=>{
@@ -311,9 +311,10 @@ export class LumenScene extends Phaser.Scene {
   // Umbral del templo, reforzando la lectura norte-sur.
   v12.fillStyle(0x555a56,.90); v12.fillRoundedRect(285,330,150,28,8);
   v12.lineStyle(3,0xb79a54,.72); v12.strokeRoundedRect(285,330,150,28,8);
-  // Estatua monumental completa: pedestal + figura central, sin usar el recorte roto anterior.
-  this.add.rectangle(360,432,72,72,0x8e8775,1).setStrokeStyle(3,0xd1c29b,.9).setDepth(438);
-  const monument=this.add.image(360,365,"npc_guardia").setScale(1.15).setTint(0xc8c1ae).setDepth(439);
+  // Fuente de los Fundadores con asset dedicado en lugar del guardia provisional.
+  const founderGlow=this.add.ellipse(360,430,190,74,0x4d91aa,.16).setDepth(437);
+  this.tweens.add({targets:founderGlow,alpha:{from:.10,to:.23},scaleX:{from:.94,to:1.04},duration:2100,yoyo:true,repeat:-1});
+  const monument=this.add.image(360,388,"p_estatua_fuente").setScale(.78).setDepth(439);
   this.add.text(360,505,"FUENTE DE LOS FUNDADORES",{fontFamily:"Georgia",fontSize:"12px",color:"#ead9aa",stroke:"#17140f",strokeThickness:4}).setOrigin(.5).setDepth(500);
   // BUILDING MASK PASS — suaviza los fondos cuadrados sin alterar los PNG originales.
   [["b_posada",118,300],["b_mercado",602,300],["b_herreria",125,760],["b_gremio",595,760],["b_templo",360,190]].forEach(a=>{
