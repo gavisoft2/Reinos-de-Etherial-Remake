@@ -15,7 +15,7 @@ export class LumenScene extends Phaser.Scene {
  }
  create(){
   this.physics.world.setBounds(0,0,720,1780);this.inHuntZone=false;this.safeZone=true;this.zoneName="Lumen";this.deathCount=0;this.respawnProtection=false; this.obstacles=this.physics.add.staticGroup();
-  // LUMEN CAPITAL V11 — reconstrucción visual: elimina paneles grises y devuelve una ciudad medieval continua.
+  // LUMEN CAPITAL V12 — primeros assets finales transparentes integrados.
    this.add.rectangle(360,890,720,1780,0x252a25,1).setDepth(-30);
    this.add.image(360,1515,"t_hierba").setDisplaySize(720,530).setAlpha(.72).setDepth(-29);
    const city=this.add.graphics().setDepth(-28);
