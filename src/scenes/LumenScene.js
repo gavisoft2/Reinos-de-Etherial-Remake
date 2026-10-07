@@ -24,20 +24,16 @@ export class LumenScene extends Phaser.Scene {
    const tile=this.add.image(x+39,y+36,"t_"+(["suelo_01","suelo_02","suelo_03","suelo_04"][(x/78+y/72)%4|0])).setDisplaySize(92,86).setAlpha(.24).setDepth(-28);
    tile.setBlendMode(Phaser.BlendModes.SOFT_LIGHT);tile.setAngle(((x+y)/72)%2?0:180);
   }
-  // Plaza de Lumen reorganizada por capas: sin imagen cuadrada superpuesta.
-  // Núcleo de la fuente: pedestal/agua construidos en escena; la estatua final irá como sprite transparente.
-  this.add.ellipse(360,470,250,112,0x243b3a,.55).setStrokeStyle(5,0xb7a16c,.9).setDepth(430);
-  this.add.ellipse(360,462,205,78,0x2d7d9c,.82).setStrokeStyle(4,0xd5c48d,.9).setDepth(431);
-  this.add.ellipse(360,450,118,52,0x8b846f,1).setStrokeStyle(3,0xd5c48d,.9).setDepth(432);
+  // Plaza de Lumen limpia: colisión de fuente; el aspecto visual usa el asset dedicado.
   this.addObstacle(360,468,205,74);
   // Plaza Real: avenida amplia, terrazas ajardinadas y mobiliario para evitar grandes zonas vacías.
   const city=this.add.graphics().setDepth(410);
   city.fillStyle(0xf4ecd9,.30); city.fillRoundedRect(250,570,220,650,24);
   city.lineStyle(3,0xb89545,.48); city.strokeRoundedRect(250,570,220,650,24);
-  // Jardines de la plaza principal.
+  // Jardines finales con props reales, sin óvalos de prototipo.
   [[185,405],[535,405],[185,535],[535,535],[175,760],[545,760],[175,980],[545,980]].forEach(([x,y],idx)=>{
-   this.add.ellipse(x,y,118,58,0x4b504d,.16).setStrokeStyle(3,0xb79b55,.62).setDepth(420);
-   this.add.image(x+(idx%2?24:-24),y-8,idx%3===0?"p_arbol_03":"p_arbol_02").setScale(idx<4?.34:.28).setDepth(y);
+   this.add.image(x+(idx%2?18:-18),y-10,idx%3===0?"p_arbol_03":"p_arbol_02").setScale(idx<4?.30:.25).setDepth(y);
+   this.add.image(x+(idx%2?-24:24),y+14,"p_maceta").setScale(.26).setDepth(y+2);
   });
   // Faroles reales y bancos alineados a la avenida.
   [[245,365],[475,365],[245,575],[475,575],[250,720],[470,720],[250,900],[470,900],[250,1100],[470,1100]].forEach(([x,y])=>this.add.image(x,y,"p_farol").setScale(.50).setDepth(y));
@@ -49,132 +45,6 @@ export class LumenScene extends Phaser.Scene {
   this.add.image(645,610,"p_puesto").setScale(.72).setDepth(610);
   // Macetas y barriles rompen la simetría artificial.
   [[90,520],[630,520],[92,790],[628,790],[105,1010],[615,1010]].forEach(([x,y],i)=>this.add.image(x,y,i%2?"p_maceta":"p_barril_01").setScale(.42).setDepth(y));
-  // VISUAL PASS SAFE V2 — detalles dibujados por Phaser, sin modificar PNGs.
-  // Bordes de avenida y pequeñas plazas laterales para romper la cuadrícula.
-  const decor=this.add.graphics().setDepth(-24);
-  decor.lineStyle(3,0xb89545,.38);
-  decor.strokeRoundedRect(238,600,244,620,26);
-  decor.lineStyle(2,0x315f91,.34);
-  decor.strokeRoundedRect(246,608,228,604,22);
-  // Rosetones pequeños de mármol en cruces de calle.
-  [[360,790],[360,990],[360,1190]].forEach(([x,y])=>{
-    decor.lineStyle(3,0xb89545,.62); decor.strokeCircle(x,y,34);
-    decor.lineStyle(2,0x315f91,.55); decor.strokeCircle(x,y,24);
-    decor.lineBetween(x-24,y,x+24,y); decor.lineBetween(x,y-24,x,y+24);
-  });
-  // Sombras suaves bajo edificios para integrarlos mejor con el mármol.
-  [[118,330,210,70],[602,330,210,70],[125,790,205,70],[595,790,205,70],[360,235,250,75]].forEach(([x,y,w,h])=>{
-    this.add.ellipse(x,y,w,h,0x1c1a16,.16).setDepth(250);
-  });
-  // Maceteros y faroles en accesos a los distritos.
-  [[220,690],[500,690],[220,910],[500,910],[220,1120],[500,1120]].forEach(([x,y],i)=>{
-    this.add.image(x,y,i%2===0?"p_maceta":"p_farol").setScale(i%2===0?.34:.42).setDepth(y);
-  });
-  // VISUAL PASS SAFE V5 — remate urbano hacia la zona sur.
-  const south=this.add.graphics().setDepth(-21);
-  // Plaza de llegada al sur con marco de mármol.
-  south.fillStyle(0x555a56,.22); south.fillRoundedRect(185,1280,350,235,28);
-  south.lineStyle(4,0xb89545,.42); south.strokeRoundedRect(185,1280,350,235,28);
-  south.lineStyle(2,0x315f91,.34); south.strokeRoundedRect(197,1292,326,211,22);
-  // Motivo heráldico central.
-  south.lineStyle(4,0xb89545,.65); south.strokeCircle(360,1395,62);
-  south.lineStyle(2,0x315f91,.58); south.strokeCircle(360,1395,45);
-  south.lineBetween(315,1395,405,1395); south.lineBetween(360,1350,360,1440);
-  // Paseos laterales y mobiliario.
-  [[120,1325],[600,1325],[120,1460],[600,1460]].forEach(([x,y],i)=>{
-    this.add.image(x,y,i%2===0?"p_farol":"p_bandera").setScale(.42).setDepth(y);
-  });
-  [[205,1345],[515,1345],[205,1470],[515,1470]].forEach(([x,y])=>{
-    this.add.image(x,y,"p_banco").setScale(.34).setDepth(y);
-  });
-  // Árboles pequeños flanqueando la salida sin cerrar el camino.
-  [[75,1275],[645,1275],[75,1510],[645,1510]].forEach(([x,y],i)=>{
-    this.add.image(x,y,i%2?"p_arbol_02":"p_arbol_03").setScale(.25).setDepth(y);
-  });
-  this.add.text(360,1490,"PUERTA SUR",{fontFamily:"Georgia",fontSize:"15px",color:"#755d2a",stroke:"#f4ead5",strokeThickness:4}).setOrigin(.5).setDepth(320);
-  // VISUAL PASS SAFE V6 — identidad de capital: accesos, emblemas y zonas sociales.
-  const royal=this.add.graphics().setDepth(-20);
-  // Alfombra pétrea ceremonial desde Plaza Real hacia el templo.
-  royal.fillStyle(0x77766d,.16); royal.fillRoundedRect(318,120,84,255,18);
-  royal.lineStyle(3,0xb89545,.46); royal.strokeRoundedRect(318,120,84,255,18);
-  royal.lineStyle(2,0x315f91,.38); royal.lineBetween(330,135,330,355); royal.lineBetween(390,135,390,355);
-  // Pequeños escudos heráldicos sobre el eje.
-  [165,225,285].forEach(y=>{
-    royal.fillStyle(0x315f91,.72); royal.fillCircle(360,y,13);
-    royal.lineStyle(2,0xd2b45b,.9); royal.strokeCircle(360,y,13);
-    royal.lineBetween(352,y,368,y); royal.lineBetween(360,y-8,360,y+8);
-  });
-  // Dos zonas sociales a los lados de la avenida.
-  [[115,1185],[605,1185]].forEach(([x,y],i)=>{
-    this.add.ellipse(x,y,128,62,0x4b504d,.20).setStrokeStyle(3,0xb89545,.48).setDepth(y-5);
-    this.add.image(x,y-8,i?"p_arbol_02":"p_arbol_03").setScale(.27).setDepth(y);
-    this.add.image(x+(i?-48:48),y+15,"p_banco").setScale(.32).setDepth(y+1);
-    this.add.image(x+(i?48:-48),y-8,"p_farol").setScale(.38).setDepth(y+2);
-  });
-  // Señales de orientación integradas en la ciudad.
-  [["← MERCADO",165,675],["GREMIO →",555,675],["↑ TEMPLO",360,330]].forEach(([t,x,y])=>{
-    this.add.text(x,y,t,{fontFamily:"Georgia",fontSize:"10px",color:"#d9c994",stroke:"#f4ead5",strokeThickness:3}).setOrigin(.5).setDepth(325);
-  });
-  // Brillos discretos en puntos de interés para guiar sin saturar.
-  [[360,340],[115,610],[605,610],[125,835],[595,835]].forEach(([x,y])=>{
-    const glow=this.add.circle(x,y,16,0xe8cf78,.10).setDepth(315);
-    this.tweens.add({targets:glow,alpha:{from:.06,to:.20},scale:{from:.8,to:1.25},duration:1700,yoyo:true,repeat:-1});
-  });
-  // VISUAL PASS SAFE V7 — capas de profundidad y vida urbana.
-  // Bordes de jardín bajos para separar circulación de decoración.
-  const edging=this.add.graphics().setDepth(405);
-  edging.lineStyle(3,0x8f7b4a,.48);
-  [[125,380,120,62],[475,380,120,62],[125,510,120,62],[475,510,120,62]].forEach(([x,y,w,h])=>{
-    edging.strokeRoundedRect(x,y,w,h,18);
-  });
-  // Pequeñas zonas de carga cerca del mercado/herrería.
-  [[72,735],[648,735]].forEach(([x,y],i)=>{
-    this.add.image(x,y,"p_carreta").setScale(.46).setDepth(y);
-    this.add.image(x+(i?35:-35),y+25,"p_caja").setScale(.34).setDepth(y+1);
-    this.add.image(x+(i?-28:28),y+30,"p_barril_01").setScale(.30).setDepth(y+2);
-  });
-  // Banderas ceremoniales cerca del templo.
-  [[285,300],[435,300],[275,355],[445,355]].forEach(([x,y])=>{
-    this.add.image(x,y,"p_bandera").setScale(.38).setDepth(y);
-  });
-  // Sombras ambientales de árboles/objetos para reforzar 2.5D.
-  [[175,760,70,22],[545,760,70,22],[175,980,70,22],[545,980,70,22],[115,1185,82,24],[605,1185,82,24]].forEach(([x,y,w,h])=>{
-    this.add.ellipse(x+7,y+16,w,h,0x17140f,.13).setDepth(y-2);
-  });
-  // Marcadores discretos de zonas de servicio.
-  [["COMERCIO",112,690],["ARTESANOS",608,690]].forEach(([t,x,y])=>{
-    this.add.text(x,y,t,{fontFamily:"Georgia",fontSize:"9px",color:"#d9c994",stroke:"#f3e8d1",strokeThickness:3}).setOrigin(.5).setDepth(330);
-  });
-  // CAPITAL PASS V12 — Plaza de los Fundadores y eje del templo.
-  const v12=this.add.graphics().setDepth(143);
-  // Anillo ceremonial amplio alrededor de la fuente.
-  v12.lineStyle(5,0xb79a54,.68); v12.strokeEllipse(360,510,310,155);
-  v12.lineStyle(2,0x557da2,.62); v12.strokeEllipse(360,510,282,137);
-  // Cuatro accesos radiales a la plaza.
-  [[360,430,360,365],[360,590,360,650],[205,510,285,510],[515,510,435,510]].forEach(([x1,y1,x2,y2])=>{
-    v12.lineStyle(5,0x77705d,.82); v12.lineBetween(x1,y1,x2,y2);
-    v12.lineStyle(2,0xb79a54,.60); v12.lineBetween(x1,y1,x2,y2);
-  });
-  // Jardines ceremoniales con props reales, evitando óvalos verdes tipo placeholder.
-  [[255,345],[465,345],[235,455],[485,455]].forEach(([x,y],i)=>{
-    this.add.image(x,y-10,i%2?"p_arbol_02":"p_arbol_01").setScale(.22).setDepth(y+2);
-    this.add.image(x+(i%2?-28:28),y+12,"p_maceta").setScale(.30).setDepth(y+3);
-    this.add.image(x+(i%2?30:-30),y+13,"p_banco").setScale(.24).setDepth(y+3);
-  });
-  // Iluminación ceremonial alrededor del monumento.
-  [[290,445],[430,445],[290,575],[430,575]].forEach(([x,y])=>{
-    this.add.image(x,y,"p_farol").setScale(.34).setDepth(y+5);
-    const halo=this.add.circle(x,y-18,18,0xffd77a,.10).setDepth(y+4);
-    this.tweens.add({targets:halo,alpha:{from:.06,to:.18},scale:{from:.85,to:1.15},duration:1900,yoyo:true,repeat:-1});
-  });
-  // Umbral del templo, reforzando la lectura norte-sur.
-  v12.fillStyle(0x555a56,.90); v12.fillRoundedRect(285,330,150,28,8);
-  v12.lineStyle(3,0xb79a54,.72); v12.strokeRoundedRect(285,330,150,28,8);
-  // Fuente de los Fundadores con asset dedicado en lugar del guardia provisional.
-  const founderGlow=this.add.ellipse(360,430,190,74,0x4d91aa,.16).setDepth(437);
-  this.tweens.add({targets:founderGlow,alpha:{from:.10,to:.23},scaleX:{from:.94,to:1.04},duration:2100,yoyo:true,repeat:-1});
-  const monument=this.add.image(360,388,"p_estatua_fuente").setScale(.78).setDepth(439);
-  this.add.text(360,505,"FUENTE DE LOS FUNDADORES",{fontFamily:"Georgia",fontSize:"12px",color:"#ead9aa",stroke:"#17140f",strokeThickness:4}).setOrigin(.5).setDepth(500);
   // FINAL ART LAYOUT V1 — composición limpia basada en assets reales.
   const avenue=this.add.graphics().setDepth(130);
   avenue.fillStyle(0x6e7069,.34); avenue.fillRoundedRect(292,565,136,900,22);
@@ -194,7 +64,7 @@ export class LumenScene extends Phaser.Scene {
     this.add.image(x,y,"p_farol").setScale(.42).setDepth(y+4);
     this.add.image(x+(i?-28:28),y+3,"p_bandera").setScale(.34).setDepth(y+3);
   });
-  // BUILDING MASK PASS — suaviza los fondos cuadrados sin alterar los PNG originales.
+  // EDIFICIOS DE LUMEN — assets actuales listos para sustitución progresiva por PNG finales.
   [["b_posada",118,300],["b_mercado",602,300],["b_herreria",125,760],["b_gremio",595,760],["b_templo",360,190]].forEach(a=>{
     const img=this.add.image(a[1],a[2],a[0]).setScale(1.42).setDepth(a[2]);
     this.addObstacle(a[1],a[2]+45,175,78);
