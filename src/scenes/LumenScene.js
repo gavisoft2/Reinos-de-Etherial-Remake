@@ -15,7 +15,7 @@ export class LumenScene extends Phaser.Scene {
  }
  create(){
   this.physics.world.setBounds(0,0,720,1780);this.inHuntZone=false;this.safeZone=true;this.zoneName="Lumen";this.deathCount=0;this.respawnProtection=false; this.obstacles=this.physics.add.staticGroup();
-  // LUMEN RESET V14 — rebuilding.
+  // LUMEN RESET V15 — reset visual total; todos los elementos antiguos quedan ocultos.
    this.add.rectangle(360,890,720,1780,0x202724,1).setDepth(-30);
    const ground=this.add.graphics().setDepth(-29);
    ground.fillStyle(0x514f47,1);ground.fillRoundedRect(18,105,684,1128,22);
@@ -42,6 +42,9 @@ export class LumenScene extends Phaser.Scene {
   this.add.text(360,1380,"Zona de cacería · Nivel 1–10",{fontFamily:"Georgia",fontSize:"14px",color:"#d8dfc4",stroke:"#26301f",strokeThickness:3}).setOrigin(.5).setDepth(3000);
   this.add.rectangle(360,1280,620,4,0x9f8a57,.38).setDepth(2999);
   this.makeHud();this.makeControls();this.makeInteractButton();this.makeInventory();this.makeShop();this.makeZoneHud();this.seedInventory();this.loadProgress();this.time.addEvent({delay:5000,loop:true,callback:()=>this.saveProgress()});
+   // RESET VISUAL TOTAL: mantenemos lógica/estado, pero nada del arte/UI antiguo se renderiza.
+   this.children.list.forEach(obj=>{if(obj&&obj.setVisible)obj.setVisible(false);});
+   this.cameras.main.setBackgroundColor("#171d1b");
  }
  addObstacle(x,y,w,h){const z=this.obstacles.create(x,y,null).setVisible(false);z.body.setSize(w,h);z.refreshBody();return z}
  makeHud(){
