@@ -19,31 +19,15 @@ export class LumenScene extends Phaser.Scene {
   this.physics.world.setBounds(0,0,720,1780);this.inHuntZone=false;this.safeZone=true;this.zoneName="Lumen";this.deathCount=0;this.respawnProtection=false; this.obstacles=this.physics.add.staticGroup();
   // Base continua: elimina el efecto de mosaico/cuadricula del suelo.
   this.add.rectangle(360,890,720,1780,0x484d4a,1).setDepth(-30);
-  this.add.image(360,640,"lumen_map").setDisplaySize(720,1280).setAlpha(.16).setDepth(-29);
-  for(let y=0;y<1780;y+=72)for(let x=0;x<720;x+=78){
-   const tile=this.add.image(x+39,y+36,"t_"+(["suelo_01","suelo_02","suelo_03","suelo_04"][(x/78+y/72)%4|0])).setDisplaySize(92,86).setAlpha(.24).setDepth(-28);
-   tile.setBlendMode(Phaser.BlendModes.SOFT_LIGHT);tile.setAngle(((x+y)/72)%2?0:180);
-  }
+  // MASTER CITY ART — capa principal coherente de Lumen.
+  this.add.image(360,640,"lumen_map").setDisplaySize(720,1280).setAlpha(.94).setDepth(-29);
+  // Extensión sur neutra para la zona de cacería, sin mosaicos repetidos.
+  this.add.image(360,1510,"t_hierba").setDisplaySize(720,540).setAlpha(.48).setDepth(-29);
   // Plaza de Lumen limpia: colisión de fuente; el aspecto visual usa el asset dedicado.
   this.addObstacle(360,468,205,74);
-  // Plaza Real final: composición ligera, sin grandes overlays geométricos.
-  [[185,405],[535,405],[185,535],[535,535],[175,760],[545,760],[175,980],[545,980]].forEach(([x,y],idx)=>{
-   this.add.image(x+(idx%2?18:-18),y-10,idx%3===0?"p_arbol_03":"p_arbol_02").setScale(idx<4?.30:.25).setDepth(y);
-   this.add.image(x+(idx%2?-24:24),y+14,"p_maceta").setScale(.26).setDepth(y+2);
-  });
-  [[245,575],[475,575],[250,900],[470,900],[285,1120],[435,1120]].forEach(([x,y])=>this.add.image(x,y,"p_farol").setScale(.46).setDepth(y));
-  [[205,650],[515,650],[205,1015],[515,1015]].forEach(([x,y])=>this.add.image(x,y,"p_banco").setScale(.40).setDepth(y));
-  [[285,610],[435,610],[285,1040],[435,1040]].forEach(([x,y])=>this.add.image(x,y,"p_bandera").setScale(.38).setDepth(y));
-  // Distritos: mercado/posada y herrería/gremio reciben props propios.
-  [[72,420,"p_puesto"],[648,420,"p_puesto"],[88,500,"p_barril_01"],[632,500,"p_maceta"]].forEach(([x,y,k])=>this.add.image(x,y,k).setScale(k==="p_puesto"?.58:.34).setDepth(y));
-  [[72,905,"p_caja"],[648,905,"p_carreta"],[82,820,"p_farol"],[638,820,"p_bandera"]].forEach(([x,y,k])=>this.add.image(x,y,k).setScale(k==="p_carreta"?.38:.34).setDepth(y));
-  [[285,1180],[435,1180],[305,1415],[415,1415]].forEach(([x,y],i)=>{this.add.image(x,y,"p_farol").setScale(i<2?.36:.40).setDepth(y+2);if(i>=2)this.add.image(x+(i%2?-25:25),y+3,"p_bandera").setScale(.30).setDepth(y+1);});
-  // EDIFICIOS DE LUMEN — assets actuales listos para sustitución progresiva por PNG finales.
-  [["b_posada",118,300],["b_mercado",602,300],["b_herreria",125,760],["b_gremio",595,760],["b_templo",360,190]].forEach(a=>{
-    const img=this.add.image(a[1],a[2],a[0]).setScale(1.42).setDepth(a[2]);
-    this.addObstacle(a[1],a[2]+45,175,78);
-  });
-  [[45,390,"p_arbol_01"],[675,390,"p_arbol_02"],[50,780,"p_arbol_03"],[670,780,"p_arbol_01"],[65,940,"p_arbol_02"],[655,940,"p_arbol_03"]].forEach(a=>{this.add.image(a[0]+5,a[1]+13,a[2]).setTint(0x000000).setAlpha(.18).setScale(1.15,.42).setDepth(a[1]-2);this.add.image(a[0],a[1],a[2]).setScale(1.25).setDepth(a[1])});
+  // La arquitectura, jardines, caminos y mobiliario visual vienen del mapa maestro.
+  // EDIFICIOS DE LUMEN — el mapa maestro aporta el arte; estas huellas conservan colisiones.
+  [[118,300],[602,300],[125,760],[595,760],[360,190]].forEach(([x,y])=>this.addObstacle(x,y+45,175,78));
   [["npc_mira",135,560,"Mira"],["npc_guardia",270,625,"Guardia"],["npc_aldric",585,560,"Aldric"],["npc_borin",135,850,"Borin"]].forEach(a=>{this.add.image(a[1],a[2],a[0]).setScale(.62).setDepth(a[2]);this.add.text(a[1],a[2]+62,a[3],{fontFamily:"Georgia",fontSize:"13px",color:"#fff2c7",stroke:"#000",strokeThickness:4}).setOrigin(.5).setDepth(a[2]+2)});
   this.playerShadow=this.add.ellipse(360,868,55,20,0x000000,.28).setDepth(798);
   this.player=this.physics.add.sprite(360,830,"gabriel_idle_01").setScale(1.05).setDepth(900);this.player.body.setSize(34,38).setOffset(24,62);this.player.setCollideWorldBounds(true);this.cameras.main.setBounds(0,0,720,1780);this.cameras.main.startFollow(this.player,true,.08,.08);this.cameras.main.setDeadzone(90,160);this.physics.add.collider(this.player,this.obstacles);
