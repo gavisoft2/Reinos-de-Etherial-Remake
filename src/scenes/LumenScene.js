@@ -26,44 +26,18 @@ export class LumenScene extends Phaser.Scene {
   }
   // Plaza de Lumen limpia: colisión de fuente; el aspecto visual usa el asset dedicado.
   this.addObstacle(360,468,205,74);
-  // Plaza Real: avenida amplia, terrazas ajardinadas y mobiliario para evitar grandes zonas vacías.
-  const city=this.add.graphics().setDepth(410);
-  city.fillStyle(0xf4ecd9,.30); city.fillRoundedRect(250,570,220,650,24);
-  city.lineStyle(3,0xb89545,.48); city.strokeRoundedRect(250,570,220,650,24);
-  // Jardines finales con props reales, sin óvalos de prototipo.
+  // Plaza Real final: composición ligera, sin grandes overlays geométricos.
   [[185,405],[535,405],[185,535],[535,535],[175,760],[545,760],[175,980],[545,980]].forEach(([x,y],idx)=>{
    this.add.image(x+(idx%2?18:-18),y-10,idx%3===0?"p_arbol_03":"p_arbol_02").setScale(idx<4?.30:.25).setDepth(y);
    this.add.image(x+(idx%2?-24:24),y+14,"p_maceta").setScale(.26).setDepth(y+2);
   });
-  // Faroles reales y bancos alineados a la avenida.
-  [[245,365],[475,365],[245,575],[475,575],[250,720],[470,720],[250,900],[470,900],[250,1100],[470,1100]].forEach(([x,y])=>this.add.image(x,y,"p_farol").setScale(.50).setDepth(y));
-  [[205,650],[515,650],[205,865],[515,865],[205,1060],[515,1060]].forEach(([x,y])=>this.add.image(x,y,"p_banco").setScale(.45).setDepth(y));
-  // Banderas marcan la avenida ceremonial.
-  [[285,610],[435,610],[285,820],[435,820],[285,1020],[435,1020]].forEach(([x,y])=>this.add.image(x,y,"p_bandera").setScale(.42).setDepth(y));
-  // Pequeños puestos laterales hacen que Mercado y Herrería formen distritos reales.
-  this.add.image(75,610,"p_puesto").setScale(.72).setDepth(610);
-  this.add.image(645,610,"p_puesto").setScale(.72).setDepth(610);
-  // Macetas y barriles rompen la simetría artificial.
-  [[90,520],[630,520],[92,790],[628,790],[105,1010],[615,1010]].forEach(([x,y],i)=>this.add.image(x,y,i%2?"p_maceta":"p_barril_01").setScale(.42).setDepth(y));
-  // FINAL ART LAYOUT V1 — composición limpia basada en assets reales.
-  const avenue=this.add.graphics().setDepth(130);
-  avenue.fillStyle(0x6e7069,.34); avenue.fillRoundedRect(292,565,136,900,22);
-  avenue.lineStyle(2,0xb89a52,.44); avenue.strokeRoundedRect(292,565,136,900,22);
-  // Ritmo visual con faroles, banderas, macetas y bancos reales.
-  [[278,650],[442,650],[278,790],[442,790],[278,930],[442,930],[278,1070],[442,1070],[278,1210],[442,1210],[278,1350],[442,1350]].forEach(([x,y],i)=>{
-    this.add.image(x,y,"p_farol").setScale(.34).setDepth(y+3);
-    if(i%2===0) this.add.image(x+(x<360?-24:24),y+4,"p_bandera").setScale(.28).setDepth(y+2);
-  });
-  [[230,690],[490,690],[230,990],[490,990],[230,1290],[490,1290]].forEach(([x,y],i)=>{
-    this.add.image(x,y-8,i%2?"p_arbol_02":"p_arbol_01").setScale(.20).setDepth(y+2);
-    this.add.image(x+(i%2?-26:26),y+12,"p_maceta").setScale(.26).setDepth(y+3);
-    this.add.image(x+(i%2?30:-30),y+15,"p_banco").setScale(.24).setDepth(y+3);
-  });
-  // Acceso final de Puerta Sur, sencillo y legible.
-  [[305,1460],[415,1460]].forEach(([x,y],i)=>{
-    this.add.image(x,y,"p_farol").setScale(.42).setDepth(y+4);
-    this.add.image(x+(i?-28:28),y+3,"p_bandera").setScale(.34).setDepth(y+3);
-  });
+  [[245,575],[475,575],[250,900],[470,900],[285,1120],[435,1120]].forEach(([x,y])=>this.add.image(x,y,"p_farol").setScale(.46).setDepth(y));
+  [[205,650],[515,650],[205,1015],[515,1015]].forEach(([x,y])=>this.add.image(x,y,"p_banco").setScale(.40).setDepth(y));
+  [[285,610],[435,610],[285,1040],[435,1040]].forEach(([x,y])=>this.add.image(x,y,"p_bandera").setScale(.38).setDepth(y));
+  // Distritos: mercado/posada y herrería/gremio reciben props propios.
+  [[72,420,"p_puesto"],[648,420,"p_puesto"],[88,500,"p_barril_01"],[632,500,"p_maceta"]].forEach(([x,y,k])=>this.add.image(x,y,k).setScale(k==="p_puesto"?.58:.34).setDepth(y));
+  [[72,905,"p_caja"],[648,905,"p_carreta"],[82,820,"p_farol"],[638,820,"p_bandera"]].forEach(([x,y,k])=>this.add.image(x,y,k).setScale(k==="p_carreta"?.38:.34).setDepth(y));
+  [[285,1180],[435,1180],[305,1415],[415,1415]].forEach(([x,y],i)=>{this.add.image(x,y,"p_farol").setScale(i<2?.36:.40).setDepth(y+2);if(i>=2)this.add.image(x+(i%2?-25:25),y+3,"p_bandera").setScale(.30).setDepth(y+1);});
   // EDIFICIOS DE LUMEN — assets actuales listos para sustitución progresiva por PNG finales.
   [["b_posada",118,300],["b_mercado",602,300],["b_herreria",125,760],["b_gremio",595,760],["b_templo",360,190]].forEach(a=>{
     const img=this.add.image(a[1],a[2],a[0]).setScale(1.42).setDepth(a[2]);
