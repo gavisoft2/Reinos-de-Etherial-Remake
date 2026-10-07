@@ -1,45 +1,42 @@
-export class LumenScene extends Phaser.Scene{constructor(){super("Lumen")}create(){const W=720,H=1280;this.cameras.main.setBackgroundColor("#17251b");
-// Base limpia del remake: composición móvil 9:16 inspirada en la referencia aprobada.
-const g=this.add.graphics();g.fillGradientStyle(0x263a29,0x263a29,0x111a13,0x111a13,1);g.fillRect(0,0,W,H);g.fillStyle(0x5e5748,1);g.fillRoundedRect(105,190,510,900,80);g.fillStyle(0x8d8370,.95);g.fillEllipse(360,500,560,330);g.lineStyle(8,0x4a4338,.9);g.strokeEllipse(360,500,560,330);
-// Fuente monumental central, foco visual de Lumen.\ng.fillStyle(0x413b32,.55);g.fillEllipse(360,525,350,150);g.fillStyle(0xc8b78f,.38);g.fillEllipse(360,516,325,132);
-g.fillStyle(0x293d42,1);g.fillEllipse(360,505,300,125);g.fillStyle(0x70a8aa,.65);g.fillEllipse(360,492,250,82);g.fillStyle(0xb8aa8a,1);g.fillRect(342,365,36,120);g.fillCircle(360,350,42);g.fillTriangle(360,285,312,360,360,338);g.fillTriangle(360,285,408,360,360,338);
-// Masas arquitectónicas cálidas: luego serán sustituidas por arte prerenderizado original.
-const house=(x,y,w,h)=>{g.fillStyle(0x6d5540,1);g.fillRoundedRect(x,y,w,h,14);g.fillStyle(0x3d2c24,1);g.fillTriangle(x-10,y+25,x+w/2,y-55,x+w+10,y+25);g.fillStyle(0xe4ad5c,.55);for(let i=0;i<3;i++)g.fillRect(x+28+i*55,y+45,24,38)};house(40,170,245,190);house(435,170,245,190);house(35,720,250,210);house(435,720,250,210);
-// Adoquines y anillos de plaza.\ng.lineStyle(2,0xc0b59d,.16);for(let r=170;r<300;r+=34)g.strokeEllipse(360,500,r*2,r);for(let a=0;a<Math.PI*2;a+=Math.PI/10){g.lineBetween(360+Math.cos(a)*95,500+Math.sin(a)*48,360+Math.cos(a)*285,500+Math.sin(a)*142)}\n// Avenida hacia la capital/castillo.
-g.fillStyle(0x736b5d,.95);g.fillTriangle(275,1280,445,1280,405,610);g.fillStyle(0x1b311e,.9);g.fillRect(0,980,190,300);g.fillRect(530,980,190,300);
-this.add.text(360,42,"REINOS DE ETHERIAL",{fontFamily:"Georgia",fontSize:"30px",color:"#f0d89a",stroke:"#17110b",strokeThickness:6}).setOrigin(.5);const loc=this.add.text(360,82,"LUMEN · CAPITAL DEL REINO",{fontFamily:"Georgia",fontSize:"15px",color:"#d8c49a",letterSpacing:2}).setOrigin(.5);
-// Ciudadela monumental al fondo.\ng.fillStyle(0x2c302d,.96);g.fillRect(250,105,220,95);g.fillRect(280,70,55,130);g.fillRect(385,70,55,130);g.fillTriangle(275,70,307,25,340,70);g.fillTriangle(380,70,412,20,445,70);g.fillStyle(0xd5a557,.42);[295,320,400,425].forEach(x=>g.fillRect(x,110,10,28));\n// Héroe temporal: proporción y presencia correctas; el arte final será sprite semi-realista original.
-const hero=this.add.container(360,660);hero.add([this.add.ellipse(0,42,72,20,0x000000,.35),this.add.circle(0,-25,18,0xd1a17a),this.add.rectangle(0,10,38,66,0x263a2a).setStrokeStyle(4,0x8a744e),this.add.triangle(0,-28,-25,-8,25,-8,0,-65,0x183023),this.add.rectangle(27,0,5,88,0x8a5b30).setRotation(.18)]);this.add.text(360,716,"Gabriel · Arquero",{fontFamily:"Georgia",fontSize:"16px",color:"#fff2c7",stroke:"#000",strokeThickness:4}).setOrigin(.5);
-// Jardines y árboles de profundidad.\n[[65,470],[655,470],[75,680],[645,680],[75,1010],[645,1010]].forEach(p=>{this.add.ellipse(p[0],p[1]+38,95,35,0x07100a,.32);this.add.rectangle(p[0],p[1],12,78,0x513b27);this.add.circle(p[0],p[1]-42,48,0x29462d);this.add.circle(p[0]-25,p[1]-30,30,0x355b38);this.add.circle(p[0]+25,p[1]-30,30,0x355b38)});\n// Señalética diegética y puntos de interés de Lumen, pensados para pantalla vertical.
- const poi=(x,y,title,sub)=>{this.add.rectangle(x,y,150,44,0x17120d,.76).setStrokeStyle(2,0xb28c50,.7);this.add.text(x,y-7,title,{fontFamily:"Georgia",fontSize:"14px",color:"#f0d9a1",stroke:"#000",strokeThickness:3}).setOrigin(.5);this.add.text(x,y+10,sub,{fontFamily:"Georgia",fontSize:"10px",color:"#c9c1aa"}).setOrigin(.5)};
- poi(155,390,"POSADA","El Ciervo Dorado");poi(565,390,"MERCADO","Galería de Lumen");poi(155,955,"HERRERÍA","Forja de Borin");poi(565,955,"GREMIO","Casa de Aventureros");
- // Luz cálida urbana para reforzar el aspecto de capital fantástica.
- [[95,430],[625,430],[92,970],[628,970]].forEach((p,i)=>{const glow=this.add.circle(p[0],p[1],54,0xffb45d,.08).setBlendMode(Phaser.BlendModes.ADD);this.add.circle(p[0],p[1],7,0xffd47c,.92);this.tweens.add({targets:glow,alpha:{from:.045,to:.13},scale:{from:.85,to:1.12},duration:1500+i*170,yoyo:true,repeat:-1})});
- // NPCs clave de la referencia visual: mercader, guardias, capitán y sanadora.
- const npc=(x,y,label,role,tint)=>{this.add.ellipse(x,y+35,54,16,0x000000,.32);this.add.circle(x,y-28,14,0xd4a27c);this.add.rectangle(x,y+5,32,60,tint).setStrokeStyle(3,0xc7a55f,.7);this.add.text(x,y+52,label,{fontFamily:"Georgia",fontSize:"15px",color:"#fff3cf",stroke:"#000",strokeThickness:4}).setOrigin(.5);this.add.text(x,y+70,role,{fontFamily:"Georgia",fontSize:"11px",color:"#c9dfd2",stroke:"#000",strokeThickness:3}).setOrigin(.5)};
- npc(120,610,"Mira","Mercader · Tienda General",0x743c35);npc(270,625,"Guardia","",0x263b55);npc(455,625,"Guardia","",0x263b55);npc(585,610,"Aldric","Capitán de Lumen",0x263b55);npc(650,745,"Selene","Sanadora · Recupera HP/MP",0xd9d4c7);
- // Ambiente vivo: fuente brillante y partículas mágicas muy suaves.
- for(let i=0;i<18;i++){const p=this.add.circle(Phaser.Math.Between(270,450),Phaser.Math.Between(400,570),Phaser.Math.Between(1,3),0x8fe7ff,Phaser.Math.FloatBetween(.18,.48));this.tweens.add({targets:p,y:p.y-Phaser.Math.Between(35,90),alpha:0,duration:Phaser.Math.Between(1500,3000),repeat:-1,delay:Phaser.Math.Between(0,1200)})}
- this.add.text(585,545,"!",{fontFamily:"Georgia",fontSize:"38px",color:"#ffd94f",stroke:"#6a4b00",strokeThickness:6}).setOrigin(.5);
- // Chat social compacto.\n this.add.rectangle(285,1005,500,92,0x070b09,.72).setStrokeStyle(2,0x8d7548,.45);this.add.text(48,970,"Mundo   General   Sistema",{fontFamily:"Georgia",fontSize:"12px",color:"#d8c49a"});this.add.text(48,995,"[Mundo] Lyra: Grupo para Bosque Eterno\n[Sistema] Bienvenido a Lumen",{fontFamily:"Arial",fontSize:"11px",color:"#d9e3dd",lineSpacing:5});\n // Profundidad visual móvil: niebla baja, hojas y luz ambiental animada.
- const haze=this.add.ellipse(360,910,760,230,0xb7c9aa,.035).setBlendMode(Phaser.BlendModes.ADD).setDepth(80);
- this.tweens.add({targets:haze,x:{from:320,to:400},alpha:{from:.018,to:.055},duration:6200,yoyo:true,repeat:-1,ease:"Sine.easeInOut"});
- for(let i=0;i<16;i++){const leaf=this.add.ellipse(Phaser.Math.Between(30,690),Phaser.Math.Between(180,1000),Phaser.Math.Between(3,7),Phaser.Math.Between(2,5),0x8ea05f,.42).setDepth(120);leaf.setRotation(Phaser.Math.FloatBetween(0,3.14));this.tweens.add({targets:leaf,x:leaf.x+Phaser.Math.Between(45,120),y:leaf.y+Phaser.Math.Between(30,100),rotation:leaf.rotation+3.1,alpha:0,duration:Phaser.Math.Between(3500,7000),delay:Phaser.Math.Between(0,2500),repeat:-1})}
- // Indicador de interacción contextual pensado para pulgar derecho.
- const interact=this.add.container(665,985).setScrollFactor(0).setDepth(5002);interact.add([this.add.circle(0,0,29,0x202a22,.9).setStrokeStyle(3,0xc7a35e,.8),this.add.text(0,0,"✦",{fontFamily:"Georgia",fontSize:"17px",color:"#f5e3b5"}).setOrigin(.5)]);this.tweens.add({targets:interact,scale:{from:.96,to:1.06},duration:900,yoyo:true,repeat:-1});
- // Controles táctiles funcionales: joystick, ataque y habilidades para celular/Telegram.
- this.move={x:0,y:0};this.physics.world.setBounds(20,120,680,1030);this.physics.add.existing(hero);hero.body.setCircle(28).setOffset(-28,-28);hero.body.setCollideWorldBounds(true);
- const joyBase=this.add.circle(118,1165,74,0x080d0a,.52).setStrokeStyle(3,0xb69a65,.55).setScrollFactor(0).setDepth(5000).setInteractive();
- const joy=this.add.circle(118,1165,31,0x657069,.72).setStrokeStyle(2,0xd0bea0,.65).setScrollFactor(0).setDepth(5001);
- const resetJoy=()=>{this.move.x=0;this.move.y=0;joy.setPosition(118,1165)};
- joyBase.on("pointermove",p=>{if(!p.isDown)return;let dx=p.x-118,dy=p.y-1165,d=Math.hypot(dx,dy)||1,m=Math.min(48,d);dx=dx/d*m;dy=dy/d*m;joy.setPosition(118+dx,1165+dy);this.move.x=dx/48;this.move.y=dy/48});joyBase.on("pointerup",resetJoy);joyBase.on("pointerout",p=>{if(!p.isDown)resetJoy()});
- const skill=(x,y,label,tint)=>{const b=this.add.circle(x,y,34,tint,.92).setStrokeStyle(3,0xd6b56f,.85).setScrollFactor(0).setDepth(5000).setInteractive();this.add.text(x,y,label,{fontFamily:"Georgia",fontSize:"17px",color:"#fff",stroke:"#000",strokeThickness:3}).setOrigin(.5).setScrollFactor(0).setDepth(5001);b.on("pointerdown",()=>{this.tweens.add({targets:b,scale:.82,duration:70,yoyo:true});});return b};
- skill(600,1165,"⚔",0x64231d);skill(500,1090,"➶",0x246d31);skill(575,1060,"✦",0x174d75);skill(650,1090,"➹",0x176d72);this.add.text(575,1020,"TIRO RÁPIDO · PERFORANTE · LLUVIA",{fontFamily:"Georgia",fontSize:"9px",color:"#d8c49a",stroke:"#000",strokeThickness:2}).setOrigin(.5);
- this.makeHud();}
-makeHud(){this.add.rectangle(360,55,680,82,0x09100c,.78).setScrollFactor(0).setStrokeStyle(2,0xa9894e,.7);this.add.circle(62,55,31,0x304331).setStrokeStyle(3,0xc4a361);this.add.text(105,25,"Gabriel  Nv.1",{fontFamily:"Georgia",fontSize:"18px",color:"#f5e6bc"});this.add.rectangle(205,55,205,13,0x431818).setOrigin(0,.5);this.add.rectangle(205,55,205,13,0xa93b35).setOrigin(0,.5);this.add.rectangle(205,75,165,10,0x18334a).setOrigin(0,.5);this.add.rectangle(205,75,165,10,0x367ba8).setOrigin(0,.5);this.add.text(430,52,"◈ 1,250   ◆ 25",{fontFamily:"Georgia",fontSize:"15px",color:"#f3d487",stroke:"#000",strokeThickness:3}).setOrigin(.5);this.add.circle(625,150,62,0x0c1510,.8).setStrokeStyle(3,0xb59457,.8);
- // Minimap funcional inicial: plaza, avenida, jugador y puntos de interés.
- this.add.circle(625,150,48,0x314233,.92);this.add.rectangle(625,150,18,88,0x807563,.9);this.add.ellipse(625,138,72,42,0x807563,.9);
- [[606,132],[645,130],[610,166],[642,168]].forEach(p=>this.add.circle(p[0],p[1],4,0xe2b84f,.95));this.add.triangle(625,154,619,166,631,166,0xffef75,1);
- this.add.text(625,150,"MAPA",{fontFamily:"Georgia",fontSize:"12px",color:"#dbc99e"}).setOrigin(.5);
-this.add.rectangle(120,1170,165,165,0x0b120d,.38).setStrokeStyle(2,0xb08e50,.5);this.add.circle(120,1170,55,0x28372c,.55).setStrokeStyle(3,0xc0a46c,.6);this.add.circle(600,1165,54,0x521d19,.88).setStrokeStyle(4,0xd1a65d);this.add.text(600,1165,"⚔",{fontSize:"35px"}).setOrigin(.5);[[520,1085,"1"],[600,1060,"2"],[665,1100,"3"]].forEach(a=>{this.add.circle(a[0],a[1],35,0x17251d,.9).setStrokeStyle(3,0xa9894e);this.add.text(a[0],a[1],a[2],{fontFamily:"Georgia",fontSize:"19px",color:"#f4ddb0"}).setOrigin(.5)});[["Tienda",430],["Inventario",500],["Habilidades",580],["Menú",660]].forEach(a=>this.add.text(a[1],105,a[0],{fontFamily:"Georgia",fontSize:"12px",color:"#ead9b1"}).setOrigin(.5));this.add.text(24,105,"EL INICIO DE UNA LEYENDA\nHabla con el Capitán   0/1",{fontFamily:"Georgia",fontSize:"14px",color:"#ead9b1",backgroundColor:"#0a100caa",padding:{x:10,y:8}});}update(){if(this.move&&this.children){const h=this.children.list.find(o=>o.type==="Container"&&o.x>250&&o.x<470&&o.y>500&&o.y<800);if(h&&h.body)h.body.setVelocity(this.move.x*150,this.move.y*150)}}
+export class LumenScene extends Phaser.Scene {
+ constructor(){super("Lumen")}
+ preload(){
+  const A="assets/reinos_etherial_assets_extracted/";
+  ["idle_01","idle_02","walk_01","walk_02","walk_03","walk_04","attack_01","attack_02","attack_03","skill_01","skill_02","skill_03"].forEach(n=>this.load.image("gabriel_"+n,A+"characters/gabriel_archer/"+n+".png"));
+  [["aldric","aldric"],["mira","mira"],["borin","borin"],["guardia","guardia"]].forEach(a=>this.load.image("npc_"+a[0],A+"npcs/"+a[1]+".png"));
+  [["posada","posada"],["mercado","mercado"],["herreria","herreria"],["gremio","gremio"],["templo","templo"]].forEach(a=>this.load.image("b_"+a[0],A+"buildings/lumen/"+a[1]+".png"));
+  ["arbol_01","arbol_02","arbol_03","farol","banco","puesto","bandera","estatua_fuente"].forEach(n=>this.load.image("p_"+n,A+"props/"+n+".png"));
+  ["suelo_01","suelo_02","suelo_03","suelo_04","hierba"].forEach(n=>this.load.image("t_"+n,A+"tiles/"+n+".png"));
+  this.load.image("lumen_map",A+"maps/lumen_master.png");
+  ["inventario","tienda","habilidades","misiones","mapa","configuracion"].forEach(n=>this.load.image("ui_"+n,A+"ui/icons/"+n+".png"));
+ }
+ create(){
+  this.physics.world.setBounds(0,0,720,1280);
+  for(let y=0;y<1280;y+=76)for(let x=0;x<720;x+=82)this.add.image(x+41,y+38,"t_"+(["suelo_01","suelo_02","suelo_03","suelo_04"][(x/82+y/76)%4|0])).setDisplaySize(84,78).setAlpha(.88);
+  this.add.image(360,455,"p_estatua_fuente").setScale(2.7).setDepth(200);
+  [["b_posada",130,300],["b_mercado",590,300],["b_herreria",135,690],["b_gremio",585,690],["b_templo",360,190]].forEach(a=>this.add.image(a[1],a[2],a[0]).setScale(1.42).setDepth(a[2]));
+  [[45,390,"p_arbol_01"],[675,390,"p_arbol_02"],[50,780,"p_arbol_03"],[670,780,"p_arbol_01"],[65,940,"p_arbol_02"],[655,940,"p_arbol_03"]].forEach(a=>this.add.image(a[0],a[1],a[2]).setScale(1.25).setDepth(a[1]));
+  [["npc_mira",150,555,"Mira"],["npc_guardia",275,570,"Guardia"],["npc_aldric",560,555,"Aldric"],["npc_borin",155,845,"Borin"]].forEach(a=>{this.add.image(a[1],a[2],a[0]).setScale(.62).setDepth(a[2]);this.add.text(a[1],a[2]+62,a[3],{fontFamily:"Georgia",fontSize:"13px",color:"#fff2c7",stroke:"#000",strokeThickness:4}).setOrigin(.5).setDepth(a[2]+2)});
+  this.player=this.physics.add.sprite(360,760,"gabriel_idle_01").setScale(1.05).setDepth(900);this.player.body.setSize(34,38).setOffset(24,62);this.player.setCollideWorldBounds(true);
+  this.add.text(360,830,"Gabriel · Arquero",{fontFamily:"Georgia",fontSize:"15px",color:"#fff1c4",stroke:"#000",strokeThickness:4}).setOrigin(.5).setDepth(901);
+  this.anims.create({key:"gabriel_idle",frames:["gabriel_idle_01","gabriel_idle_02"].map(key=>({key})),frameRate:3,repeat:-1});
+  this.anims.create({key:"gabriel_walk",frames:["gabriel_walk_01","gabriel_walk_02","gabriel_walk_03","gabriel_walk_04"].map(key=>({key})),frameRate:8,repeat:-1});
+  this.player.play("gabriel_idle");this.move={x:0,y:0};this.makeHud();this.makeControls();
+ }
+ makeHud(){
+  this.add.rectangle(360,52,700,84,0x080d0a,.82).setScrollFactor(0).setDepth(5000).setStrokeStyle(2,0xb79251,.7);
+  this.add.text(28,22,"Gabriel · Nv.1",{fontFamily:"Georgia",fontSize:"17px",color:"#f4dfad"}).setScrollFactor(0).setDepth(5001);
+  this.add.rectangle(30,52,260,12,0x9e342e).setOrigin(0,.5).setScrollFactor(0).setDepth(5001);this.add.rectangle(30,72,205,9,0x326f9e).setOrigin(0,.5).setScrollFactor(0).setDepth(5001);
+  [["ui_tienda",430],["ui_inventario",500],["ui_habilidades",570],["ui_misiones",640]].forEach(a=>this.add.image(a[1],52,a[0]).setDisplaySize(46,38).setScrollFactor(0).setDepth(5001));
+  this.add.image(640,145,"lumen_map").setDisplaySize(118,78).setScrollFactor(0).setDepth(5000).setAlpha(.95);
+  this.add.text(20,112,"EL INICIO DE UNA LEYENDA\nHabla con Aldric  0/1",{fontFamily:"Georgia",fontSize:"13px",color:"#f0dfb7",backgroundColor:"#080d0acc",padding:{x:9,y:7}}).setScrollFactor(0).setDepth(5001);
+ }
+ makeControls(){
+  const base=this.add.circle(110,1160,72,0x08100b,.55).setStrokeStyle(3,0xb99b64,.6).setInteractive().setScrollFactor(0).setDepth(6000), knob=this.add.circle(110,1160,30,0x65736a,.8).setScrollFactor(0).setDepth(6001);
+  const reset=()=>{this.move.x=this.move.y=0;knob.setPosition(110,1160)};base.on("pointermove",p=>{if(!p.isDown)return;let dx=p.x-110,dy=p.y-1160,d=Math.hypot(dx,dy)||1,m=Math.min(48,d);dx=dx/d*m;dy=dy/d*m;knob.setPosition(110+dx,1160+dy);this.move={x:dx/48,y:dy/48}});base.on("pointerup",reset);base.on("pointerout",reset);
+  [["gabriel_attack_01",610,1160],["gabriel_skill_01",520,1080],["gabriel_skill_02",600,1050],["gabriel_skill_03",675,1090]].forEach((a,i)=>{const b=this.add.circle(a[1],a[2],i?34:52,i?0x234c34:0x64251f,.9).setStrokeStyle(3,0xd1aa63,.8).setInteractive().setScrollFactor(0).setDepth(6000);this.add.image(a[1],a[2],a[0]).setDisplaySize(i?46:66,i?54:76).setScrollFactor(0).setDepth(6001);b.on("pointerdown",()=>this.player.setTexture(a[0]));b.on("pointerup",()=>this.player.play("gabriel_idle"))});
+ }
+ update(){
+  if(!this.player)return;const moving=Math.abs(this.move.x)+Math.abs(this.move.y)>.08;this.player.setVelocity(this.move.x*170,this.move.y*170);if(moving){if(this.player.anims.currentAnim?.key!=="gabriel_walk")this.player.play("gabriel_walk");if(this.move.x<-.05)this.player.setFlipX(true);if(this.move.x>.05)this.player.setFlipX(false)}else if(this.player.anims.currentAnim?.key!=="gabriel_idle")this.player.play("gabriel_idle");this.player.setDepth(this.player.y+100);
+ }
 }
