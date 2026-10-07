@@ -204,13 +204,9 @@ export class LumenScene extends Phaser.Scene {
   this.add.text(360,505,"FUENTE DE LOS FUNDADORES",{fontFamily:"Georgia",fontSize:"12px",color:"#ead9aa",stroke:"#17140f",strokeThickness:4}).setOrigin(.5).setDepth(500);
   // BUILDING MASK PASS — suaviza los fondos cuadrados sin alterar los PNG originales.
   [["b_posada",118,300],["b_mercado",602,300],["b_herreria",125,760],["b_gremio",595,760],["b_templo",360,190]].forEach(a=>{
+    const pad=this.add.rectangle(a[1],a[2]+8,228,205,0x414644,.96).setStrokeStyle(3,0x8d825f,.72).setDepth(a[2]-2);
+    this.add.rectangle(a[1],a[2]+92,205,18,0x77705d,.85).setDepth(a[2]-1);
     const img=this.add.image(a[1],a[2],a[0]).setScale(1.42).setDepth(a[2]);
-    // Recorte visual seguro: elimina las esquinas rectangulares más evidentes del asset.
-    const maskShape=this.make.graphics({x:0,y:0,add:false});
-    const mw=img.displayWidth*.84, mh=img.displayHeight*.88;
-    maskShape.fillStyle(0xffffff,1);
-    maskShape.fillRoundedRect(a[1]-mw/2,a[2]-mh/2,mw,mh,Math.min(34,mw*.12));
-    img.setMask(maskShape.createGeometryMask());
     this.addObstacle(a[1],a[2]+45,175,78);
   });
   [[45,390,"p_arbol_01"],[675,390,"p_arbol_02"],[50,780,"p_arbol_03"],[670,780,"p_arbol_01"],[65,940,"p_arbol_02"],[655,940,"p_arbol_03"]].forEach(a=>{this.add.image(a[0]+5,a[1]+13,a[2]).setTint(0x000000).setAlpha(.18).setScale(1.15,.42).setDepth(a[1]-2);this.add.image(a[0],a[1],a[2]).setScale(1.25).setDepth(a[1])});
