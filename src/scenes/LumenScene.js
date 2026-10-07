@@ -15,12 +15,12 @@ export class LumenScene extends Phaser.Scene {
  }
  create(){
   this.physics.world.setBounds(0,0,720,1780);this.inHuntZone=false;this.safeZone=true;this.zoneName="Lumen";this.deathCount=0;this.respawnProtection=false; this.obstacles=this.physics.add.staticGroup();
-  // LUMEN CAPITAL V8 — ciudad jugable: zonas interactivas y feedback de proximidad.
+  // LUMEN CAPITAL V9 — composición basada en la referencia final aprobada.
    this.add.rectangle(360,890,720,1780,0x1d2422,1).setDepth(-30);
    this.add.image(360,1515,"t_hierba").setDisplaySize(720,530).setAlpha(.76).setDepth(-29);
    const city=this.add.graphics().setDepth(-28);
-   city.fillStyle(0x3b4440,1);city.fillRoundedRect(22,112,676,1122,36);city.lineStyle(8,0x927d55,.80);city.strokeRoundedRect(22,112,676,1122,36);
-   city.fillStyle(0x6e6d65,1);city.fillRoundedRect(236,142,248,1085,30);city.lineStyle(4,0xc2a469,.72);city.strokeRoundedRect(236,142,248,1085,30);
+   city.fillStyle(0x3b4440,1);city.fillRoundedRect(10,100,700,1140,28);city.lineStyle(8,0x927d55,.80);city.strokeRoundedRect(22,112,676,1122,36);
+   city.fillStyle(0x716d62,1);city.fillRoundedRect(226,135,268,1095,24);city.lineStyle(4,0xc2a469,.72);city.strokeRoundedRect(236,142,248,1085,30);
    for(let y=205;y<1185;y+=105){city.lineStyle(2,0x989286,.30);city.lineBetween(252,y,468,y);}
    city.fillStyle(0x79766c,1);city.fillCircle(360,555,160);city.lineStyle(7,0xc7a96c,.88);city.strokeCircle(360,555,160);city.lineStyle(2,0xa38c5c,.58);city.strokeCircle(360,555,120);
    city.fillStyle(0x676963,.98);city.fillRoundedRect(50,505,620,98,24);city.fillRoundedRect(84,782,552,82,22);
@@ -29,10 +29,10 @@ export class LumenScene extends Phaser.Scene {
    city.fillStyle(0x77746b,.98);[0,1,2].forEach(i=>city.fillRoundedRect(292-i*10,305+i*12,136+i*20,9,4));
    city.fillStyle(0x5b5e58,1);city.fillRoundedRect(246,1162,228,72,14);city.lineStyle(4,0xbc9e62,.68);city.strokeRoundedRect(246,1162,228,72,14);
 
-   [["b_templo",360,238,.77,160,68],["b_posada",140,405,.62,132,60],["b_mercado",580,405,.62,132,60],["b_herreria",140,770,.60,130,60],["b_gremio",580,770,.60,130,60]].forEach(([k,x,y,s,w,h])=>{this.add.image(x,y,k).setScale(s).setDepth(y);this.addObstacle(x,y+35,w,h);});
+   [["b_templo",360,230,.92,190,76],["b_posada",125,405,.72,148,64],["b_mercado",595,405,.72,148,64],["b_herreria",125,790,.70,146,64],["b_gremio",595,790,.70,146,64]].forEach(([k,x,y,s,w,h])=>{this.add.image(x,y,k).setScale(s).setDepth(y);this.addObstacle(x,y+35,w,h);});
    [["TEMPLO DE LUMEN",360,332],["POSADA",140,497],["MERCADO",580,497],["HERRERÍA",140,865],["GREMIO",580,865]].forEach(([t,x,y])=>this.add.text(x,y,t,{fontFamily:"Georgia",fontSize:"11px",color:"#f0dda9",stroke:"#151a17",strokeThickness:3}).setOrigin(.5).setDepth(1200));
 
-   this.add.image(360,555,"p_estatua_fuente").setScale(.71).setDepth(565);this.addObstacle(360,570,114,56);
+   this.add.image(360,565,"p_estatua_fuente").setScale(.82).setDepth(565);this.addObstacle(360,580,126,60);
    this.add.text(360,690,"PLAZA DE LOS FUNDADORES",{fontFamily:"Georgia",fontSize:"12px",color:"#d9c18b",stroke:"#171c18",strokeThickness:3}).setOrigin(.5).setDepth(1200);
    [[278,345],[442,345],[255,650],[465,650],[275,905],[445,905],[290,1095],[430,1095]].forEach(([x,y])=>{this.add.circle(x,y-12,24,0xffc96b,.075).setDepth(y-2);this.add.image(x,y,"p_farol").setScale(.46).setDepth(y);});
    [[290,372],[430,372],[270,930],[450,930]].forEach(([x,y])=>this.add.image(x,y,"p_bandera").setScale(.40).setDepth(y));
@@ -42,12 +42,19 @@ export class LumenScene extends Phaser.Scene {
    [[105,655],[615,655],[110,1040],[610,1040]].forEach(([x,y])=>this.add.image(x,y,"p_barril_01").setScale(.34).setDepth(y));
    [[135,675],[585,675]].forEach(([x,y])=>this.add.image(x,y,"p_caja").setScale(.32).setDepth(y));
    [["npc_guardia",285,1185],["npc_guardia",435,1185]].forEach(([k,x,y])=>this.add.image(x,y,k).setScale(.31).setDepth(y));
+   const gateStone=this.add.graphics().setDepth(1160);
+   gateStone.fillStyle(0x454a47,.98);gateStone.fillRoundedRect(34,1125,190,105,12);gateStone.fillRoundedRect(496,1125,190,105,12);
+   gateStone.lineStyle(3,0x8f7a54,.70);gateStone.strokeRoundedRect(34,1125,190,105,12);gateStone.strokeRoundedRect(496,1125,190,105,12);
+   gateStone.fillStyle(0x565b57,1);gateStone.fillRoundedRect(225,1160,270,70,18);
+   gateStone.lineStyle(4,0xb0925a,.72);gateStone.strokeRoundedRect(225,1160,270,70,18);
+   this.add.text(360,1193,"PUERTA SUR",{fontFamily:"Georgia",fontSize:"12px",color:"#f2d99d",stroke:"#111",strokeThickness:3}).setOrigin(.5).setDepth(1210);
    // Señales de navegación integradas a la capital.
    [["NORTE · TEMPLO",360,155],["OESTE · COMERCIO",118,548],["ESTE · MERCADO",602,548],["SUR · PRADERAS",360,1140]].forEach(([t,x,y])=>this.add.text(x,y,t,{fontFamily:"Georgia",fontSize:"10px",color:"#cbb889",stroke:"#111713",strokeThickness:3}).setOrigin(.5).setDepth(1180));
    // Sombras suaves bajo NPCs para mejorar profundidad sin alterar gameplay.
    [[175,625],[305,720],[545,625],[175,900],[285,1200],[435,1200]].forEach(([x,y])=>this.add.ellipse(x,y,34,10,0x000000,.22).setDepth(y-2));
    [["npc_mira",175,610,"Mira"],["npc_guardia",305,705,"Guardia"],["npc_aldric",545,610,"Aldric"],["npc_borin",175,885,"Borin"]].forEach(a=>{this.add.image(a[1],a[2],a[0]).setScale(.38).setDepth(a[2]);this.add.text(a[1],a[2]+53,a[3],{fontFamily:"Georgia",fontSize:"13px",color:"#fff2c7",stroke:"#000",strokeThickness:3}).setOrigin(.5).setDepth(a[2]+2)});
    // Puntos de interés reales: preparan entrada a edificios y mejoran exploración.
+   this.add.text(360,118,"LUMEN · CAPITAL DEL REINO",{fontFamily:"Georgia",fontSize:"15px",color:"#f0d79b",backgroundColor:"#101613dd",padding:{x:14,y:6},stroke:"#000",strokeThickness:3}).setOrigin(.5).setDepth(3100);
    this.cityPOI=[
     {name:"Templo de Lumen",x:360,y:315,r:105},
     {name:"Posada",x:140,y:485,r:92},
