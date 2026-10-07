@@ -38,9 +38,9 @@ export class LumenScene extends Phaser.Scene {
   this.playerName=this.add.text(360,830,"Gabriel · Arquero",{fontFamily:"Georgia",fontSize:"15px",color:"#fff1c4",stroke:"#000",strokeThickness:4}).setOrigin(.5).setDepth(901);
   this.anims.create({key:"gabriel_idle",frames:["gabriel_idle_01","gabriel_idle_02"].map(key=>({key})),frameRate:3,repeat:-1});
   this.anims.create({key:"gabriel_walk",frames:["gabriel_walk_01","gabriel_walk_02","gabriel_walk_03","gabriel_walk_04"].map(key=>({key})),frameRate:8,repeat:-1});
-  this.player.play("gabriel_idle");this.move={x:0,y:0};this.questDone=false;this.slimeQuest=false;this.slimesKilled=0;this.level=1;this.xp=0;this.xpNeed=100;this.gold=0;this.playerHp=100;this.maxHp=100;this.attackReady=true;this.inventory={slimeGel:0};this.equipment={weapon:"Arco del Aprendiz",armor:"Cuero de Lumen"};this.attackPower=15;this.defense=2;this.potions=1;this.inventoryOpen=false;this.inventorySlots=20;this.maxInventorySlots=60;this.baseSlotPrice=100;this.npcTargets=[];this.spawnSlimes();
+  this.player.play("gabriel_idle");this.move={x:0,y:0};this.questDone=false;this.slimeQuest=false;this.slimesKilled=0;this.level=1;this.xp=0;this.xpNeed=100;this.gold=0;this.playerHp=100;this.maxHp=100;this.attackReady=true;this.inventory={slimeGel:0};this.equipment={weapon:"Arco del Aprendiz",armor:"Cuero de Lumen"};this.attackPower=15;this.defense=2;this.potions=1;this.inventoryOpen=false;this.inventorySlots=20;this.maxInventorySlots=60;this.baseSlotPrice=100;this.inventoryItems=[];this.npcTargets=[];this.spawnSlimes();
   this.npcTargets.push({name:"Aldric",x:560,y:555,r:88});
-  this.makeHud();this.makeControls();this.makeInteractButton();this.makeInventory();
+  this.makeHud();this.makeControls();this.makeInteractButton();this.makeInventory();this.seedInventory();
  }
  removeSheetBackground(key){
   const tex=this.textures.get(key), src=tex?.getSourceImage(); if(!src) return;
@@ -107,7 +107,15 @@ export class LumenScene extends Phaser.Scene {
   this.time.delayedCall(10000,()=>{if(drop.active)drop.destroy()});
  }
  spawnLootText(x,y,msg){const t=this.add.text(x,y-30,msg,{fontFamily:"Georgia",fontSize:"13px",color:"#8ff0a4",stroke:"#102014",strokeThickness:3}).setOrigin(.5).setDepth(8500);this.tweens.add({targets:t,y:y-70,alpha:0,duration:1200,onComplete:()=>t.destroy()});}
- updateInventoryHud(){this.invText?.setText("Gel "+this.inventory.slimeGel);this.inventoryDetail?.setText("MATERIALES\\nGel de Slime: "+this.inventory.slimeGel+"\\n\\nCONSUMIBLES\\nPoción menor: "+this.potions);const used=this.getInventoryUsed();this.slotText?.setText("Mochila: "+used+" / "+this.inventorySlots+" espacios");this.slotPriceText?.setText(this.inventorySlots>=this.maxInventorySlots?"Mochila al máximo":"Siguiente espacio: "+this.getNextSlotPrice()+" Oro");}
+ updateInventoryHud(){this.syncInventoryItems();this.invText?.setText("Gel "+this.inventory.slimeGel);this.inventoryDetail?.setText("MATERIALES\\nGel de Slime: "+this.inventory.slimeGel+"\\n\\nCONSUMIBLES\\nPoción menor: "+this.potions);const used=this.getInventoryUsed();this.slotText?.setText("Mochila: "+used+" / "+this.inventorySlots+" espacios");this.slotPriceText?.setText(this.inventorySlots>=this.maxInventorySlots?"Mochila al máximo":"Siguiente espacio: "+this.getNextSlotPrice()+" Oro");}
+ seedInventory(){
+  this.inventoryItems=[
+   {id:"bow1",name:"Arco del Aprendiz",type:"Arma",rarity:"Común",icon:"🏹",equipped:true},
+   {id:"armor1",name:"Cuero de Lumen",type:"Armadura",rarity:"Común",icon:"🛡️",equipped:true},
+   {id:"potion",name:"Poción menor",type:"Consumible",rarity:"Común",icon:"🧪",qty:this.potions},
+   {id:"gel",name:"Gel de Slime",type:"Material",rarity:"Común",icon:"🟢",qty:this.inventory.slimeGel}
+  ];this.renderSlots();
+ }
  makeInventory(){
   this.inventoryPanel=this.add.container(360,620).setScrollFactor(0).setDepth(9500).setVisible(false);
   const bg=this.add.rectangle(0,0,610,700,0x0b100d,.97).setStrokeStyle(3,0xb89552,.9);
@@ -123,15 +131,22 @@ export class LumenScene extends Phaser.Scene {
   const potion=this.add.rectangle(0,205,330,60,0x31533c,.95).setStrokeStyle(2,0x91c99e).setInteractive();
   const potionText=this.add.text(0,205,"Usar Poción (+35 HP)",{fontFamily:"Georgia",fontSize:"17px",color:"#f2e8c9"}).setOrigin(.5);
   potion.on("pointerdown",()=>this.usePotion());close.on("pointerdown",()=>this.toggleInventory(false));
-  this.inventoryPanel.add([bg,title,close,eq,this.inventoryDetail,this.slotText,this.slotPriceText,unlock,unlockText,potion,potionText]);this.updateInventoryHud();
+  this.slotLayer=this.add.container(-255,270);this.inventoryPanel.add([bg,title,close,eq,this.inventoryDetail,this.slotText,this.slotPriceText,unlock,unlockText,potion,potionText,this.slotLayer]);this.updateInventoryHud();
   this.input.keyboard?.on("keydown-I",()=>this.toggleInventory());
  }
- getInventoryUsed(){return this.inventory.slimeGel+this.potions+2;}
+ renderSlots(){
+  if(!this.slotLayer)return;this.slotLayer.removeAll(true);const cols=5,size=48,gap=7;
+  for(let i=0;i<this.inventorySlots;i++){const x=(i%cols)*(size+gap),y=Math.floor(i/cols)*(size+gap);const box=this.add.rectangle(x,y,size,size,0x182019,.96).setStrokeStyle(1,i<20?0x776544:0x9b7b3d,.9).setOrigin(0);
+   const item=this.inventoryItems?.[i];this.slotLayer.add(box);if(item){const t=this.add.text(x+size/2,y+size/2,item.icon,{fontSize:"22px"}).setOrigin(.5);this.slotLayer.add(t);if(item.qty>1){const q=this.add.text(x+size-4,y+size-4,String(item.qty),{fontSize:"11px",color:"#ffffff",stroke:"#000000",strokeThickness:3}).setOrigin(1);this.slotLayer.add(q);}}
+  }
+ }
+ syncInventoryItems(){if(!this.inventoryItems?.length)return;const p=this.inventoryItems.find(i=>i.id==="potion"),g=this.inventoryItems.find(i=>i.id==="gel");if(p)p.qty=this.potions;if(g)g.qty=this.inventory.slimeGel;this.renderSlots();}
+ getInventoryUsed(){return 2+(this.potions>0?1:0)+(this.inventory.slimeGel>0?1:0);}
  getNextSlotPrice(){const unlocked=this.inventorySlots-20;return Math.floor(this.baseSlotPrice*Math.pow(1.18,unlocked));}
  buyInventorySlot(){
   if(this.inventorySlots>=this.maxInventorySlots){this.showDialogue("Tu mochila ya alcanzó el máximo de "+this.maxInventorySlots+" espacios.");return}
   const price=this.getNextSlotPrice();if(this.gold<price){this.showDialogue("Necesitas "+price+" Oro para desbloquear el siguiente espacio.");return}
-  this.gold-=price;this.inventorySlots++;this.goldText?.setText("Oro "+this.gold);this.updateInventoryHud();this.showDialogue("Espacio desbloqueado. Tu mochila ahora tiene "+this.inventorySlots+" espacios.");
+  this.gold-=price;this.inventorySlots++;this.goldText?.setText("Oro "+this.gold);this.updateInventoryHud();this.renderSlots();this.showDialogue("Espacio desbloqueado. Tu mochila ahora tiene "+this.inventorySlots+" espacios.");
  }
  toggleInventory(force){this.inventoryOpen=force??!this.inventoryOpen;this.inventoryPanel.setVisible(this.inventoryOpen);}
  usePotion(){if(this.potions<=0||this.playerHp>=this.maxHp)return;this.potions--;this.playerHp=Math.min(this.maxHp,this.playerHp+35);this.hpBar.width=260*this.playerHp/this.maxHp;this.updateInventoryHud();this.showDialogue("Has usado una Poción menor. +35 HP");}
