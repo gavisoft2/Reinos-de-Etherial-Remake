@@ -15,7 +15,7 @@ export class LumenScene extends Phaser.Scene {
  create(){
   // Limpia el fondo gris/cuadriculado heredado del sprite sheet.
   const transparentKeys=["gabriel_idle_01","gabriel_idle_02","gabriel_walk_01","gabriel_walk_02","gabriel_walk_03","gabriel_walk_04","gabriel_attack_01","gabriel_attack_02","gabriel_attack_03","npc_aldric","npc_mira","npc_borin","npc_guardia","enemy_slime","enemy_wolf","enemy_goblin"];transparentKeys.forEach(k=>this.removeSheetBackground(k));
-  this.physics.world.setBounds(0,0,720,1780);this.inHuntZone=false;this.safeZone=true;this.zoneName="Lumen";this.deathCount=0;this.respawnProtection=false; this.obstacles=this.physics.add.staticGroup();
+  this.physics.world.setBounds(0,0,720,1780);this.inHuntZone=false;this.safeZone=true;this.zoneName="Lumen";this.deathCount=0;this.respawnProtection=false;this.minimapEnemies=[]; this.obstacles=this.physics.add.staticGroup();
   // Base continua: elimina el efecto de mosaico/cuadricula del suelo.
   this.add.rectangle(360,890,720,1780,0x3f4938,1).setDepth(-30);
   this.add.image(360,640,"lumen_map").setDisplaySize(720,1280).setAlpha(.16).setDepth(-29);
@@ -41,7 +41,7 @@ export class LumenScene extends Phaser.Scene {
   this.zoneTitle=this.add.text(360,1320,"PRADERAS DE LUMEN",{fontFamily:"Georgia",fontSize:"25px",color:"#f0d69a",stroke:"#26301f",strokeThickness:5}).setOrigin(.5).setDepth(3000);
   this.add.text(360,1360,"Zona de cacería · Nivel 1–10",{fontFamily:"Georgia",fontSize:"14px",color:"#d8dfc4",stroke:"#26301f",strokeThickness:3}).setOrigin(.5).setDepth(3000);
   this.add.rectangle(360,1288,620,6,0x9f8a57,.45).setDepth(2999);
-  this.makeHud();this.makeControls();this.makeInteractButton();this.makeInventory();this.makeShop();this.makeZoneHud();this.seedInventory();this.loadProgress();this.time.addEvent({delay:5000,loop:true,callback:()=>this.saveProgress()});
+  this.makeHud();this.makeControls();this.makeInteractButton();this.makeInventory();this.makeShop();this.makeZoneHud();this.makeMinimap();this.seedInventory();this.loadProgress();this.time.addEvent({delay:5000,loop:true,callback:()=>this.saveProgress()});
  }
  removeSheetBackground(key){
   const tex=this.textures.get(key), src=tex?.getSourceImage(); if(!src) return;
@@ -185,6 +185,22 @@ export class LumenScene extends Phaser.Scene {
   if(this.respawnProtection)return;this.deathCount++;this.playerHp=this.maxHp;this.hpBar.width=260;this.player.setVelocity(0);this.player.setPosition(360,1180);this.respawnProtection=true;this.player.setAlpha(.55);
   this.showDialogue("Has caído. Los guardias te han llevado a la Puerta Sur de Lumen.");
   this.time.delayedCall(3000,()=>{this.respawnProtection=false;this.player.setAlpha(1);});
+ }
+ makeMinimap(){
+  this.minimap=this.add.container(630,185).setScrollFactor(0).setDepth(6200);
+  const rim=this.add.circle(0,0,66,0x0b110d,.94).setStrokeStyle(3,0xc4a661,.9);
+  const land=this.add.circle(0,0,59,0x45533b,1);
+  this.minimapPlayer=this.add.circle(0,0,4,0xffe07a,1);
+  this.minimapGate=this.add.rectangle(0,18,42,3,0xd2bd80,.9);
+  this.minimapLabel=this.add.text(0,76,"Lumen",{fontFamily:"Georgia",fontSize:"11px",color:"#ead9ad"}).setOrigin(.5);
+  this.minimap.add([rim,land,this.minimapGate,this.minimapPlayer,this.minimapLabel]);
+ }
+ updateMinimap(){
+  if(!this.minimapPlayer)return;const scaleX=104/720,scaleY=104/1780;
+  this.minimapPlayer.setPosition((this.player.x-360)*scaleX,(this.player.y-890)*scaleY);
+  this.minimapLabel.setText(this.zoneName);
+  this.minimapEnemies.forEach(d=>d.destroy());this.minimapEnemies=[];
+  [this.slimes,this.wolves,this.goblins,this.skeletons,this.orcs].forEach(g=>g?.getChildren().forEach(e=>{if(!e.active)return;const dot=this.add.circle((e.x-360)*scaleX,(e.y-890)*scaleY,2.2,0xd9554d,1);this.minimap.add(dot);this.minimapEnemies.push(dot);}));
  }
  makeZoneHud(){
   this.zoneHud=this.add.container(360,112).setScrollFactor(0).setDepth(6100);
