@@ -15,7 +15,7 @@ export class LumenScene extends Phaser.Scene {
  create(){
   // Limpia el fondo gris/cuadriculado heredado del sprite sheet.
   const transparentKeys=["gabriel_idle_01","gabriel_idle_02","gabriel_walk_01","gabriel_walk_02","gabriel_walk_03","gabriel_walk_04","gabriel_attack_01","gabriel_attack_02","gabriel_attack_03","npc_aldric","npc_mira","npc_borin","npc_guardia","enemy_slime","enemy_wolf","enemy_goblin"];transparentKeys.forEach(k=>this.removeSheetBackground(k));
-  this.physics.world.setBounds(0,0,720,1780);this.inHuntZone=false; this.obstacles=this.physics.add.staticGroup();
+  this.physics.world.setBounds(0,0,720,1780);this.inHuntZone=false;this.safeZone=true;this.zoneName="Lumen"; this.obstacles=this.physics.add.staticGroup();
   // Base continua: elimina el efecto de mosaico/cuadricula del suelo.
   this.add.rectangle(360,890,720,1780,0x3f4938,1).setDepth(-30);
   this.add.image(360,640,"lumen_map").setDisplaySize(720,1280).setAlpha(.16).setDepth(-29);
@@ -34,10 +34,13 @@ export class LumenScene extends Phaser.Scene {
   this.anims.create({key:"gabriel_walk",frames:["gabriel_walk_01","gabriel_walk_02","gabriel_walk_03","gabriel_walk_04"].map(key=>({key})),frameRate:8,repeat:-1});
   this.player.play("gabriel_idle");this.move={x:0,y:0};this.questDone=false;this.slimeQuest=false;this.slimesKilled=0;this.level=1;this.xp=0;this.xpNeed=100;this.gold=0;this.playerHp=100;this.maxHp=100;this.attackReady=true;this.inventory={slimeGel:0};this.equipment={weapon:"Arco del Aprendiz",armor:"Cuero de Lumen"};this.attackPower=15;this.defense=2;this.potions=1;this.gearBonus={attack:0,defense:0};this.inventoryOpen=false;this.inventorySlots=20;this.maxInventorySlots=60;this.baseSlotPrice=100;this.inventoryItems=[];this.gearDrops=0;this.selectedItem=null;this.shopOpen=false;this.questRewardClaimed=false;this.secondQuest=false;this.secondRewardClaimed=false;this.wolvesKilled=0;this.thirdQuest=false;this.thirdRewardClaimed=false;this.goblinsKilled=0;this.fourthQuest=false;this.fourthRewardClaimed=false;this.skeletonsKilled=0;this.fifthQuest=false;this.orcsKilled=0;this.saveKey="etherial_save_v1";this.npcTargets=[];this.spawnSlimes();
   this.npcTargets.push({name:"Aldric",x:560,y:555,r:88});this.questMarker=this.add.text(560,495,"!",{fontFamily:"Georgia",fontSize:"30px",color:"#ffd75a",stroke:"#4a3210",strokeThickness:4}).setOrigin(.5).setDepth(9000);this.tweens.add({targets:this.questMarker,y:487,duration:650,yoyo:true,repeat:-1});
+  this.add.rectangle(360,1270,720,70,0x283322,.72).setDepth(-5);
+  this.add.text(360,1248,"PUERTA SUR DE LUMEN",{fontFamily:"Georgia",fontSize:"17px",color:"#e8d5a5",stroke:"#1d2419",strokeThickness:4}).setOrigin(.5).setDepth(3000);
+  this.add.text(360,1280,"⚔  Zona segura termina aquí  ⚔",{fontFamily:"Georgia",fontSize:"12px",color:"#d5c38e"}).setOrigin(.5).setDepth(3000);
   this.zoneTitle=this.add.text(360,1320,"PRADERAS DE LUMEN",{fontFamily:"Georgia",fontSize:"25px",color:"#f0d69a",stroke:"#26301f",strokeThickness:5}).setOrigin(.5).setDepth(3000);
   this.add.text(360,1360,"Zona de cacería · Nivel 1–10",{fontFamily:"Georgia",fontSize:"14px",color:"#d8dfc4",stroke:"#26301f",strokeThickness:3}).setOrigin(.5).setDepth(3000);
   this.add.rectangle(360,1288,620,6,0x9f8a57,.45).setDepth(2999);
-  this.makeHud();this.makeControls();this.makeInteractButton();this.makeInventory();this.makeShop();this.seedInventory();this.loadProgress();this.time.addEvent({delay:5000,loop:true,callback:()=>this.saveProgress()});
+  this.makeHud();this.makeControls();this.makeInteractButton();this.makeInventory();this.makeShop();this.makeZoneHud();this.seedInventory();this.loadProgress();this.time.addEvent({delay:5000,loop:true,callback:()=>this.saveProgress()});
  }
  removeSheetBackground(key){
   const tex=this.textures.get(key), src=tex?.getSourceImage(); if(!src) return;
@@ -177,6 +180,17 @@ export class LumenScene extends Phaser.Scene {
   else if(this.secondQuest){this.questText.setText("PELIGRO EN EL BOSQUE\nDerrota Lobos  "+Math.min(3,this.wolvesKilled)+"/3");this.spawnWolves();this.questMarker?.setText("…");}
   else if(this.questDone){this.questText.setText("PRIMERA CACERÍA\nDerrota Slimes  "+Math.min(3,this.slimesKilled)+"/3");this.questMarker?.setText("…");}
  }
+ makeZoneHud(){
+  this.zoneHud=this.add.container(360,112).setScrollFactor(0).setDepth(6100);
+  const bg=this.add.rectangle(0,0,250,32,0x101510,.78).setStrokeStyle(1,0x88754c,.8);
+  this.zoneHudText=this.add.text(0,0,"🏰 Lumen · Zona segura",{fontFamily:"Georgia",fontSize:"12px",color:"#e9ddb9"}).setOrigin(.5);
+  this.zoneHud.add([bg,this.zoneHudText]);
+ }
+ updateZoneState(){
+  const hunt=this.player.y>1260;if(hunt===this.inHuntZone)return;this.inHuntZone=hunt;this.safeZone=!hunt;this.zoneName=hunt?"Praderas de Lumen":"Lumen";
+  this.zoneHudText?.setText(hunt?"⚔ Praderas de Lumen · Cacería":"🏰 Lumen · Zona segura");
+  this.showDialogue(hunt?"Has salido de las murallas. Los monstruos pueden atacarte.":"Has regresado a Lumen. Los enemigos no pueden atacarte aquí.");
+ }
  makeShop(){
   this.shopPanel=this.add.container(360,620).setScrollFactor(0).setDepth(9600).setVisible(false);
   const bg=this.add.rectangle(0,0,610,700,0x0b100d,.98).setStrokeStyle(3,0xb89552,.9);
@@ -312,9 +326,9 @@ export class LumenScene extends Phaser.Scene {
  }
  update(){
   if(!this.player)return;
-  const nowHunt=this.player.y>1260;if(nowHunt!==this.inHuntZone){this.inHuntZone=nowHunt;this.showDialogue(nowHunt?"Has entrado en las Praderas de Lumen. Zona de cacería.":"Has regresado a Lumen. Zona segura.");}
+  this.updateZoneState();
   const now=this.time.now;
-  const hostileTick=(group,speed,damage,range=185)=>group?.getChildren().forEach(e=>{if(!e.active)return;const d=Phaser.Math.Distance.Between(this.player.x,this.player.y,e.x,e.y);if(d<range&&d>58)this.physics.moveToObject(e,this.player,speed);else e.setVelocity(0);if(d<62&&now-e.lastHit>1250){e.lastHit=now;const hit=Math.max(1,damage-this.defense);this.playerHp=Math.max(0,this.playerHp-hit);this.hpBar.width=260*this.playerHp/this.maxHp;this.showCombatText(this.player.x,this.player.y-72,"-"+hit,"#ff7b72");if(this.playerHp<=0){this.playerHp=this.maxHp;this.hpBar.width=260;this.player.setPosition(360,760);this.showDialogue("Has caído en combate. Regresas a la plaza de Lumen.");}}e.setDepth(e.y);e.hpBg?.setPosition(e.x,e.y-50).setDepth(e.y+1);e.hpBar?.setPosition(e.x-(e.maxHp===80?33:31),e.y-(e.maxHp===80?52:50)).setDepth(e.y+2);});
+  const hostileTick=(group,speed,damage,range=185)=>group?.getChildren().forEach(e=>{if(!e.active)return;if(this.safeZone){e.setVelocity(0);return;}const d=Phaser.Math.Distance.Between(this.player.x,this.player.y,e.x,e.y);if(d<range&&d>58)this.physics.moveToObject(e,this.player,speed);else e.setVelocity(0);if(d<62&&now-e.lastHit>1250){e.lastHit=now;const hit=Math.max(1,damage-this.defense);this.playerHp=Math.max(0,this.playerHp-hit);this.hpBar.width=260*this.playerHp/this.maxHp;this.showCombatText(this.player.x,this.player.y-72,"-"+hit,"#ff7b72");if(this.playerHp<=0){this.playerHp=this.maxHp;this.hpBar.width=260;this.player.setPosition(360,760);this.showDialogue("Has caído en combate. Regresas a la plaza de Lumen.");}}e.setDepth(e.y);e.hpBg?.setPosition(e.x,e.y-50).setDepth(e.y+1);e.hpBar?.setPosition(e.x-(e.maxHp===80?33:31),e.y-(e.maxHp===80?52:50)).setDepth(e.y+2);});
   hostileTick(this.wolves,38,7);hostileTick(this.goblins,42,10,205);hostileTick(this.skeletons,45,13,220);hostileTick(this.orcs,48,17,235);
   this.slimes?.getChildren().forEach(s=>{if(!s.active)return;const d=Phaser.Math.Distance.Between(this.player.x,this.player.y,s.x,s.y);
    if(d<175&&d>55)this.physics.moveToObject(s,this.player,32);else s.setVelocity(0);
