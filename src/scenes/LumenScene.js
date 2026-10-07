@@ -63,17 +63,6 @@ export class LumenScene extends Phaser.Scene {
   this.add.rectangle(360,1280,620,4,0x9f8a57,.38).setDepth(2999);
   this.makeHud();this.makeControls();this.makeInteractButton();this.makeInventory();this.makeShop();this.makeZoneHud();this.seedInventory();this.loadProgress();this.time.addEvent({delay:5000,loop:true,callback:()=>this.saveProgress()});
  }
- removeSheetBackground(key){
-  const tex=this.textures.get(key), src=tex?.getSourceImage(); if(!src) return;
-  const w=src.width,h=src.height,cv=document.createElement("canvas");cv.width=w;cv.height=h;
-  const ctx=cv.getContext("2d",{willReadFrequently:true});ctx.drawImage(src,0,0);
-  const img=ctx.getImageData(0,0,w,h),d=img.data,seen=new Uint8Array(w*h),q=[];
-  const bg=i=>{const r=d[i*4],g=d[i*4+1],b=d[i*4+2],a=d[i*4+3];const mx=Math.max(r,g,b),mn=Math.min(r,g,b);return a<40 || (mx-mn<16 && mx<92 && mn>18)};
-  const push=(x,y)=>{if(x<0||y<0||x>=w||y>=h)return;const n=y*w+x;if(seen[n]||!bg(n))return;seen[n]=1;q.push(n)};
-  for(let x=0;x<w;x++){push(x,0);push(x,h-1)}for(let y=0;y<h;y++){push(0,y);push(w-1,y)}
-  for(let p=0;p<q.length;p++){const n=q[p],x=n%w,y=(n/w)|0;d[n*4+3]=0;push(x-1,y);push(x+1,y);push(x,y-1);push(x,y+1)}
-  ctx.putImageData(img,0,0);this.textures.remove(key);this.textures.addCanvas(key,cv);
- }
  addObstacle(x,y,w,h){const z=this.obstacles.create(x,y,null).setVisible(false);z.body.setSize(w,h);z.refreshBody();return z}
  makeHud(){
   this.add.rectangle(360,52,700,84,0x080d0a,.82).setScrollFactor(0).setDepth(5000).setStrokeStyle(2,0xb79251,.7);
