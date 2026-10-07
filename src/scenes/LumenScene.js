@@ -175,10 +175,27 @@ export class LumenScene extends Phaser.Scene {
   this.tweens.add({targets:founderGlow,alpha:{from:.10,to:.23},scaleX:{from:.94,to:1.04},duration:2100,yoyo:true,repeat:-1});
   const monument=this.add.image(360,388,"p_estatua_fuente").setScale(.78).setDepth(439);
   this.add.text(360,505,"FUENTE DE LOS FUNDADORES",{fontFamily:"Georgia",fontSize:"12px",color:"#ead9aa",stroke:"#17140f",strokeThickness:4}).setOrigin(.5).setDepth(500);
+  // FINAL ART LAYOUT V1 — composición limpia basada en assets reales.
+  const avenue=this.add.graphics().setDepth(130);
+  avenue.fillStyle(0x6e7069,.34); avenue.fillRoundedRect(292,565,136,900,22);
+  avenue.lineStyle(2,0xb89a52,.44); avenue.strokeRoundedRect(292,565,136,900,22);
+  // Ritmo visual con faroles, banderas, macetas y bancos reales.
+  [[278,650],[442,650],[278,790],[442,790],[278,930],[442,930],[278,1070],[442,1070],[278,1210],[442,1210],[278,1350],[442,1350]].forEach(([x,y],i)=>{
+    this.add.image(x,y,"p_farol").setScale(.34).setDepth(y+3);
+    if(i%2===0) this.add.image(x+(x<360?-24:24),y+4,"p_bandera").setScale(.28).setDepth(y+2);
+  });
+  [[230,690],[490,690],[230,990],[490,990],[230,1290],[490,1290]].forEach(([x,y],i)=>{
+    this.add.image(x,y-8,i%2?"p_arbol_02":"p_arbol_01").setScale(.20).setDepth(y+2);
+    this.add.image(x+(i%2?-26:26),y+12,"p_maceta").setScale(.26).setDepth(y+3);
+    this.add.image(x+(i%2?30:-30),y+15,"p_banco").setScale(.24).setDepth(y+3);
+  });
+  // Acceso final de Puerta Sur, sencillo y legible.
+  [[305,1460],[415,1460]].forEach(([x,y],i)=>{
+    this.add.image(x,y,"p_farol").setScale(.42).setDepth(y+4);
+    this.add.image(x+(i?-28:28),y+3,"p_bandera").setScale(.34).setDepth(y+3);
+  });
   // BUILDING MASK PASS — suaviza los fondos cuadrados sin alterar los PNG originales.
   [["b_posada",118,300],["b_mercado",602,300],["b_herreria",125,760],["b_gremio",595,760],["b_templo",360,190]].forEach(a=>{
-    const pad=this.add.rectangle(a[1],a[2]+8,228,205,0x414644,.96).setStrokeStyle(3,0x8d825f,.72).setDepth(a[2]-2);
-    this.add.rectangle(a[1],a[2]+92,205,18,0x77705d,.85).setDepth(a[2]-1);
     const img=this.add.image(a[1],a[2],a[0]).setScale(1.42).setDepth(a[2]);
     this.addObstacle(a[1],a[2]+45,175,78);
   });
