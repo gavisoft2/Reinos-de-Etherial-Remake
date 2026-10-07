@@ -32,9 +32,9 @@ export class LumenScene extends Phaser.Scene {
   this.playerName=this.add.text(360,830,"Gabriel · Arquero",{fontFamily:"Georgia",fontSize:"15px",color:"#fff1c4",stroke:"#000",strokeThickness:4}).setOrigin(.5).setDepth(901);
   this.anims.create({key:"gabriel_idle",frames:["gabriel_idle_01","gabriel_idle_02"].map(key=>({key})),frameRate:3,repeat:-1});
   this.anims.create({key:"gabriel_walk",frames:["gabriel_walk_01","gabriel_walk_02","gabriel_walk_03","gabriel_walk_04"].map(key=>({key})),frameRate:8,repeat:-1});
-  this.player.play("gabriel_idle");this.move={x:0,y:0};this.questDone=false;this.slimeQuest=false;this.slimesKilled=0;this.level=1;this.xp=0;this.xpNeed=100;this.gold=0;this.playerHp=100;this.maxHp=100;this.attackReady=true;this.inventory={slimeGel:0};this.equipment={weapon:"Arco del Aprendiz",armor:"Cuero de Lumen"};this.attackPower=15;this.defense=2;this.potions=1;this.gearBonus={attack:0,defense:0};this.inventoryOpen=false;this.inventorySlots=20;this.maxInventorySlots=60;this.baseSlotPrice=100;this.inventoryItems=[];this.gearDrops=0;this.selectedItem=null;this.shopOpen=false;this.questRewardClaimed=false;this.secondQuest=false;this.secondRewardClaimed=false;this.wolvesKilled=0;this.thirdQuest=false;this.goblinsKilled=0;this.npcTargets=[];this.spawnSlimes();
+  this.player.play("gabriel_idle");this.move={x:0,y:0};this.questDone=false;this.slimeQuest=false;this.slimesKilled=0;this.level=1;this.xp=0;this.xpNeed=100;this.gold=0;this.playerHp=100;this.maxHp=100;this.attackReady=true;this.inventory={slimeGel:0};this.equipment={weapon:"Arco del Aprendiz",armor:"Cuero de Lumen"};this.attackPower=15;this.defense=2;this.potions=1;this.gearBonus={attack:0,defense:0};this.inventoryOpen=false;this.inventorySlots=20;this.maxInventorySlots=60;this.baseSlotPrice=100;this.inventoryItems=[];this.gearDrops=0;this.selectedItem=null;this.shopOpen=false;this.questRewardClaimed=false;this.secondQuest=false;this.secondRewardClaimed=false;this.wolvesKilled=0;this.thirdQuest=false;this.thirdRewardClaimed=false;this.goblinsKilled=0;this.saveKey="etherial_save_v1";this.npcTargets=[];this.spawnSlimes();
   this.npcTargets.push({name:"Aldric",x:560,y:555,r:88});this.questMarker=this.add.text(560,495,"!",{fontFamily:"Georgia",fontSize:"30px",color:"#ffd75a",stroke:"#4a3210",strokeThickness:4}).setOrigin(.5).setDepth(9000);this.tweens.add({targets:this.questMarker,y:487,duration:650,yoyo:true,repeat:-1});
-  this.makeHud();this.makeControls();this.makeInteractButton();this.makeInventory();this.makeShop();this.seedInventory();
+  this.makeHud();this.makeControls();this.makeInteractButton();this.makeInventory();this.makeShop();this.seedInventory();this.loadProgress();this.time.addEvent({delay:5000,loop:true,callback:()=>this.saveProgress()});
  }
  removeSheetBackground(key){
   const tex=this.textures.get(key), src=tex?.getSourceImage(); if(!src) return;
@@ -146,6 +146,20 @@ export class LumenScene extends Phaser.Scene {
    {id:"gel",name:"Gel de Slime",type:"Material",rarity:"Común",icon:"🟢",qty:this.inventory.slimeGel}
   ];this.renderSlots();
  }
+ saveProgress(){
+  try{localStorage.setItem(this.saveKey,JSON.stringify({level:this.level,xp:this.xp,xpNeed:this.xpNeed,gold:this.gold,playerHp:this.playerHp,maxHp:this.maxHp,potions:this.potions,inventorySlots:this.inventorySlots,slimeGel:this.inventory.slimeGel,questDone:this.questDone,questRewardClaimed:this.questRewardClaimed,secondQuest:this.secondQuest,secondRewardClaimed:this.secondRewardClaimed,wolvesKilled:this.wolvesKilled,thirdQuest:this.thirdQuest,thirdRewardClaimed:this.thirdRewardClaimed,goblinsKilled:this.goblinsKilled,items:this.inventoryItems.filter(i=>!["potion","gel"].includes(i.id))}));}catch(e){}
+ }
+ loadProgress(){
+  try{const d=JSON.parse(localStorage.getItem(this.saveKey)||"null");if(!d)return;["level","xp","xpNeed","gold","playerHp","maxHp","potions","inventorySlots","questDone","questRewardClaimed","secondQuest","secondRewardClaimed","wolvesKilled","thirdQuest","thirdRewardClaimed","goblinsKilled"].forEach(k=>{if(d[k]!==undefined)this[k]=d[k]});if(d.slimeGel!==undefined)this.inventory.slimeGel=d.slimeGel;if(Array.isArray(d.items)){const basics=this.inventoryItems.filter(i=>["potion","gel"].includes(i.id));this.inventoryItems=[...d.items,...basics];}
+   const w=this.inventoryItems.find(i=>i.type==="Arma"&&i.equipped),a=this.inventoryItems.find(i=>i.type==="Armadura"&&i.equipped);this.attackPower=w?.attack||15;this.defense=a?.defense||2;
+   this.levelText?.setText("Gabriel · Nv."+this.level);this.xpText?.setText("EXP "+this.xp+"/"+this.xpNeed);this.goldText?.setText("Oro "+this.gold);this.hpBar.width=260*this.playerHp/this.maxHp;this.statsText?.setText("ATQ "+this.attackPower+" · DEF "+this.defense);this.updateInventoryHud();this.renderSlots();this.restoreQuestState();
+  }catch(e){}
+ }
+ restoreQuestState(){
+  if(this.thirdQuest){this.questText.setText("SAQUEADORES VERDES\nDerrota Goblins  "+Math.min(4,this.goblinsKilled)+"/4");this.spawnGoblins();this.questMarker?.setText("…");}
+  else if(this.secondQuest){this.questText.setText("PELIGRO EN EL BOSQUE\nDerrota Lobos  "+Math.min(3,this.wolvesKilled)+"/3");this.spawnWolves();this.questMarker?.setText("…");}
+  else if(this.questDone){this.questText.setText("PRIMERA CACERÍA\nDerrota Slimes  "+Math.min(3,this.slimesKilled)+"/3");this.questMarker?.setText("…");}
+ }
  makeShop(){
   this.shopPanel=this.add.container(360,620).setScrollFactor(0).setDepth(9600).setVisible(false);
   const bg=this.add.rectangle(0,0,610,700,0x0b100d,.98).setStrokeStyle(3,0xb89552,.9);
@@ -165,7 +179,7 @@ export class LumenScene extends Phaser.Scene {
   this.shopPanel.add([bg,title,close,info,potionBtn,potionTxt,potionPrice,desc,bag,bagTxt,this.shopBagPrice]);
  }
  toggleShop(force){this.shopOpen=force??!this.shopOpen;this.shopPanel.setVisible(this.shopOpen);}
- buyPotion(){if(this.gold<25){this.showDialogue("Necesitas 25 Oro para comprar una Poción menor.");return}if(this.getInventoryUsed()>=this.inventorySlots&&this.potions===0){this.showDialogue("Inventario lleno.");return}this.gold-=25;this.potions++;this.goldText?.setText("Oro "+this.gold);this.updateInventoryHud();this.showDialogue("Compraste una Poción menor.");}
+ buyPotion(){if(this.gold<25){this.showDialogue("Necesitas 25 Oro para comprar una Poción menor.");return}if(this.getInventoryUsed()>=this.inventorySlots&&this.potions===0){this.showDialogue("Inventario lleno.");return}this.gold-=25;this.potions++;this.goldText?.setText("Oro "+this.gold);this.updateInventoryHud();this.showDialogue("Compraste una Poción menor.");this.saveProgress();}
  makeInventory(){
   this.inventoryPanel=this.add.container(360,620).setScrollFactor(0).setDepth(9500).setVisible(false);
   const bg=this.add.rectangle(0,0,610,700,0x0b100d,.97).setStrokeStyle(3,0xb89552,.9);
@@ -210,7 +224,7 @@ export class LumenScene extends Phaser.Scene {
   if(item.id==="gel"){if(this.inventory.slimeGel<=0)return;this.inventory.slimeGel--;item.qty=this.inventory.slimeGel;}
   else if(item.id==="potion"){if(this.potions<=0)return;this.potions--;item.qty=this.potions;}
   else {const i=this.inventoryItems.indexOf(item);if(i>=0)this.inventoryItems.splice(i,1);}
-  this.gold+=price;this.goldText?.setText("Oro "+this.gold);this.itemInfo?.destroy();this.itemInfo=null;this.updateInventoryHud();this.showDialogue("Objeto vendido por "+price+" Oro.");
+  this.gold+=price;this.goldText?.setText("Oro "+this.gold);this.itemInfo?.destroy();this.itemInfo=null;this.updateInventoryHud();this.showDialogue("Objeto vendido por "+price+" Oro.");this.saveProgress();
  }
  rarityColor(r){return {"Común":0x9b9b9b,"Poco común":0x5bbd72,"Raro":0x5597e6,"Épico":0xa56be8,"Legendario":0xe8a83c}[r]||0x9b9b9b;}
  equipItem(item){
@@ -224,7 +238,7 @@ export class LumenScene extends Phaser.Scene {
  buyInventorySlot(){
   if(this.inventorySlots>=this.maxInventorySlots){this.showDialogue("Tu mochila ya alcanzó el máximo de "+this.maxInventorySlots+" espacios.");return}
   const price=this.getNextSlotPrice();if(this.gold<price){this.showDialogue("Necesitas "+price+" Oro para desbloquear el siguiente espacio.");return}
-  this.gold-=price;this.inventorySlots++;this.goldText?.setText("Oro "+this.gold);this.updateInventoryHud();this.renderSlots();this.showDialogue("Espacio desbloqueado. Tu mochila ahora tiene "+this.inventorySlots+" espacios.");
+  this.gold-=price;this.inventorySlots++;this.goldText?.setText("Oro "+this.gold);this.updateInventoryHud();this.renderSlots();this.showDialogue("Espacio desbloqueado. Tu mochila ahora tiene "+this.inventorySlots+" espacios.");this.saveProgress();
  }
  toggleInventory(force){this.inventoryOpen=force??!this.inventoryOpen;this.inventoryPanel.setVisible(this.inventoryOpen);}
  usePotion(){if(this.potions<=0||this.playerHp>=this.maxHp)return;this.potions--;this.playerHp=Math.min(this.maxHp,this.playerHp+35);this.hpBar.width=260*this.playerHp/this.maxHp;this.updateInventoryHud();this.showDialogue("Has usado una Poción menor. +35 HP");}
