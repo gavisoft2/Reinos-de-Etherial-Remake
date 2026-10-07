@@ -13,7 +13,21 @@ export class LumenScene extends Phaser.Scene {
   this.load.image("enemy_slime",A+"enemies/slime.png");this.load.image("enemy_wolf",A+"enemies/lobo_salvaje.png");this.load.image("enemy_goblin",A+"enemies/goblin.png");this.load.image("enemy_skeleton",A+"enemies/esqueleto.png");this.load.image("enemy_orc",A+"enemies/orco.png");
   this.load.image("loot_gel",A+"effects/curacion.png");
  }
- create(){
+ cleanBakedBackground(key){
+ const tex=this.textures.get(key); if(!tex||key==="__MISSING") return;
+ const src=tex.getSourceImage(); if(!src||!src.width||!src.height) return;
+ const cv=document.createElement("canvas"); cv.width=src.width; cv.height=src.height;
+ const ctx=cv.getContext("2d",{willReadFrequently:true}); ctx.drawImage(src,0,0);
+ const im=ctx.getImageData(0,0,cv.width,cv.height),d=im.data,w=cv.width,h=cv.height;
+ const seen=new Uint8Array(w*h),q=[];
+ const push=(x,y)=>{const n=y*w+x;if(!seen[n]){seen[n]=1;q.push(n);}};
+ for(let x=0;x<w;x++){push(x,0);push(x,h-1)} for(let y=0;y<h;y++){push(0,y);push(w-1,y)}
+ const neutral=n=>{const i=n*4,r=d[i],g=d[i+1],b=d[i+2],mx=Math.max(r,g,b),mn=Math.min(r,g,b);return d[i+3]>0&&mx-mn<42&&r>45&&g>45&&b>45};
+ for(let z=0;z<q.length;z++){const n=q[z];if(!neutral(n))continue;d[n*4+3]=0;const x=n%w,y=(n/w)|0;if(x)push(x-1,y);if(x<w-1)push(x+1,y);if(y)push(x,y-1);if(y<h-1)push(x,y+1)}
+ ctx.putImageData(im,0,0); tex.destroy(); this.textures.addCanvas(key,cv);
+}
+create(){
+ ["b_posada","b_mercado","b_herreria","b_gremio","b_templo","p_arbol_01","p_arbol_02","p_arbol_03","p_farol","p_banco","p_puesto","p_bandera","p_maceta","p_barril_01","p_barril_02","p_carreta","p_caja"].forEach(k=>this.cleanBakedBackground(k));
   // Limpia el fondo gris/cuadriculado heredado del sprite sheet.
   const transparentKeys=["gabriel_idle_01","gabriel_idle_02","gabriel_walk_01","gabriel_walk_02","gabriel_walk_03","gabriel_walk_04","gabriel_attack_01","gabriel_attack_02","gabriel_attack_03","npc_aldric","npc_mira","npc_borin","npc_guardia","enemy_slime","enemy_wolf","enemy_goblin"];transparentKeys.forEach(k=>this.removeSheetBackground(k));
   this.physics.world.setBounds(0,0,720,1780);this.inHuntZone=false;this.safeZone=true;this.zoneName="Lumen";this.deathCount=0;this.respawnProtection=false; this.obstacles=this.physics.add.staticGroup();
