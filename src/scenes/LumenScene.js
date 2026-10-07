@@ -119,7 +119,23 @@ export class LumenScene extends Phaser.Scene {
   const hit=this.add.text(target.x,target.y-72,"-"+dmg,{fontFamily:"Georgia",fontSize:"18px",color:"#ffd38a",stroke:"#401510",strokeThickness:3}).setOrigin(.5).setDepth(8000);
   this.tweens.add({targets:hit,y:hit.y-28,alpha:0,duration:650,onComplete:()=>hit.destroy()});if(target.hp<=0)this.killSlime(target);
  }
- attackNearest(){if(this.fifthQuest&&this.attackOrc())return;if(this.fourthQuest&&this.attackSkeleton())return;if(this.thirdQuest&&this.attackGoblin())return;if(this.secondQuest&&this.attackWolf())return;
+ getNearestEnemy(range){
+  let target=null,best=range;[this.orcs,this.skeletons,this.goblins,this.wolves,this.slimes].forEach(g=>g?.getChildren().forEach(e=>{if(!e.active)return;const d=Phaser.Math.Distance.Between(this.player.x,this.player.y,e.x,e.y);if(d<best){best=d;target=e}}));return target;
+ }
+ basicDamageEnemy(t,dmg){
+  if(!t?.active)return;t.hp-=dmg;if(t.hpBar)t.hpBar.width=Math.max(2,(t.maxHp===165?76:t.maxHp===115?62:t.maxHp===80?66:56)*Math.max(0,t.hp/t.maxHp));this.showCombatText(t.x,t.y-72,"-"+dmg,"#ffd38a");
+  if(t.hp<=0){if(this.slimes?.contains(t))this.killSlime(t);else{t.hp=1;this.showCombatText(t.x,t.y-92,"¡Remátalo!","#ffe16b");}}
+ }
+ attackNearestWarrior(){
+  const t=this.getNearestEnemy(92);if(!t){this.showDialogue("Acércate más para atacar con la espada.");return}if(!this.attackReady)return;this.attackReady=false;this.time.delayedCall(620,()=>this.attackReady=true);this.player.setTexture("thoran_attack_01");const dmg=Math.floor(this.attackPower+Phaser.Math.Between(3,8));const fx=this.add.image(t.x,t.y,"fx_sword_wave").setDisplaySize(58,58).setDepth(9000);this.tweens.add({targets:fx,alpha:0,scale:1.25,duration:260,onComplete:()=>fx.destroy()});this.basicDamageEnemy(t,dmg);this.time.delayedCall(220,()=>{if(this.playerClass==="warrior")this.player.play("thoran_idle")});
+ }
+ attackNearestMage(){
+  const t=this.getNearestEnemy(285);if(!t){this.showDialogue("No hay enemigos dentro del alcance mágico.");return}if(!this.attackReady)return;this.attackReady=false;this.time.delayedCall(700,()=>this.attackReady=true);this.player.setTexture("selene_attack_01");const dmg=Math.floor(this.attackPower+Phaser.Math.Between(2,7));const p=this.add.image(this.player.x,this.player.y-18,"fx_fireball").setDisplaySize(38,38).setDepth(9000);this.tweens.add({targets:p,x:t.x,y:t.y,duration:260,onComplete:()=>{p.destroy();this.basicDamageEnemy(t,dmg)}});this.time.delayedCall(280,()=>{if(this.playerClass==="mage")this.player.play("selene_idle")});
+ }
+ attackNearest(){
+  if(this.playerClass==="warrior")return this.attackNearestWarrior();
+  if(this.playerClass==="mage")return this.attackNearestMage();
+  if(this.fifthQuest&&this.attackOrc())return;if(this.fourthQuest&&this.attackSkeleton())return;if(this.thirdQuest&&this.attackGoblin())return;if(this.secondQuest&&this.attackWolf())return;
   if(!this.slimes)return;let target=null,best=210;
   this.slimes.getChildren().forEach(s=>{if(!s.active)return;const d=Phaser.Math.Distance.Between(this.player.x,this.player.y,s.x,s.y);if(d<best){best=d;target=s}});
   if(!target){this.showDialogue("No hay enemigos dentro del alcance.");return}
@@ -357,7 +373,7 @@ export class LumenScene extends Phaser.Scene {
  makeControls(){
   const base=this.add.circle(110,1160,72,0x08100b,.55).setStrokeStyle(3,0xb99b64,.6).setInteractive().setScrollFactor(0).setDepth(6000), knob=this.add.circle(110,1160,30,0x65736a,.8).setScrollFactor(0).setDepth(6001);
   const reset=()=>{this.move.x=this.move.y=0;knob.setPosition(110,1160)};base.on("pointermove",p=>{if(!p.isDown)return;let dx=p.x-110,dy=p.y-1160,d=Math.hypot(dx,dy)||1,m=Math.min(48,d);dx=dx/d*m;dy=dy/d*m;knob.setPosition(110+dx,1160+dy);this.move={x:dx/48,y:dy/48}});base.on("pointerup",reset);base.on("pointerout",reset);
-  [["gabriel_attack_01",610,1160],["gabriel_skill_01",500,1095],["gabriel_skill_02",565,1045],["gabriel_skill_03",635,1060],["gabriel_skill_03",680,1125]].forEach((a,i)=>{const b=this.add.circle(a[1],a[2],i?34:52,i?0x234c34:0x64251f,.9).setStrokeStyle(3,0xd1aa63,.8).setInteractive().setScrollFactor(0).setDepth(6000);this.add.image(a[1],a[2],a[0]).setDisplaySize(i?46:66,i?54:76).setScrollFactor(0).setDepth(6001);b.on("pointerdown",()=>{this.player.setTexture(a[0]);if(i===0)this.attackNearest();else if(this.playerClass==="warrior")this.castWarriorSkill(i-1);else if(this.playerClass==="mage")this.castMageSkill(i-1);else this.castSafeSkill(i-1)});b.on("pointerup",()=>this.player.play("gabriel_idle"))});
+  [["gabriel_attack_01",610,1160],["gabriel_skill_01",500,1095],["gabriel_skill_02",565,1045],["gabriel_skill_03",635,1060],["gabriel_skill_03",680,1125]].forEach((a,i)=>{const b=this.add.circle(a[1],a[2],i?34:52,i?0x234c34:0x64251f,.9).setStrokeStyle(3,0xd1aa63,.8).setInteractive().setScrollFactor(0).setDepth(6000);this.add.image(a[1],a[2],a[0]).setDisplaySize(i?46:66,i?54:76).setScrollFactor(0).setDepth(6001);b.on("pointerdown",()=>{this.player.setTexture(a[0]);if(i===0)this.attackNearest();else if(this.playerClass==="warrior")this.castWarriorSkill(i-1);else if(this.playerClass==="mage")this.castMageSkill(i-1);else this.castSafeSkill(i-1)});b.on("pointerup",()=>this.player.play(this.playerClass==="warrior"?"thoran_idle":this.playerClass==="mage"?"selene_idle":"gabriel_idle"))});
  }
  update(){
   if(!this.player)return;
@@ -369,6 +385,6 @@ export class LumenScene extends Phaser.Scene {
    if(d<175&&d>55)this.physics.moveToObject(s,this.player,32);else s.setVelocity(0);
    if(d<62&&now-s.lastHit>1200){s.lastHit=now;const incoming=Math.max(1,5-this.defense);this.playerHp=Math.max(0,this.playerHp-incoming);this.hpBar.width=260*this.playerHp/this.maxHp;if(this.playerHp<=0){this.handlePlayerDeath();}}
   });
-  const moving=Math.abs(this.move.x)+Math.abs(this.move.y)>.08;this.player.setVelocity(this.move.x*170,this.move.y*170);if(moving){if(this.player.anims.currentAnim?.key!=="gabriel_walk")this.player.play("gabriel_walk");if(this.move.x<-.05)this.player.setFlipX(true);if(this.move.x>.05)this.player.setFlipX(false)}else if(this.player.anims.currentAnim?.key!=="gabriel_idle")this.player.play("gabriel_idle");this.slimes?.getChildren().forEach(s=>{if(s.active){s.setDepth(s.y);s.hpBg?.setPosition(s.x,s.y-48).setDepth(s.y+1);s.hpBar?.setPosition(s.x-28,s.y-48).setDepth(s.y+2)}});this.player.setDepth(this.player.y+100);this.playerShadow.setPosition(this.player.x,this.player.y+38).setDepth(this.player.y-1);this.playerName.setPosition(this.player.x,this.player.y+70).setDepth(this.player.y+102);
+  const moving=Math.abs(this.move.x)+Math.abs(this.move.y)>.08;const walkKey=this.playerClass==="warrior"?"thoran_walk":this.playerClass==="mage"?"selene_walk":"gabriel_walk",idleKey=this.playerClass==="warrior"?"thoran_idle":this.playerClass==="mage"?"selene_idle":"gabriel_idle";this.player.setVelocity(this.move.x*170,this.move.y*170);if(moving){if(this.player.anims.currentAnim?.key!==walkKey)this.player.play(walkKey);if(this.move.x<-.05)this.player.setFlipX(true);if(this.move.x>.05)this.player.setFlipX(false)}else if(this.player.anims.currentAnim?.key!==idleKey)this.player.play(idleKey);this.slimes?.getChildren().forEach(s=>{if(s.active){s.setDepth(s.y);s.hpBg?.setPosition(s.x,s.y-48).setDepth(s.y+1);s.hpBar?.setPosition(s.x-28,s.y-48).setDepth(s.y+2)}});this.player.setDepth(this.player.y+100);this.playerShadow.setPosition(this.player.x,this.player.y+38).setDepth(this.player.y-1);this.playerName.setPosition(this.player.x,this.player.y+70).setDepth(this.player.y+102);
  }
 }
