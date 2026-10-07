@@ -1,7 +1,7 @@
 export class LumenScene extends Phaser.Scene {
  constructor(){super("Lumen")}
  preload(){
-  const A="assets/reinos_etherial_assets_extracted/";
+  const A="assets/";
   ["idle_01","idle_02","walk_01","walk_02","walk_03","walk_04","attack_01","attack_02","attack_03","skill_01","skill_02","skill_03"].forEach(n=>this.load.image("gabriel_"+n,A+"characters/gabriel_archer/"+n+".png"));
   [["aldric","aldric"],["mira","mira"],["borin","borin"],["guardia","guardia"]].forEach(a=>this.load.image("npc_"+a[0],A+"npcs/"+a[1]+".png"));
   [["posada","posada"],["mercado","mercado"],["herreria","herreria"],["gremio","gremio"],["templo","templo"]].forEach(a=>this.load.image("b_"+a[0],A+"buildings/lumen/"+a[1]+".png"));
@@ -11,18 +11,19 @@ export class LumenScene extends Phaser.Scene {
   ["inventario","tienda","habilidades","misiones","mapa","configuracion"].forEach(n=>this.load.image("ui_"+n,A+"ui/icons/"+n+".png"));
  }
  create(){
-  this.physics.world.setBounds(0,0,720,1280);
+  this.physics.world.setBounds(0,0,720,1280); this.obstacles=this.physics.add.staticGroup();
   for(let y=0;y<1280;y+=76)for(let x=0;x<720;x+=82)this.add.image(x+41,y+38,"t_"+(["suelo_01","suelo_02","suelo_03","suelo_04"][(x/82+y/76)%4|0])).setDisplaySize(84,78).setAlpha(.88);
-  this.add.image(360,455,"p_estatua_fuente").setScale(2.7).setDepth(200);
-  [["b_posada",130,300],["b_mercado",590,300],["b_herreria",135,690],["b_gremio",585,690],["b_templo",360,190]].forEach(a=>this.add.image(a[1],a[2],a[0]).setScale(1.42).setDepth(a[2]));
+  this.add.image(360,455,"p_estatua_fuente").setScale(2.7).setDepth(455); this.addObstacle(360,470,150,70);
+  [["b_posada",130,300],["b_mercado",590,300],["b_herreria",135,690],["b_gremio",585,690],["b_templo",360,190]].forEach(a=>{this.add.image(a[1],a[2],a[0]).setScale(1.42).setDepth(a[2]);this.addObstacle(a[1],a[2]+45,175,78)});
   [[45,390,"p_arbol_01"],[675,390,"p_arbol_02"],[50,780,"p_arbol_03"],[670,780,"p_arbol_01"],[65,940,"p_arbol_02"],[655,940,"p_arbol_03"]].forEach(a=>this.add.image(a[0],a[1],a[2]).setScale(1.25).setDepth(a[1]));
   [["npc_mira",150,555,"Mira"],["npc_guardia",275,570,"Guardia"],["npc_aldric",560,555,"Aldric"],["npc_borin",155,845,"Borin"]].forEach(a=>{this.add.image(a[1],a[2],a[0]).setScale(.62).setDepth(a[2]);this.add.text(a[1],a[2]+62,a[3],{fontFamily:"Georgia",fontSize:"13px",color:"#fff2c7",stroke:"#000",strokeThickness:4}).setOrigin(.5).setDepth(a[2]+2)});
-  this.player=this.physics.add.sprite(360,760,"gabriel_idle_01").setScale(1.05).setDepth(900);this.player.body.setSize(34,38).setOffset(24,62);this.player.setCollideWorldBounds(true);
+  this.player=this.physics.add.sprite(360,760,"gabriel_idle_01").setScale(1.05).setDepth(900);this.player.body.setSize(34,38).setOffset(24,62);this.player.setCollideWorldBounds(true);this.physics.add.collider(this.player,this.obstacles);
   this.add.text(360,830,"Gabriel · Arquero",{fontFamily:"Georgia",fontSize:"15px",color:"#fff1c4",stroke:"#000",strokeThickness:4}).setOrigin(.5).setDepth(901);
   this.anims.create({key:"gabriel_idle",frames:["gabriel_idle_01","gabriel_idle_02"].map(key=>({key})),frameRate:3,repeat:-1});
   this.anims.create({key:"gabriel_walk",frames:["gabriel_walk_01","gabriel_walk_02","gabriel_walk_03","gabriel_walk_04"].map(key=>({key})),frameRate:8,repeat:-1});
   this.player.play("gabriel_idle");this.move={x:0,y:0};this.makeHud();this.makeControls();
  }
+ addObstacle(x,y,w,h){const z=this.obstacles.create(x,y,null).setVisible(false);z.body.setSize(w,h);z.refreshBody();return z}
  makeHud(){
   this.add.rectangle(360,52,700,84,0x080d0a,.82).setScrollFactor(0).setDepth(5000).setStrokeStyle(2,0xb79251,.7);
   this.add.text(28,22,"Gabriel · Nv.1",{fontFamily:"Georgia",fontSize:"17px",color:"#f4dfad"}).setScrollFactor(0).setDepth(5001);
