@@ -213,9 +213,8 @@ export class LumenScene extends Phaser.Scene {
   });
   // Jardineras para romper esquinas rectangulares y dar profundidad.
   [[215,370],[505,370],[220,825],[500,825]].forEach(([x,y],i)=>{
-    capital.fillStyle(0x315c34,.92); capital.fillEllipse(x,y,58,27);
-    capital.lineStyle(2,0x9b895d,.65); capital.strokeEllipse(x,y,58,27);
-    this.add.image(x,y-10,i%2?"p_arbol_02":"p_arbol_01").setScale(.18).setDepth(y+4);
+    this.add.image(x,y-11,i%2?"p_arbol_02":"p_arbol_01").setScale(.20).setDepth(y+4);
+    this.add.image(x+(i%2?-23:23),y+12,"p_maceta").setScale(.24).setDepth(y+5);
   });
   // Faroles marcan accesos principales.
   [[260,420],[460,420],[265,880],[455,880]].forEach(([x,y])=>{
@@ -241,8 +240,7 @@ export class LumenScene extends Phaser.Scene {
   });
   // Vegetación baja junto a los cruces.
   [[278,650],[424,650],[278,950],[424,950]].forEach(([x,y])=>{
-    promenade.fillStyle(0x315c34,.86); promenade.fillEllipse(x,y,44,19);
-    promenade.lineStyle(1,0x9b895d,.55); promenade.strokeEllipse(x,y,44,19);
+    this.add.image(x,y,"p_maceta").setScale(.27).setDepth(y+2);
   });
   // CAPITAL PASS V10 — jardines de transición y entrada monumental.
   const v10=this.add.graphics().setDepth(142);
@@ -267,8 +265,8 @@ export class LumenScene extends Phaser.Scene {
   const v11=this.add.graphics().setDepth(141);
   // Cuatro pequeñas plazoletas laterales para llenar sin bloquear el corredor.
   [[155,555],[565,555],[155,970],[565,970]].forEach(([x,y],i)=>{
-    v11.fillStyle(0x4b504d,.86); v11.fillCircle(x,y,42);
-    v11.lineStyle(2,0xb79a54,.64); v11.strokeCircle(x,y,42);
+    v11.fillStyle(0x4b504d,.55); v11.fillRoundedRect(x-42,y-25,84,50,14);
+    v11.lineStyle(2,0xb79a54,.48); v11.strokeRoundedRect(x-42,y-25,84,50,14);
     this.add.image(x,y-10,i%2?"p_arbol_01":"p_arbol_02").setScale(.20).setDepth(y+2);
     this.add.image(x+(i%2?-22:22),y+13,"p_maceta").setScale(.25).setDepth(y+3);
     this.add.image(x+(i%2?-38:38),y+10,"p_farol").setScale(.28).setDepth(y+3);
