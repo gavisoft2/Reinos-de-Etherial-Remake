@@ -38,7 +38,7 @@ export class LumenScene extends Phaser.Scene {
   this.playerName=this.add.text(360,830,"Gabriel · Arquero",{fontFamily:"Georgia",fontSize:"15px",color:"#fff1c4",stroke:"#000",strokeThickness:4}).setOrigin(.5).setDepth(901);
   this.anims.create({key:"gabriel_idle",frames:["gabriel_idle_01","gabriel_idle_02"].map(key=>({key})),frameRate:3,repeat:-1});
   this.anims.create({key:"gabriel_walk",frames:["gabriel_walk_01","gabriel_walk_02","gabriel_walk_03","gabriel_walk_04"].map(key=>({key})),frameRate:8,repeat:-1});
-  this.player.play("gabriel_idle");this.move={x:0,y:0};this.questDone=false;this.slimeQuest=false;this.slimesKilled=0;this.level=1;this.xp=0;this.xpNeed=100;this.gold=0;this.playerHp=100;this.maxHp=100;this.attackReady=true;this.inventory={slimeGel:0};this.equipment={weapon:"Arco del Aprendiz",armor:"Cuero de Lumen"};this.attackPower=15;this.defense=2;this.potions=1;this.gearBonus={attack:0,defense:0};this.inventoryOpen=false;this.inventorySlots=20;this.maxInventorySlots=60;this.baseSlotPrice=100;this.inventoryItems=[];this.gearDrops=0;this.npcTargets=[];this.spawnSlimes();
+  this.player.play("gabriel_idle");this.move={x:0,y:0};this.questDone=false;this.slimeQuest=false;this.slimesKilled=0;this.level=1;this.xp=0;this.xpNeed=100;this.gold=0;this.playerHp=100;this.maxHp=100;this.attackReady=true;this.inventory={slimeGel:0};this.equipment={weapon:"Arco del Aprendiz",armor:"Cuero de Lumen"};this.attackPower=15;this.defense=2;this.potions=1;this.gearBonus={attack:0,defense:0};this.inventoryOpen=false;this.inventorySlots=20;this.maxInventorySlots=60;this.baseSlotPrice=100;this.inventoryItems=[];this.gearDrops=0;this.selectedItem=null;this.npcTargets=[];this.spawnSlimes();
   this.npcTargets.push({name:"Aldric",x:560,y:555,r:88});
   this.makeHud();this.makeControls();this.makeInteractButton();this.makeInventory();this.seedInventory();
  }
@@ -158,10 +158,22 @@ export class LumenScene extends Phaser.Scene {
   this.itemInfo?.destroy();this.itemInfo=this.add.container(0,-25).setDepth(9700);
   const bg=this.add.rectangle(0,0,430,190,0x101711,.98).setStrokeStyle(2,this.rarityColor(item.rarity));
   const tx=this.add.text(-190,-70,item.icon+"  "+item.name+"\n"+item.rarity+" · "+item.type+"\n"+stat,{fontFamily:"Georgia",fontSize:"16px",color:"#f4e4b9",lineSpacing:8});
-  const action=this.add.rectangle(0,62,220,42,0x4f6038,.95).setStrokeStyle(1,0xd1b66c).setInteractive();
-  const at=this.add.text(0,62,item.type==="Arma"||item.type==="Armadura"?(item.equipped?"Equipado":"Equipar"):"Cerrar",{fontFamily:"Georgia",fontSize:"15px",color:"#fff1c4"}).setOrigin(.5);
+  const action=this.add.rectangle(-80,62,190,42,0x4f6038,.95).setStrokeStyle(1,0xd1b66c).setInteractive();
+  const sell=this.add.rectangle(135,62,150,42,0x5b3928,.95).setStrokeStyle(1,0xc18b5b).setInteractive();
+  const at=this.add.text(-80,62,item.type==="Arma"||item.type==="Armadura"?(item.equipped?"Equipado":"Equipar"):"Cerrar",{fontFamily:"Georgia",fontSize:"15px",color:"#fff1c4"}).setOrigin(.5);
+  const sellPrice=this.itemSellPrice(item);const st=this.add.text(135,62,"Vender "+sellPrice+" Oro",{fontFamily:"Georgia",fontSize:"13px",color:"#ffe0ad"}).setOrigin(.5);
   action.on("pointerdown",()=>{if((item.type==="Arma"||item.type==="Armadura")&&!item.equipped)this.equipItem(item);this.itemInfo.destroy();this.itemInfo=null});
-  this.itemInfo.add([bg,tx,action,at]);this.inventoryPanel.add(this.itemInfo);
+  sell.on("pointerdown",()=>this.sellItem(item));
+  this.itemInfo.add([bg,tx,action,at,sell,st]);this.inventoryPanel.add(this.itemInfo);
+ }
+ itemSellPrice(item){if(item.equipped)return 0;const base=item.type==="Arma"?35:item.type==="Armadura"?30:item.type==="Material"?3:8;const m={"Común":1,"Poco común":2,"Raro":5,"Épico":12,"Legendario":30}[item.rarity]||1;return Math.floor(base*m);}
+ sellItem(item){
+  if(item.equipped){this.showDialogue("No puedes vender un objeto equipado.");return}
+  const price=this.itemSellPrice(item);if(price<=0)return;
+  if(item.id==="gel"){if(this.inventory.slimeGel<=0)return;this.inventory.slimeGel--;item.qty=this.inventory.slimeGel;}
+  else if(item.id==="potion"){if(this.potions<=0)return;this.potions--;item.qty=this.potions;}
+  else {const i=this.inventoryItems.indexOf(item);if(i>=0)this.inventoryItems.splice(i,1);}
+  this.gold+=price;this.goldText?.setText("Oro "+this.gold);this.itemInfo?.destroy();this.itemInfo=null;this.updateInventoryHud();this.showDialogue("Objeto vendido por "+price+" Oro.");
  }
  rarityColor(r){return {"Común":0x9b9b9b,"Poco común":0x5bbd72,"Raro":0x5597e6,"Épico":0xa56be8,"Legendario":0xe8a83c}[r]||0x9b9b9b;}
  equipItem(item){
