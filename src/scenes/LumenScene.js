@@ -70,6 +70,33 @@ export class LumenScene extends Phaser.Scene {
   [[220,690],[500,690],[220,910],[500,910],[220,1120],[500,1120]].forEach(([x,y],i)=>{
     this.add.image(x,y,i%2===0?"p_maceta":"p_farol").setScale(i%2===0?.34:.42).setDepth(y);
   });
+  // VISUAL PASS SAFE V3 — ciudad más viva sin tocar texturas ni lógica.
+  // Terrazas laterales y conexiones de mármol.
+  const urban=this.add.graphics().setDepth(-23);
+  urban.fillStyle(0xf0e6cf,.22);
+  urban.fillRoundedRect(18,640,205,520,18);
+  urban.fillRoundedRect(497,640,205,520,18);
+  urban.lineStyle(3,0xb89545,.34);
+  urban.strokeRoundedRect(18,640,205,520,18);
+  urban.strokeRoundedRect(497,640,205,520,18);
+  // Cruces laterales conectados a la avenida real.
+  [700,900,1100].forEach(y=>{
+    urban.lineStyle(4,0xb89545,.34);
+    urban.lineBetween(70,y,650,y);
+    urban.lineStyle(2,0x315f91,.30);
+    urban.lineBetween(90,y+8,630,y+8);
+  });
+  // Columnas ceremoniales simples en el eje principal.
+  [[300,690],[420,690],[300,890],[420,890],[300,1090],[420,1090]].forEach(([x,y])=>{
+    this.add.rectangle(x,y,18,42,0xd9cfb8,.96).setStrokeStyle(2,0x9f874d,.75).setDepth(y);
+    this.add.circle(x,y-23,11,0xe7ddc7,1).setStrokeStyle(2,0xb89545,.8).setDepth(y+1);
+  });
+  // Vegetación baja para dar continuidad entre jardines y calles.
+  [[70,680],[650,680],[72,880],[648,880],[72,1080],[648,1080],[185,1160],[535,1160]].forEach(([x,y],i)=>{
+    this.add.image(x,y,i%3===0?"p_arbol_01":"p_maceta").setScale(i%3===0?.24:.30).setDepth(y);
+  });
+  // Señal visual hacia Puerta Sur.
+  this.add.text(360,1235,"◆  AVENIDA REAL  ◆",{fontFamily:"Georgia",fontSize:"13px",color:"#7a622b",stroke:"#f1e6cd",strokeThickness:3}).setOrigin(.5).setDepth(300);
   // Estatua monumental completa: pedestal + figura central, sin usar el recorte roto anterior.
   this.add.rectangle(360,432,72,72,0x8e8775,1).setStrokeStyle(3,0xd1c29b,.9).setDepth(438);
   const monument=this.add.image(360,365,"npc_guardia").setScale(1.15).setTint(0xc8c1ae).setDepth(439);
