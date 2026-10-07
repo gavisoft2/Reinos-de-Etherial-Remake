@@ -2,7 +2,7 @@ export class LumenScene extends Phaser.Scene {
  constructor(){super("Lumen")}
  preload(){
   const A="assets/";
-  ["idle_01","idle_02","walk_01","walk_02","walk_03","walk_04","attack_01","attack_02","attack_03","skill_01","skill_02","skill_03"].forEach(n=>this.load.image("gabriel_"+n,A+"characters/gabriel_archer/"+n+".png"));
+  ["idle_01","idle_02","walk_01","walk_02","walk_03","walk_04","attack_01","attack_02","attack_03","skill_01","skill_02","skill_03"].forEach(n=>this.load.image("gabriel_"+n,A+"characters/gabriel_archer/"+n+".png"));["idle_01","idle_02","walk_01","walk_02","walk_03","walk_04","attack_01","attack_02","attack_03","skill_01","skill_02","skill_03"].forEach(n=>this.load.image("thoran_"+n,A+"characters/thoran_warrior/"+n+".png"));
   [["aldric","aldric"],["mira","mira"],["borin","borin"],["guardia","guardia"]].forEach(a=>this.load.image("npc_"+a[0],A+"npcs/"+a[1]+".png"));
   [["posada","posada"],["mercado","mercado"],["herreria","herreria"],["gremio","gremio"],["templo","templo"]].forEach(a=>this.load.image("b_"+a[0],A+"buildings/lumen/"+a[1]+".png"));
   ["arbol_01","arbol_02","arbol_03","farol","banco","puesto","bandera","estatua_fuente"].forEach(n=>this.load.image("p_"+n,A+"props/"+n+".png"));
@@ -10,7 +10,7 @@ export class LumenScene extends Phaser.Scene {
   this.load.image("lumen_map",A+"maps/lumen_master.png");
   ["inventario","tienda","habilidades","misiones","mapa","configuracion"].forEach(n=>this.load.image("ui_"+n,A+"ui/icons/"+n+".png"));
   this.load.image("enemy_slime",A+"enemies/slime.png");this.load.image("enemy_wolf",A+"enemies/lobo_salvaje.png");this.load.image("enemy_goblin",A+"enemies/goblin.png");this.load.image("enemy_skeleton",A+"enemies/esqueleto.png");this.load.image("enemy_orc",A+"enemies/orco.png");
-  this.load.image("loot_gel",A+"effects/curacion.png");this.load.image("fx_arrow",A+"effects/flecha.png");this.load.image("fx_multi",A+"effects/flecha_multiple.png");this.load.image("fx_explosive",A+"effects/flecha_explosiva.png");this.load.image("fx_arrow_storm",A+"effects/circulo_magico.png");
+  this.load.image("loot_gel",A+"effects/curacion.png");this.load.image("fx_arrow",A+"effects/flecha.png");this.load.image("fx_multi",A+"effects/flecha_multiple.png");this.load.image("fx_explosive",A+"effects/flecha_explosiva.png");this.load.image("fx_arrow_storm",A+"effects/circulo_magico.png");this.load.image("fx_sword_wave",A+"effects/espada_onda.png");this.load.image("fx_sword_spin",A+"effects/espada_giro.png");this.load.image("fx_shield",A+"effects/escudo.png");
  }
  create(){
   // Limpia el fondo gris/cuadriculado heredado del sprite sheet.
@@ -32,7 +32,7 @@ export class LumenScene extends Phaser.Scene {
   this.playerName=this.add.text(360,830,"Gabriel · Arquero",{fontFamily:"Georgia",fontSize:"15px",color:"#fff1c4",stroke:"#000",strokeThickness:4}).setOrigin(.5).setDepth(901);
   this.anims.create({key:"gabriel_idle",frames:["gabriel_idle_01","gabriel_idle_02"].map(key=>({key})),frameRate:3,repeat:-1});
   this.anims.create({key:"gabriel_walk",frames:["gabriel_walk_01","gabriel_walk_02","gabriel_walk_03","gabriel_walk_04"].map(key=>({key})),frameRate:8,repeat:-1});
-  this.player.play("gabriel_idle");this.move={x:0,y:0};this.questDone=false;this.slimeQuest=false;this.slimesKilled=0;this.level=1;this.xp=0;this.xpNeed=100;this.gold=0;this.playerHp=100;this.maxHp=100;this.attackReady=true;this.inventory={slimeGel:0};this.equipment={weapon:"Arco del Aprendiz",armor:"Cuero de Lumen"};this.attackPower=15;this.defense=2;this.potions=1;this.gearBonus={attack:0,defense:0};this.inventoryOpen=false;this.inventorySlots=20;this.maxInventorySlots=60;this.baseSlotPrice=100;this.inventoryItems=[];this.gearDrops=0;this.selectedItem=null;this.shopOpen=false;this.questRewardClaimed=false;this.secondQuest=false;this.secondRewardClaimed=false;this.wolvesKilled=0;this.thirdQuest=false;this.thirdRewardClaimed=false;this.goblinsKilled=0;this.fourthQuest=false;this.fourthRewardClaimed=false;this.skeletonsKilled=0;this.fifthQuest=false;this.orcsKilled=0;this.saveKey="etherial_save_v1";this.npcTargets=[];this.spawnSlimes();
+  this.player.play("gabriel_idle");this.playerClass="archer";this.move={x:0,y:0};this.questDone=false;this.slimeQuest=false;this.slimesKilled=0;this.level=1;this.xp=0;this.xpNeed=100;this.gold=0;this.playerHp=100;this.maxHp=100;this.attackReady=true;this.inventory={slimeGel:0};this.equipment={weapon:"Arco del Aprendiz",armor:"Cuero de Lumen"};this.attackPower=15;this.defense=2;this.potions=1;this.gearBonus={attack:0,defense:0};this.inventoryOpen=false;this.inventorySlots=20;this.maxInventorySlots=60;this.baseSlotPrice=100;this.inventoryItems=[];this.gearDrops=0;this.selectedItem=null;this.shopOpen=false;this.questRewardClaimed=false;this.secondQuest=false;this.secondRewardClaimed=false;this.wolvesKilled=0;this.thirdQuest=false;this.thirdRewardClaimed=false;this.goblinsKilled=0;this.fourthQuest=false;this.fourthRewardClaimed=false;this.skeletonsKilled=0;this.fifthQuest=false;this.orcsKilled=0;this.saveKey="etherial_save_v1";this.npcTargets=[];this.spawnSlimes();
   this.npcTargets.push({name:"Aldric",x:560,y:555,r:88});this.questMarker=this.add.text(560,495,"!",{fontFamily:"Georgia",fontSize:"30px",color:"#ffd75a",stroke:"#4a3210",strokeThickness:4}).setOrigin(.5).setDepth(9000);this.tweens.add({targets:this.questMarker,y:487,duration:650,yoyo:true,repeat:-1});
   this.add.rectangle(360,1270,720,70,0x283322,.72).setDepth(-5);
   this.add.text(360,1248,"PUERTA SUR DE LUMEN",{fontFamily:"Georgia",fontSize:"17px",color:"#e8d5a5",stroke:"#1d2419",strokeThickness:4}).setOrigin(.5).setDepth(3000);
@@ -331,6 +331,15 @@ export class LumenScene extends Phaser.Scene {
   this.mana-=costs[i];this.skillReady[i]=false;this.time.delayedCall(cooldowns[i],()=>this.skillReady[i]=true);
   const count=[1,3,4,6][i],mult=[1.6,1.05,1.25,1.4][i],key=["fx_arrow","fx_multi","fx_explosive","fx_arrow_storm"][i];
   targets.slice(0,count).forEach((t,n)=>this.time.delayedCall(n*80,()=>{if(!t.active)return;const p=this.add.image(this.player.x,this.player.y-18,key).setDisplaySize(i===3?72:(i===2?58:46),i===3?72:(i===2?34:20)).setDepth(9000);this.tweens.add({targets:p,x:t.x,y:t.y,duration:190,onComplete:()=>{p.destroy();if(!t.active)return;const dmg=Math.floor(this.attackPower*mult);t.hp=Math.max(1,t.hp-dmg);if(t.hpBar)t.hpBar.width=Math.max(2,t.hpBar.width*(t.hp/t.maxHp));this.showCombatText(t.x,t.y-75,"-"+dmg,"#ffd86a");}})}); 
+ }
+ setWarriorClass(){
+  this.playerClass="warrior";this.player.setTexture("thoran_idle_01");this.playerName.setText("Thoran · Guerrero");this.attackPower=22;this.defense=6;this.maxHp=145;this.playerHp=this.maxHp;this.maxMana=75;this.mana=75;
+  if(!this.anims.exists("thoran_idle"))this.anims.create({key:"thoran_idle",frames:["thoran_idle_01","thoran_idle_02"].map(key=>({key})),frameRate:3,repeat:-1});
+  if(!this.anims.exists("thoran_walk"))this.anims.create({key:"thoran_walk",frames:["thoran_walk_01","thoran_walk_02","thoran_walk_03","thoran_walk_04"].map(key=>({key})),frameRate:8,repeat:-1});
+  this.player.play("thoran_idle");this.statsText?.setText("ATQ "+this.attackPower+" · DEF "+this.defense);this.hpBar.width=260;
+ }
+ castWarriorSkill(i){
+  const costs=[10,18,22,30],cd=[2200,4500,6000,9000];if(!this.skillReady[i]||this.mana<costs[i])return;const groups=[this.slimes,this.wolves,this.goblins,this.skeletons,this.orcs],targets=[];groups.forEach(g=>g?.getChildren().forEach(e=>{if(e.active&&Phaser.Math.Distance.Between(this.player.x,this.player.y,e.x,e.y)<150)targets.push(e)}));if(!targets.length)return;this.mana-=costs[i];this.skillReady[i]=false;this.time.delayedCall(cd[i],()=>this.skillReady[i]=true);const mult=[1.5,1.15,.9,1.65][i],count=[1,4,1,6][i],key=["fx_sword_wave","fx_sword_spin","fx_shield","fx_sword_wave"][i];targets.slice(0,count).forEach(t=>{const fx=this.add.image(t.x,t.y,key).setDisplaySize(i===1?72:58,i===1?72:58).setDepth(9000);this.tweens.add({targets:fx,alpha:0,scale:1.35,duration:350,onComplete:()=>fx.destroy()});const dmg=Math.floor(this.attackPower*mult);t.hp=Math.max(1,t.hp-dmg);this.showCombatText(t.x,t.y-70,"-"+dmg,"#ffd38a")});if(i===2){this.defense+=5;this.time.delayedCall(3500,()=>this.defense=Math.max(6,this.defense-5));}
  }
  makeControls(){
   const base=this.add.circle(110,1160,72,0x08100b,.55).setStrokeStyle(3,0xb99b64,.6).setInteractive().setScrollFactor(0).setDepth(6000), knob=this.add.circle(110,1160,30,0x65736a,.8).setScrollFactor(0).setDepth(6001);
