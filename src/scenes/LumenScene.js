@@ -15,53 +15,54 @@ export class LumenScene extends Phaser.Scene {
  }
  create(){
   this.physics.world.setBounds(0,0,720,1780);this.inHuntZone=false;this.safeZone=true;this.zoneName="Lumen";this.deathCount=0;this.respawnProtection=false; this.obstacles=this.physics.add.staticGroup();
-  // LUMEN CAPITAL V10 — interacción de edificios y servicios de ciudad.
-   this.add.rectangle(360,890,720,1780,0x1d2422,1).setDepth(-30);
-   this.add.image(360,1515,"t_hierba").setDisplaySize(720,530).setAlpha(.76).setDepth(-29);
+  // LUMEN CAPITAL V11 — reconstrucción visual: elimina paneles grises y devuelve una ciudad medieval continua.
+   this.add.rectangle(360,890,720,1780,0x252a25,1).setDepth(-30);
+   this.add.image(360,1515,"t_hierba").setDisplaySize(720,530).setAlpha(.72).setDepth(-29);
    const city=this.add.graphics().setDepth(-28);
-   city.fillStyle(0x3b4440,1);city.fillRoundedRect(10,100,700,1140,28);city.lineStyle(8,0x927d55,.80);city.strokeRoundedRect(22,112,676,1122,36);
-   city.fillStyle(0x716d62,1);city.fillRoundedRect(226,135,268,1095,24);city.lineStyle(4,0xc2a469,.72);city.strokeRoundedRect(236,142,248,1085,30);
-   for(let y=205;y<1185;y+=105){city.lineStyle(2,0x989286,.30);city.lineBetween(252,y,468,y);}
-   city.fillStyle(0x79766c,1);city.fillCircle(360,555,160);city.lineStyle(7,0xc7a96c,.88);city.strokeCircle(360,555,160);city.lineStyle(2,0xa38c5c,.58);city.strokeCircle(360,555,120);
-   city.fillStyle(0x676963,.98);city.fillRoundedRect(50,505,620,98,24);city.fillRoundedRect(84,782,552,82,22);
-   [[40,323,202,176],[478,323,202,176],[42,694,202,182],[476,694,202,182]].forEach(r=>{city.fillStyle(0x555b56,.98);city.fillRoundedRect(...r,20);city.lineStyle(2,0x927e59,.50);city.strokeRoundedRect(...r,20);});
-   [880,1070].forEach(y=>{city.lineStyle(3,0xb89c62,.52);city.strokeCircle(360,y,44);city.lineStyle(1,0xb89c62,.30);city.strokeCircle(360,y,30);});
-   city.fillStyle(0x77746b,.98);[0,1,2].forEach(i=>city.fillRoundedRect(292-i*10,305+i*12,136+i*20,9,4));
-   city.fillStyle(0x5b5e58,1);city.fillRoundedRect(246,1162,228,72,14);city.lineStyle(4,0xbc9e62,.68);city.strokeRoundedRect(246,1162,228,72,14);
+   // recinto de piedra continuo
+   city.fillStyle(0x5b5a50,1);city.fillRoundedRect(18,105,684,1128,22);
+   city.lineStyle(7,0x9b8253,.82);city.strokeRoundedRect(18,105,684,1128,22);
+   // avenida real de piedra clara
+   city.fillStyle(0x817968,1);city.fillRoundedRect(224,130,272,1090,18);
+   city.lineStyle(3,0xc2a268,.70);city.strokeRoundedRect(224,130,272,1090,18);
+   for(let y=175;y<1200;y+=74){city.lineStyle(1,0xa9a18f,.28);city.lineBetween(238,y,482,y);}
+   // calles transversales, sin cajas de distrito
+   city.fillStyle(0x756f61,1);city.fillRoundedRect(35,390,650,104,18);city.fillRoundedRect(35,735,650,100,18);
+   // plaza circular protagonista
+   city.fillStyle(0x8b806d,1);city.fillCircle(360,565,178);
+   city.lineStyle(8,0xc3a164,.86);city.strokeCircle(360,565,178);
+   city.lineStyle(3,0xa78c59,.68);city.strokeCircle(360,565,136);
+   city.lineStyle(2,0xc3a164,.42);city.strokeCircle(360,565,104);
+   // accesos de piedra a edificios
+   [[245,310,230,54],[35,450,210,58],[475,450,210,58],[35,795,210,58],[475,795,210,58]].forEach(r=>{city.fillStyle(0x766f61,.96);city.fillRoundedRect(...r,12);});
 
-   [["b_templo",360,230,.92,190,76],["b_posada",125,405,.72,148,64],["b_mercado",595,405,.72,148,64],["b_herreria",125,790,.70,146,64],["b_gremio",595,790,.70,146,64]].forEach(([k,x,y,s,w,h])=>{this.add.image(x,y,k).setScale(s).setDepth(y);this.addObstacle(x,y+35,w,h);});
-   [["TEMPLO DE LUMEN",360,332],["POSADA",140,497],["MERCADO",580,497],["HERRERÍA",140,865],["GREMIO",580,865]].forEach(([t,x,y])=>this.add.text(x,y,t,{fontFamily:"Georgia",fontSize:"11px",color:"#f0dda9",stroke:"#151a17",strokeThickness:3}).setOrigin(.5).setDepth(1200));
+   // edificios grandes y pegados a las calles para ocultar el aspecto de tarjetas flotantes
+   [["b_templo",360,245,1.08,205,78],["b_posada",112,400,.86,160,68],["b_mercado",608,400,.86,160,68],["b_herreria",112,755,.84,158,68],["b_gremio",608,755,.84,158,68]].forEach(([k,x,y,s,w,h])=>{this.add.image(x,y,k).setScale(s).setDepth(y);this.addObstacle(x,y+38,w,h);});
+   [["TEMPLO",360,340],["POSADA",112,505],["MERCADO",608,505],["HERRERÍA",112,858],["GREMIO",608,858]].forEach(([t,x,y])=>this.add.text(x,y,t,{fontFamily:"Georgia",fontSize:"12px",color:"#f4dda2",backgroundColor:"#101512dd",padding:{x:10,y:4},stroke:"#000",strokeThickness:2}).setOrigin(.5).setDepth(1250));
 
-   this.add.image(360,565,"p_estatua_fuente").setScale(.82).setDepth(565);this.addObstacle(360,580,126,60);
-   this.add.text(360,690,"PLAZA DE LOS FUNDADORES",{fontFamily:"Georgia",fontSize:"12px",color:"#d9c18b",stroke:"#171c18",strokeThickness:3}).setOrigin(.5).setDepth(1200);
-   [[278,345],[442,345],[255,650],[465,650],[275,905],[445,905],[290,1095],[430,1095]].forEach(([x,y])=>{this.add.circle(x,y-12,24,0xffc96b,.075).setDepth(y-2);this.add.image(x,y,"p_farol").setScale(.46).setDepth(y);});
-   [[290,372],[430,372],[270,930],[450,930]].forEach(([x,y])=>this.add.image(x,y,"p_bandera").setScale(.40).setDepth(y));
-   [[82,575],[638,575]].forEach(([x,y])=>this.add.image(x,y,"p_puesto").setScale(.54).setDepth(y));
-   [[165,665],[555,665],[165,1015],[555,1015]].forEach(([x,y])=>this.add.image(x,y,"p_banco").setScale(.46).setDepth(y));
-   // pequeños props urbanos para dar vida sin volver a llenar de geometría
-   [[105,655],[615,655],[110,1040],[610,1040]].forEach(([x,y])=>this.add.image(x,y,"p_barril_01").setScale(.34).setDepth(y));
-   [[135,675],[585,675]].forEach(([x,y])=>this.add.image(x,y,"p_caja").setScale(.32).setDepth(y));
-   [["npc_guardia",285,1185],["npc_guardia",435,1185]].forEach(([k,x,y])=>this.add.image(x,y,k).setScale(.31).setDepth(y));
+   // fuente central y eje ceremonial
+   this.add.image(360,565,"p_estatua_fuente").setScale(.95).setDepth(575);this.addObstacle(360,585,130,62);
+   [[285,350],[435,350],[255,650],[465,650],[275,920],[445,920],[290,1085],[430,1085]].forEach(([x,y])=>this.add.image(x,y,"p_farol").setScale(.48).setDepth(y));
+   [[285,375],[435,375],[275,945],[445,945]].forEach(([x,y])=>this.add.image(x,y,"p_bandera").setScale(.42).setDepth(y));
+   [[62,555],[658,555]].forEach(([x,y])=>this.add.image(x,y,"p_puesto").setScale(.58).setDepth(y));
+
+   // NPCs limpios y separados de los props.
+   [["npc_mira",190,675,"Mira"],["npc_guardia",315,735,"Guardia"],["npc_aldric",530,675,"Aldric"],["npc_borin",185,930,"Borin"]].forEach(a=>{this.add.ellipse(a[1],a[2]+18,38,11,0x000000,.24).setDepth(a[2]-1);this.add.image(a[1],a[2],a[0]).setScale(.40).setDepth(a[2]);this.add.text(a[1],a[2]+54,a[3],{fontFamily:"Georgia",fontSize:"13px",color:"#fff2c7",stroke:"#000",strokeThickness:3}).setOrigin(.5).setDepth(a[2]+2)});
+
+   // Puerta Sur integrada al eje central.
    const gateStone=this.add.graphics().setDepth(1160);
-   gateStone.fillStyle(0x454a47,.98);gateStone.fillRoundedRect(34,1125,190,105,12);gateStone.fillRoundedRect(496,1125,190,105,12);
-   gateStone.lineStyle(3,0x8f7a54,.70);gateStone.strokeRoundedRect(34,1125,190,105,12);gateStone.strokeRoundedRect(496,1125,190,105,12);
-   gateStone.fillStyle(0x565b57,1);gateStone.fillRoundedRect(225,1160,270,70,18);
-   gateStone.lineStyle(4,0xb0925a,.72);gateStone.strokeRoundedRect(225,1160,270,70,18);
-   this.add.text(360,1193,"PUERTA SUR",{fontFamily:"Georgia",fontSize:"12px",color:"#f2d99d",stroke:"#111",strokeThickness:3}).setOrigin(.5).setDepth(1210);
-   // Señales de navegación integradas a la capital.
-   [["NORTE · TEMPLO",360,155],["OESTE · COMERCIO",118,548],["ESTE · MERCADO",602,548],["SUR · PRADERAS",360,1140]].forEach(([t,x,y])=>this.add.text(x,y,t,{fontFamily:"Georgia",fontSize:"10px",color:"#cbb889",stroke:"#111713",strokeThickness:3}).setOrigin(.5).setDepth(1180));
-   // Sombras suaves bajo NPCs para mejorar profundidad sin alterar gameplay.
-   [[175,625],[305,720],[545,625],[175,900],[285,1200],[435,1200]].forEach(([x,y])=>this.add.ellipse(x,y,34,10,0x000000,.22).setDepth(y-2));
-   [["npc_mira",175,610,"Mira"],["npc_guardia",305,705,"Guardia"],["npc_aldric",545,610,"Aldric"],["npc_borin",175,885,"Borin"]].forEach(a=>{this.add.image(a[1],a[2],a[0]).setScale(.38).setDepth(a[2]);this.add.text(a[1],a[2]+53,a[3],{fontFamily:"Georgia",fontSize:"13px",color:"#fff2c7",stroke:"#000",strokeThickness:3}).setOrigin(.5).setDepth(a[2]+2)});
-   // Puntos de interés reales: preparan entrada a edificios y mejoran exploración.
-   this.add.text(360,118,"LUMEN · CAPITAL DEL REINO",{fontFamily:"Georgia",fontSize:"15px",color:"#f0d79b",backgroundColor:"#101613dd",padding:{x:14,y:6},stroke:"#000",strokeThickness:3}).setOrigin(.5).setDepth(3100);
+   gateStone.fillStyle(0x4b4d47,1);gateStone.fillRoundedRect(28,1120,205,112,12);gateStone.fillRoundedRect(487,1120,205,112,12);gateStone.fillRoundedRect(225,1160,270,72,16);
+   gateStone.lineStyle(4,0xa98d59,.75);gateStone.strokeRoundedRect(225,1160,270,72,16);
+   [["npc_guardia",285,1182],["npc_guardia",435,1182]].forEach(([k,x,y])=>this.add.image(x,y,k).setScale(.33).setDepth(y));
+   this.add.text(360,1195,"PUERTA SUR DE LUMEN",{fontFamily:"Georgia",fontSize:"13px",color:"#f2d99d",stroke:"#111",strokeThickness:3}).setOrigin(.5).setDepth(1210);
+
    this.cityPOI=[
-    {name:"Templo de Lumen",x:360,y:315,r:105,action:"Santuario: recuperación y bendiciones"},
-    {name:"Posada",x:140,y:485,r:92,action:"Descanso y punto de retorno"},
-    {name:"Mercado",x:580,y:485,r:92,action:"Compra y venta de objetos"},
+    {name:"Templo de Lumen",x:360,y:330,r:105,action:"Santuario: recuperación y bendiciones"},
+    {name:"Posada",x:140,y:500,r:92,action:"Descanso y punto de retorno"},
+    {name:"Mercado",x:580,y:500,r:92,action:"Compra y venta de objetos"},
     {name:"Herrería",x:140,y:850,r:92,action:"Mejorar armas y armaduras"},
     {name:"Gremio",x:580,y:850,r:92,action:"Misiones y contratos"},
-    {name:"Plaza de los Fundadores",x:360,y:555,r:145,action:"Centro social de Lumen"}
+    {name:"Plaza de los Fundadores",x:360,y:565,r:155,action:"Centro social de Lumen"}
    ];
    this.poiHint=this.add.text(360,1080,"",{fontFamily:"Georgia",fontSize:"13px",color:"#ffe6a8",backgroundColor:"#111713dd",padding:{x:10,y:6},stroke:"#000",strokeThickness:2}).setOrigin(.5).setDepth(3500);
    this.poiAction=this.add.text(360,1112,"",{fontFamily:"Georgia",fontSize:"11px",color:"#d8c69b",backgroundColor:"#0b100edd",padding:{x:8,y:5}}).setOrigin(.5).setDepth(3500);
@@ -71,7 +72,7 @@ export class LumenScene extends Phaser.Scene {
   this.anims.create({key:"gabriel_idle",frames:["gabriel_idle_01","gabriel_idle_02"].map(key=>({key})),frameRate:3,repeat:-1});
   this.anims.create({key:"gabriel_walk",frames:["gabriel_walk_01","gabriel_walk_02","gabriel_walk_03","gabriel_walk_04"].map(key=>({key})),frameRate:8,repeat:-1});
   this.player.play("gabriel_idle");this.move={x:0,y:0};this.questDone=false;this.slimeQuest=false;this.slimesKilled=0;this.level=1;this.xp=0;this.xpNeed=100;this.gold=0;this.playerHp=100;this.maxHp=100;this.attackReady=true;this.inventory={slimeGel:0};this.equipment={weapon:"Arco del Aprendiz",armor:"Cuero de Lumen"};this.attackPower=15;this.defense=2;this.potions=1;this.gearBonus={attack:0,defense:0};this.inventoryOpen=false;this.inventorySlots=20;this.maxInventorySlots=60;this.baseSlotPrice=100;this.inventoryItems=[];this.gearDrops=0;this.selectedItem=null;this.shopOpen=false;this.questRewardClaimed=false;this.secondQuest=false;this.secondRewardClaimed=false;this.wolvesKilled=0;this.thirdQuest=false;this.thirdRewardClaimed=false;this.goblinsKilled=0;this.fourthQuest=false;this.fourthRewardClaimed=false;this.skeletonsKilled=0;this.fifthQuest=false;this.orcsKilled=0;this.saveKey="etherial_save_v1";this.npcTargets=[];this.spawnSlimes();
-  this.npcTargets.push({name:"Aldric",x:545,y:610,r:82});this.questMarker=this.add.text(545,548,"!",{fontFamily:"Georgia",fontSize:"28px",color:"#ffd75a",stroke:"#4a3210",strokeThickness:4}).setOrigin(.5).setDepth(9000);this.tweens.add({targets:this.questMarker,y:540,duration:650,yoyo:true,repeat:-1});
+  this.npcTargets.push({name:"Aldric",x:530,y:675,r:82});this.questMarker=this.add.text(530,613,"!",{fontFamily:"Georgia",fontSize:"28px",color:"#ffd75a",stroke:"#4a3210",strokeThickness:4}).setOrigin(.5).setDepth(9000);this.tweens.add({targets:this.questMarker,y:605,duration:650,yoyo:true,repeat:-1});
   this.add.rectangle(360,1245,720,58,0x283322,.72).setDepth(-5);
   this.add.text(360,1230,"PUERTA SUR DE LUMEN",{fontFamily:"Georgia",fontSize:"17px",color:"#e8d5a5",stroke:"#1d2419",strokeThickness:4}).setOrigin(.5).setDepth(3000);
   
