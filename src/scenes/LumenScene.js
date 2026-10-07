@@ -16,56 +16,17 @@ export class LumenScene extends Phaser.Scene {
  create(){
   this.physics.world.setBounds(0,0,720,1780);this.inHuntZone=false;this.safeZone=true;this.zoneName="Lumen";this.deathCount=0;this.respawnProtection=false; this.obstacles=this.physics.add.staticGroup();
   // LUMEN RESET V14 — rebuilding.
-   this.add.rectangle(360,890,720,1780,0x252a25,1).setDepth(-30);
-   this.add.image(360,1515,"t_hierba").setDisplaySize(720,530).setAlpha(.72).setDepth(-29);
-   const city=this.add.graphics().setDepth(-28);
-   // recinto de piedra continuo
-   city.fillStyle(0x5b5a50,1);city.fillRoundedRect(18,105,684,1128,22);
-   city.lineStyle(7,0x9b8253,.82);city.strokeRoundedRect(18,105,684,1128,22);
-   // avenida real de piedra clara
-   city.fillStyle(0x817968,1);city.fillRoundedRect(224,130,272,1090,18);
-   city.lineStyle(3,0xc2a268,.70);city.strokeRoundedRect(224,130,272,1090,18);
-   for(let y=175;y<1200;y+=74){city.lineStyle(1,0xa9a18f,.28);city.lineBetween(238,y,482,y);}
-   // calles transversales, sin cajas de distrito
-   city.fillStyle(0x756f61,1);city.fillRoundedRect(35,390,650,104,18);city.fillRoundedRect(35,735,650,100,18);
-   // plaza circular protagonista
-   city.fillStyle(0x8b806d,1);city.fillCircle(360,565,178);
-   city.lineStyle(8,0xc3a164,.86);city.strokeCircle(360,565,178);
-   city.lineStyle(3,0xa78c59,.68);city.strokeCircle(360,565,136);
-   city.lineStyle(2,0xc3a164,.42);city.strokeCircle(360,565,104);
-   // accesos de piedra a edificios
-   [[245,310,230,54],[35,450,210,58],[475,450,210,58],[35,795,210,58],[475,795,210,58]].forEach(r=>{city.fillStyle(0x766f61,.96);city.fillRoundedRect(...r,12);});
-
-   // edificios grandes y pegados a las calles para ocultar el aspecto de tarjetas flotantes
-   [["b_templo",360,245,1.08,205,78],["b_posada",112,400,.86,160,68],["b_mercado",608,400,.86,160,68],["b_herreria",112,755,.84,158,68],["b_gremio",608,755,.84,158,68]].forEach(([k,x,y,s,w,h])=>{this.add.image(x,y,k).setScale(s).setDepth(y);this.addObstacle(x,y+38,w,h);});
-   [["TEMPLO",360,340],["POSADA",112,505],["MERCADO",608,505],["HERRERÍA",112,858],["GREMIO",608,858]].forEach(([t,x,y])=>this.add.text(x,y,t,{fontFamily:"Georgia",fontSize:"12px",color:"#f4dda2",backgroundColor:"#101512dd",padding:{x:10,y:4},stroke:"#000",strokeThickness:2}).setOrigin(.5).setDepth(1250));
-
-   // fuente central y eje ceremonial
-   this.add.image(360,565,"p_estatua_fuente").setScale(.95).setDepth(575);this.addObstacle(360,585,130,62);
-   [[285,350],[435,350],[255,650],[465,650],[275,920],[445,920],[290,1085],[430,1085]].forEach(([x,y])=>this.add.image(x,y,"p_farol").setScale(.48).setDepth(y));
-   [[285,375],[435,375],[275,945],[445,945]].forEach(([x,y])=>this.add.image(x,y,"p_bandera").setScale(.42).setDepth(y));
-   [[62,555],[658,555]].forEach(([x,y])=>this.add.image(x,y,"p_puesto").setScale(.58).setDepth(y));
-
-   // NPCs limpios y separados de los props.
-   [["npc_mira",190,675,"Mira"],["npc_guardia",315,735,"Guardia"],["npc_aldric",530,675,"Aldric"],["npc_borin",185,930,"Borin"]].forEach(a=>{this.add.ellipse(a[1],a[2]+18,38,11,0x000000,.24).setDepth(a[2]-1);this.add.image(a[1],a[2],a[0]).setScale(.40).setDepth(a[2]);this.add.text(a[1],a[2]+54,a[3],{fontFamily:"Georgia",fontSize:"13px",color:"#fff2c7",stroke:"#000",strokeThickness:3}).setOrigin(.5).setDepth(a[2]+2)});
-
-   // Puerta Sur integrada al eje central.
-   const gateStone=this.add.graphics().setDepth(1160);
-   gateStone.fillStyle(0x4b4d47,1);gateStone.fillRoundedRect(28,1120,205,112,12);gateStone.fillRoundedRect(487,1120,205,112,12);gateStone.fillRoundedRect(225,1160,270,72,16);
-   gateStone.lineStyle(4,0xa98d59,.75);gateStone.strokeRoundedRect(225,1160,270,72,16);
-   [["npc_guardia",285,1182],["npc_guardia",435,1182]].forEach(([k,x,y])=>this.add.image(x,y,k).setScale(.33).setDepth(y));
-   this.add.text(360,1195,"PUERTA SUR DE LUMEN",{fontFamily:"Georgia",fontSize:"13px",color:"#f2d99d",stroke:"#111",strokeThickness:3}).setOrigin(.5).setDepth(1210);
-
-   this.cityPOI=[
-    {name:"Templo de Lumen",x:360,y:330,r:105,action:"Santuario: recuperación y bendiciones"},
-    {name:"Posada",x:140,y:500,r:92,action:"Descanso y punto de retorno"},
-    {name:"Mercado",x:580,y:500,r:92,action:"Compra y venta de objetos"},
-    {name:"Herrería",x:140,y:850,r:92,action:"Mejorar armas y armaduras"},
-    {name:"Gremio",x:580,y:850,r:92,action:"Misiones y contratos"},
-    {name:"Plaza de los Fundadores",x:360,y:565,r:155,action:"Centro social de Lumen"}
-   ];
-   this.poiHint=this.add.text(360,1080,"",{fontFamily:"Georgia",fontSize:"13px",color:"#ffe6a8",backgroundColor:"#111713dd",padding:{x:10,y:6},stroke:"#000",strokeThickness:2}).setOrigin(.5).setDepth(3500);
-   this.poiAction=this.add.text(360,1112,"",{fontFamily:"Georgia",fontSize:"11px",color:"#d8c69b",backgroundColor:"#0b100edd",padding:{x:8,y:5}}).setOrigin(.5).setDepth(3500);
+   this.add.rectangle(360,890,720,1780,0x202724,1).setDepth(-30);
+   const ground=this.add.graphics().setDepth(-29);
+   ground.fillStyle(0x514f47,1);ground.fillRoundedRect(18,105,684,1128,22);
+   ground.fillStyle(0x777063,1);ground.fillRoundedRect(230,110,260,1125,18);
+   ground.lineStyle(3,0xa68b58,.55);ground.strokeRoundedRect(230,110,260,1125,18);
+   ground.fillStyle(0x807666,1);ground.fillCircle(360,565,170);
+   ground.lineStyle(6,0xb7985e,.70);ground.strokeCircle(360,565,170);
+   this.add.text(360,150,"LUMEN · RECONSTRUCCIÓN",{fontFamily:"Georgia",fontSize:"16px",color:"#e7d09a",stroke:"#111",strokeThickness:3}).setOrigin(.5).setDepth(1200);
+   this.cityPOI=[];
+   this.poiHint=this.add.text(360,1080,"",{fontFamily:"Georgia",fontSize:"13px",color:"#ffe6a8"}).setOrigin(.5).setDepth(3500).setVisible(false);
+   this.poiAction=this.add.text(360,1112,"",{fontFamily:"Georgia",fontSize:"11px",color:"#d8c69b"}).setOrigin(.5).setDepth(3500).setVisible(false);
    this.playerShadow=this.add.ellipse(360,1002,48,15,0x000000,.24).setDepth(899);
     this.player=this.physics.add.sprite(360,968,"gabriel_idle_01").setScale(.68).setDepth(900);this.player.body.setSize(34,38).setOffset(24,62);this.player.setCollideWorldBounds(true);this.cameras.main.setBounds(0,0,720,1780);this.cameras.main.startFollow(this.player,true,.10,.10,0,135);this.cameras.main.setDeadzone(70,110);this.physics.add.collider(this.player,this.obstacles);
   this.playerName=this.add.text(360,1028,"Gabriel · Arquero",{fontFamily:"Georgia",fontSize:"14px",color:"#fff1c4",stroke:"#000",strokeThickness:3}).setOrigin(.5).setDepth(901);
