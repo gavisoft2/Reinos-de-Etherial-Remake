@@ -47,7 +47,7 @@ export class LumenScene extends Phaser.Scene {
   const w=src.width,h=src.height,cv=document.createElement("canvas");cv.width=w;cv.height=h;
   const ctx=cv.getContext("2d",{willReadFrequently:true});ctx.drawImage(src,0,0);
   const img=ctx.getImageData(0,0,w,h),d=img.data,seen=new Uint8Array(w*h),q=[];
-  const bg=i=>{const r=d[i*4],g=d[i*4+1],b=d[i*4+2],a=d[i*4+3];const mx=Math.max(r,g,b),mn=Math.min(r,g,b);return a<245 || (mx-mn<18 && mx<125 && mn>28)};
+  const bg=i=>{const r=d[i*4],g=d[i*4+1],b=d[i*4+2],a=d[i*4+3];const mx=Math.max(r,g,b),mn=Math.min(r,g,b);return a<40 || (mx-mn<16 && mx<92 && mn>18)};
   const push=(x,y)=>{if(x<0||y<0||x>=w||y>=h)return;const n=y*w+x;if(seen[n]||!bg(n))return;seen[n]=1;q.push(n)};
   for(let x=0;x<w;x++){push(x,0);push(x,h-1)}for(let y=0;y<h;y++){push(0,y);push(w-1,y)}
   for(let p=0;p<q.length;p++){const n=q[p],x=n%w,y=(n/w)|0;d[n*4+3]=0;push(x-1,y);push(x+1,y);push(x,y-1);push(x,y+1)}
@@ -68,7 +68,7 @@ export class LumenScene extends Phaser.Scene {
  attackGoblin(){
   if(!this.goblins)return false;let t=null,b=235;this.goblins.getChildren().forEach(g=>{if(g.active){const d=Phaser.Math.Distance.Between(this.player.x,this.player.y,g.x,g.y);if(d<b){b=d;t=g}}});if(!t)return false;if(!this.attackReady)return true;
   this.attackReady=false;this.time.delayedCall(480,()=>this.attackReady=true);const crit=Phaser.Math.Between(1,100)<=12,dmg=Math.floor((this.attackPower+Phaser.Math.Between(0,5))*(crit?1.75:1));const a=this.add.image(this.player.x,this.player.y-18,"gabriel_attack_01").setDisplaySize(30,38).setDepth(9000);
-  this.tweens.add({targets:a,x:t.x,y:t.y,duration:180,onComplete:()=>{a.destroy();if(!t.active)return;t.hp-=dmg;t.hpBar.width=66*Math.max(0,t.hp/t.maxHp);this.showCombatText(t.x,t.y-72,"-"+dmg,crit?"#ffe16b":"#ffd38a");if(t.hp<=0){t.disableBody(true,true);t.hpBg.destroy();t.hpBar.destroy();this.goblinsKilled++;this.gainXp(60);this.gold+=Phaser.Math.Between(12,20);this.goldText?.setText("Oro "+this.gold);if(Phaser.Math.Between(1,100)<=28)this.spawnGearDrop(t.x,t.y);this.questText.setText("SAQUEADORES VERDES\nDerrota Goblins  "+Math.min(4,this.goblinsKilled)+"/4"+(this.goblinsKilled>=4?" ✓":""));if(this.goblinsKilled===4)this.showDialogue("Los saqueadores han caído. Regresa con Aldric.");}}});return true;
+  this.tweens.add({targets:a,x:t.x,y:t.y,duration:180,onComplete:()=>{a.destroy();if(!t.active)return;t.hp-=dmg;t.hpBar.width=66*Math.max(0,t.hp/t.maxHp);this.showCombatText(t.x,t.y-72,"-"+dmg,crit?"#ffe16b":"#ffd38a");if(t.hp<=0){const rx=t.x,ry=t.y;t.disableBody(true,true);t.hpBg.destroy();t.hpBar.destroy();this.respawnEnemy("goblin",rx,ry,8500);this.goblinsKilled++;this.gainXp(60);this.gold+=Phaser.Math.Between(12,20);this.goldText?.setText("Oro "+this.gold);if(Phaser.Math.Between(1,100)<=28)this.spawnGearDrop(t.x,t.y);this.questText.setText("SAQUEADORES VERDES\nDerrota Goblins  "+Math.min(4,this.goblinsKilled)+"/4"+(this.goblinsKilled>=4?" ✓":""));if(this.goblinsKilled===4)this.showDialogue("Los saqueadores han caído. Regresa con Aldric.");}}});return true;
  }
  spawnWolves(){
   this.wolves=this.physics.add.group();[[135,1120],[355,1160],[585,1095]].forEach(p=>{const w=this.wolves.create(p[0],p[1],"enemy_wolf").setScale(.72).setDepth(p[1]);w.hp=55;w.maxHp=55;w.lastHit=0;w.hpBg=this.add.rectangle(p[0],p[1]-50,64,7,0x1b1512,.85).setDepth(p[1]+1);w.hpBar=this.add.rectangle(p[0]-31,p[1]-50,62,5,0xb63c35).setOrigin(0,.5).setDepth(p[1]+2);});
@@ -77,7 +77,14 @@ export class LumenScene extends Phaser.Scene {
   if(!this.wolves)return false;let t=null,b=225;this.wolves.getChildren().forEach(w=>{if(w.active){const d=Phaser.Math.Distance.Between(this.player.x,this.player.y,w.x,w.y);if(d<b){b=d;t=w}}});if(!t)return false;
   if(!this.attackReady)return true;this.attackReady=false;this.time.delayedCall(480,()=>this.attackReady=true);const crit=Phaser.Math.Between(1,100)<=12,dmg=Math.floor((this.attackPower+Phaser.Math.Between(0,5))*(crit?1.75:1));this.fireArrowWolf(t,dmg);return true;
  }
- fireArrowWolf(t,dmg){const a=this.add.image(this.player.x,this.player.y-18,"gabriel_attack_01").setDisplaySize(30,38).setDepth(9000);this.tweens.add({targets:a,x:t.x,y:t.y,duration:180,onComplete:()=>{a.destroy();if(!t.active)return;t.hp-=dmg;t.hpBar.width=62*Math.max(0,t.hp/t.maxHp);this.showCombatText(t.x,t.y-70,"-"+dmg,"#ffd38a");if(t.hp<=0){t.disableBody(true,true);t.hpBg.destroy();t.hpBar.destroy();this.wolvesKilled++;this.gainXp(40);this.gold+=Phaser.Math.Between(8,14);this.goldText?.setText("Oro "+this.gold);this.questText.setText("PELIGRO EN EL BOSQUE\nDerrota Lobos  "+Math.min(3,this.wolvesKilled)+"/3"+(this.wolvesKilled>=3?" ✓":""));if(this.wolvesKilled===3)this.showDialogue("Objetivo cumplido. Regresa con Aldric.");}}});}
+ fireArrowWolf(t,dmg){const a=this.add.image(this.player.x,this.player.y-18,"gabriel_attack_01").setDisplaySize(30,38).setDepth(9000);this.tweens.add({targets:a,x:t.x,y:t.y,duration:180,onComplete:()=>{a.destroy();if(!t.active)return;t.hp-=dmg;t.hpBar.width=62*Math.max(0,t.hp/t.maxHp);this.showCombatText(t.x,t.y-70,"-"+dmg,"#ffd38a");if(t.hp<=0){const rx=t.x,ry=t.y;t.disableBody(true,true);t.hpBg.destroy();t.hpBar.destroy();this.respawnEnemy("wolf",rx,ry,7000);this.wolvesKilled++;this.gainXp(40);this.gold+=Phaser.Math.Between(8,14);this.goldText?.setText("Oro "+this.gold);this.questText.setText("PELIGRO EN EL BOSQUE\nDerrota Lobos  "+Math.min(3,this.wolvesKilled)+"/3"+(this.wolvesKilled>=3?" ✓":""));if(this.wolvesKilled===3)this.showDialogue("Objetivo cumplido. Regresa con Aldric.");}}});}
+ respawnEnemy(kind,x,y,delay=6500){
+  this.time.delayedCall(delay,()=>{
+   if(kind==="slime"&&this.slimes){const s=this.slimes.create(x,y,"enemy_slime").setScale(.72).setDepth(y);s.hp=30;s.maxHp=30;s.homeX=x;s.homeY=y;s.lastHit=0;s.setImmovable(false);s.hpBg=this.add.rectangle(x,y-48,58,7,0x1b1512,.85).setDepth(y+1);s.hpBar=this.add.rectangle(x-28,y-48,56,5,0xb63c35,1).setOrigin(0,.5).setDepth(y+2);}
+   if(kind==="wolf"&&this.wolves){const w=this.wolves.create(x,y,"enemy_wolf").setScale(.72).setDepth(y);w.hp=55;w.maxHp=55;w.lastHit=0;w.hpBg=this.add.rectangle(x,y-50,64,7,0x1b1512,.85).setDepth(y+1);w.hpBar=this.add.rectangle(x-31,y-50,62,5,0xb63c35).setOrigin(0,.5).setDepth(y+2);}
+   if(kind==="goblin"&&this.goblins){const g=this.goblins.create(x,y,"enemy_goblin").setScale(.7).setDepth(y);g.hp=80;g.maxHp=80;g.lastHit=0;g.hpBg=this.add.rectangle(x,y-52,68,7,0x1b1512,.85).setDepth(y+1);g.hpBar=this.add.rectangle(x-33,y-52,66,5,0xb63c35).setOrigin(0,.5).setDepth(y+2);}
+  });
+ }
  spawnSlimes(){
   this.slimes=this.physics.add.group();
   [[190,980],[360,1040],[545,955]].forEach((p,i)=>{
