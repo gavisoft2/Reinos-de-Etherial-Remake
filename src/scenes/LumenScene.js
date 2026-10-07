@@ -148,7 +148,7 @@ export class LumenScene extends Phaser.Scene {
   // VISUAL PASS SAFE V6 — identidad de capital: accesos, emblemas y zonas sociales.
   const royal=this.add.graphics().setDepth(-20);
   // Alfombra pétrea ceremonial desde Plaza Real hacia el templo.
-  royal.fillStyle(0xd8c99f,.18); royal.fillRoundedRect(318,120,84,255,18);
+  royal.fillStyle(0x77766d,.16); royal.fillRoundedRect(318,120,84,255,18);
   royal.lineStyle(3,0xb89545,.46); royal.strokeRoundedRect(318,120,84,255,18);
   royal.lineStyle(2,0x315f91,.38); royal.lineBetween(330,135,330,355); royal.lineBetween(390,135,390,355);
   // Pequeños escudos heráldicos sobre el eje.
@@ -166,7 +166,7 @@ export class LumenScene extends Phaser.Scene {
   });
   // Señales de orientación integradas en la ciudad.
   [["← MERCADO",165,675],["GREMIO →",555,675],["↑ TEMPLO",360,330]].forEach(([t,x,y])=>{
-    this.add.text(x,y,t,{fontFamily:"Georgia",fontSize:"10px",color:"#6f592d",stroke:"#f4ead5",strokeThickness:3}).setOrigin(.5).setDepth(325);
+    this.add.text(x,y,t,{fontFamily:"Georgia",fontSize:"10px",color:"#d9c994",stroke:"#f4ead5",strokeThickness:3}).setOrigin(.5).setDepth(325);
   });
   // Brillos discretos en puntos de interés para guiar sin saturar.
   [[360,340],[115,610],[605,610],[125,835],[595,835]].forEach(([x,y])=>{
@@ -196,7 +196,7 @@ export class LumenScene extends Phaser.Scene {
   });
   // Marcadores discretos de zonas de servicio.
   [["COMERCIO",112,690],["ARTESANOS",608,690]].forEach(([t,x,y])=>{
-    this.add.text(x,y,t,{fontFamily:"Georgia",fontSize:"9px",color:"#745d31",stroke:"#f3e8d1",strokeThickness:3}).setOrigin(.5).setDepth(330);
+    this.add.text(x,y,t,{fontFamily:"Georgia",fontSize:"9px",color:"#d9c994",stroke:"#f3e8d1",strokeThickness:3}).setOrigin(.5).setDepth(330);
   });
   // Estatua monumental completa: pedestal + figura central, sin usar el recorte roto anterior.
   this.add.rectangle(360,432,72,72,0x8e8775,1).setStrokeStyle(3,0xd1c29b,.9).setDepth(438);
