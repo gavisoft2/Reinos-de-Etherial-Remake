@@ -198,6 +198,27 @@ export class LumenScene extends Phaser.Scene {
   [["COMERCIO",112,690],["ARTESANOS",608,690]].forEach(([t,x,y])=>{
     this.add.text(x,y,t,{fontFamily:"Georgia",fontSize:"9px",color:"#d9c994",stroke:"#f3e8d1",strokeThickness:3}).setOrigin(.5).setDepth(330);
   });
+  // CAPITAL PASS V8 — transición orgánica entre distritos y avenida real.
+  const capital=this.add.graphics().setDepth(150);
+  // Aceras de piedra conectan las bases de edificios con la avenida.
+  [[118,405,242,34],[602,405,242,34],[125,865,242,34],[595,865,242,34]].forEach(([x,y,w,h])=>{
+    capital.fillStyle(0x555a56,.88); capital.fillRoundedRect(x-w/2,y-h/2,w,h,10);
+    capital.lineStyle(2,0x9b895d,.62); capital.strokeRoundedRect(x-w/2,y-h/2,w,h,10);
+  });
+  // Entradas doradas desde cada distrito.
+  [[235,405,315,405],[485,405,405,405],[245,865,315,865],[475,865,405,865]].forEach(([x1,y1,x2,y2])=>{
+    capital.lineStyle(3,0xb89a52,.52); capital.lineBetween(x1,y1,x2,y2);
+  });
+  // Jardineras para romper esquinas rectangulares y dar profundidad.
+  [[215,370],[505,370],[220,825],[500,825]].forEach(([x,y],i)=>{
+    capital.fillStyle(0x315c34,.92); capital.fillEllipse(x,y,58,27);
+    capital.lineStyle(2,0x9b895d,.65); capital.strokeEllipse(x,y,58,27);
+    this.add.image(x,y-10,i%2?"p_arbol_02":"p_arbol_01").setScale(.18).setDepth(y+4);
+  });
+  // Faroles marcan accesos principales.
+  [[260,420],[460,420],[265,880],[455,880]].forEach(([x,y])=>{
+    this.add.image(x,y,"p_farol").setScale(.34).setDepth(y+5);
+  });
   // Estatua monumental completa: pedestal + figura central, sin usar el recorte roto anterior.
   this.add.rectangle(360,432,72,72,0x8e8775,1).setStrokeStyle(3,0xd1c29b,.9).setDepth(438);
   const monument=this.add.image(360,365,"npc_guardia").setScale(1.15).setTint(0xc8c1ae).setDepth(439);
