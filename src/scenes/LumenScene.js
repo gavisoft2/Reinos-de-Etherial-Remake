@@ -65,6 +65,18 @@ export class LumenScene extends Phaser.Scene {
 
   this.add.text(360,1640,"LUMEN",{fontFamily:"Georgia",fontSize:"36px",color:"#ead8a8",stroke:"#111914",strokeThickness:6}).setOrigin(.5).setDepth(40);
   this.add.text(360,1682,"Capital de Etherial",{fontFamily:"Georgia",fontSize:"15px",color:"#c9c3a5"}).setOrigin(.5).setDepth(40);
+
+  const detail=this.add.graphics().setDepth(6);
+  detail.lineStyle(2,0x4e4a43,.42);
+  for(let y=310;y<1330;y+=42) detail.lineBetween(250,y,470,y);
+  for(let y=330;y<1330;y+=84){detail.lineBetween(250,y,470,y+20);detail.lineBetween(470,y,250,y+20);}
+  detail.fillStyle(0x4c6769,.8);detail.fillRoundedRect(70,690,105,210,22);detail.fillRoundedRect(545,690,105,210,22);
+  detail.lineStyle(4,0x9b8b68,.7);detail.strokeRoundedRect(70,690,105,210,22);detail.strokeRoundedRect(545,690,105,210,22);
+  for(let i=0;i<5;i++){detail.fillStyle(0x817b70,1);detail.fillRoundedRect(270+i*10,265+i*14,180-i*20,12,4);}
+  [[165,735],[555,735],[165,850],[555,850],[285,1185],[435,1185]].forEach(([x,y])=>{this.add.rectangle(x,y,62,10,0x6b4c31,1).setDepth(35);this.add.rectangle(x-24,y+13,5,22,0x33271f,1).setDepth(34);this.add.rectangle(x+24,y+13,5,22,0x33271f,1).setDepth(34);});
+  [[245,350],[475,350],[245,1125],[475,1125]].forEach(([x,y],i)=>{this.add.rectangle(x,y,5,74,0x41372b,1).setDepth(36);const flag=this.add.graphics().setDepth(37);flag.fillStyle(i%2?0x274f72:0x315d7c,1);flag.fillTriangle(x+3,y-35,x+43,y-25,x+3,y+8);flag.lineStyle(2,0xc6a55f,1);flag.lineBetween(x+4,y-34,x+4,y+8);});
+  const label=(x,y,t)=>this.add.text(x,y,t,{fontFamily:"Georgia",fontSize:"12px",color:"#dfcfaa",stroke:"#172019",strokeThickness:3}).setOrigin(.5).setDepth(45);
+  label(145,390,"POSADA");label(575,390,"MERCADO");label(145,940,"HERRERÍA");label(575,940,"GREMIO");label(360,70,"TEMPLO DE LUMEN");
   this.cameras.main.scrollY=260;
  }
  addObstacle(x,y,w,h){const z=this.obstacles.create(x,y,null).setVisible(false);z.body.setSize(w,h);z.refreshBody();return z}
