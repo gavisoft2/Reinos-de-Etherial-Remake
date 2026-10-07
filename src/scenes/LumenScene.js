@@ -145,6 +145,34 @@ export class LumenScene extends Phaser.Scene {
     this.add.image(x,y,i%2?"p_arbol_02":"p_arbol_03").setScale(.25).setDepth(y);
   });
   this.add.text(360,1490,"PUERTA SUR",{fontFamily:"Georgia",fontSize:"15px",color:"#755d2a",stroke:"#f4ead5",strokeThickness:4}).setOrigin(.5).setDepth(320);
+  // VISUAL PASS SAFE V6 — identidad de capital: accesos, emblemas y zonas sociales.
+  const royal=this.add.graphics().setDepth(-20);
+  // Alfombra pétrea ceremonial desde Plaza Real hacia el templo.
+  royal.fillStyle(0xd8c99f,.18); royal.fillRoundedRect(318,120,84,255,18);
+  royal.lineStyle(3,0xb89545,.46); royal.strokeRoundedRect(318,120,84,255,18);
+  royal.lineStyle(2,0x315f91,.38); royal.lineBetween(330,135,330,355); royal.lineBetween(390,135,390,355);
+  // Pequeños escudos heráldicos sobre el eje.
+  [165,225,285].forEach(y=>{
+    royal.fillStyle(0x315f91,.72); royal.fillCircle(360,y,13);
+    royal.lineStyle(2,0xd2b45b,.9); royal.strokeCircle(360,y,13);
+    royal.lineBetween(352,y,368,y); royal.lineBetween(360,y-8,360,y+8);
+  });
+  // Dos zonas sociales a los lados de la avenida.
+  [[115,1185],[605,1185]].forEach(([x,y],i)=>{
+    this.add.ellipse(x,y,128,62,0x315c34,.72).setStrokeStyle(3,0xb89545,.48).setDepth(y-5);
+    this.add.image(x,y-8,i?"p_arbol_02":"p_arbol_03").setScale(.27).setDepth(y);
+    this.add.image(x+(i?-48:48),y+15,"p_banco").setScale(.32).setDepth(y+1);
+    this.add.image(x+(i?48:-48),y-8,"p_farol").setScale(.38).setDepth(y+2);
+  });
+  // Señales de orientación integradas en la ciudad.
+  [["← MERCADO",165,675],["GREMIO →",555,675],["↑ TEMPLO",360,330]].forEach(([t,x,y])=>{
+    this.add.text(x,y,t,{fontFamily:"Georgia",fontSize:"10px",color:"#6f592d",stroke:"#f4ead5",strokeThickness:3}).setOrigin(.5).setDepth(325);
+  });
+  // Brillos discretos en puntos de interés para guiar sin saturar.
+  [[360,340],[115,610],[605,610],[125,835],[595,835]].forEach(([x,y])=>{
+    const glow=this.add.circle(x,y,16,0xe8cf78,.10).setDepth(315);
+    this.tweens.add({targets:glow,alpha:{from:.06,to:.20},scale:{from:.8,to:1.25},duration:1700,yoyo:true,repeat:-1});
+  });
   // Estatua monumental completa: pedestal + figura central, sin usar el recorte roto anterior.
   this.add.rectangle(360,432,72,72,0x8e8775,1).setStrokeStyle(3,0xd1c29b,.9).setDepth(438);
   const monument=this.add.image(360,365,"npc_guardia").setScale(1.15).setTint(0xc8c1ae).setDepth(439);
