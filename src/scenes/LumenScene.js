@@ -20,15 +20,22 @@ export class LumenScene extends Phaser.Scene {
   // Base continua: elimina el efecto de mosaico/cuadricula del suelo.
   this.add.rectangle(360,890,720,1780,0x484d4a,1).setDepth(-30);
   // LUMEN FIT V1 — lumen_master es 500x247 (~2.02:1). Mantener proporción real.
-  // El mapa original es 500x247. Escalado proporcional a 1280px de alto = 2591px de ancho.
-  // En móvil se recortan los laterales y vemos DE CERCA el centro jugable de la ciudad.
-  this.add.image(360,640,"lumen_map").setDisplaySize(2591,1280).setAlpha(1).setDepth(-29);
-  // Praderas empiezan después de la muralla sur.
-  this.add.image(360,1530,"t_hierba").setDisplaySize(720,500).setAlpha(.78).setDepth(-29);
-  // Plaza de Lumen limpia: colisión de fuente; el aspecto visual usa el asset dedicado.
-  this.addObstacle(360,468,205,74);
-  // El mapa maestro ya contiene arquitectura, jardines y plaza; no duplicar props encima.
-  // EDIFICIOS DE LUMEN — el mapa maestro aporta el arte; estas huellas conservan colisiones.
+  // LUMEN CLEAN BASE — fondo panorámico eliminado.
+  // Base neutra temporal para reconstruir la ciudad en vertical con assets independientes.
+  this.add.rectangle(360,640,720,1280,0x343b38,1).setDepth(-29);
+  this.add.image(360,1510,"t_hierba").setDisplaySize(720,540).setAlpha(.72).setDepth(-29);
+  // Avenida central limpia.
+  const lumenRoad=this.add.graphics().setDepth(-28);
+  lumenRoad.fillStyle(0x696960,.88); lumenRoad.fillRoundedRect(250,0,220,1240,26);
+  lumenRoad.lineStyle(3,0xa98f58,.55); lumenRoad.strokeRoundedRect(250,0,220,1240,26);
+  // Plaza y mobiliario independientes: ya no dependen del background antiguo.
+  const plaza=this.add.graphics().setDepth(-27);
+  plaza.fillStyle(0x73736a,.96);plaza.fillCircle(360,520,145);
+  plaza.lineStyle(4,0xb49a61,.70);plaza.strokeCircle(360,520,145);
+  this.add.image(360,520,"p_estatua_fuente").setScale(.56).setDepth(530);
+  this.addObstacle(360,535,105,52);
+  [[120,300,"p_arbol_01"],[600,300,"p_arbol_02"],[115,720,"p_arbol_03"],[605,720,"p_arbol_01"],[120,1040,"p_arbol_02"],[600,1040,"p_arbol_03"]].forEach(([x,y,k])=>this.add.image(x,y,k).setScale(.58).setDepth(y));
+  [[285,360],[435,360],[270,680],[450,680],[285,940],[435,940],[295,1140],[425,1140]].forEach(([x,y])=>this.add.image(x,y,"p_farol").setScale(.38).setDepth(y));
   [["npc_mira",205,650,"Mira"],["npc_guardia",300,735,"Guardia"],["npc_aldric",515,650,"Aldric"],["npc_borin",205,880,"Borin"]].forEach(a=>{this.add.image(a[1],a[2],a[0]).setScale(.34).setDepth(a[2]);this.add.text(a[1],a[2]+48,a[3],{fontFamily:"Georgia",fontSize:"12px",color:"#fff2c7",stroke:"#000",strokeThickness:3}).setOrigin(.5).setDepth(a[2]+2)});
     this.playerShadow=this.add.ellipse(360,928,44,14,0x000000,.22).setDepth(899);
     this.player=this.physics.add.sprite(360,895,"gabriel_idle_01").setScale(.62).setDepth(900);this.player.body.setSize(34,38).setOffset(24,62);this.player.setCollideWorldBounds(true);this.cameras.main.setBounds(0,0,720,1780);this.cameras.main.startFollow(this.player,true,.10,.10,0,150);this.cameras.main.setDeadzone(70,105);this.physics.add.collider(this.player,this.obstacles);
