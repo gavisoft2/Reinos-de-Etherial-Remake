@@ -14,38 +14,13 @@ export class LumenScene extends Phaser.Scene {
   this.load.image("loot_gel",A+"effects/curacion.png");
  }
  create(){
-  this.physics.world.setBounds(0,0,720,1780);this.inHuntZone=false;this.safeZone=true;this.zoneName="Lumen";this.deathCount=0;this.respawnProtection=false; this.obstacles=this.physics.add.staticGroup();
-  // LUMEN RESET V15 — reset visual total; todos los elementos antiguos quedan ocultos.
-   this.add.rectangle(360,890,720,1780,0x202724,1).setDepth(-30);
-   const ground=this.add.graphics().setDepth(-29);
-   ground.fillStyle(0x514f47,1);ground.fillRoundedRect(18,105,684,1128,22);
-   ground.fillStyle(0x777063,1);ground.fillRoundedRect(230,110,260,1125,18);
-   ground.lineStyle(3,0xa68b58,.55);ground.strokeRoundedRect(230,110,260,1125,18);
-   ground.fillStyle(0x807666,1);ground.fillCircle(360,565,170);
-   ground.lineStyle(6,0xb7985e,.70);ground.strokeCircle(360,565,170);
-   this.add.text(360,150,"LUMEN · RECONSTRUCCIÓN",{fontFamily:"Georgia",fontSize:"16px",color:"#e7d09a",stroke:"#111",strokeThickness:3}).setOrigin(.5).setDepth(1200);
-   this.cityPOI=[];
-   this.poiHint=this.add.text(360,1080,"",{fontFamily:"Georgia",fontSize:"13px",color:"#ffe6a8"}).setOrigin(.5).setDepth(3500).setVisible(false);
-   this.poiAction=this.add.text(360,1112,"",{fontFamily:"Georgia",fontSize:"11px",color:"#d8c69b"}).setOrigin(.5).setDepth(3500).setVisible(false);
-   this.playerShadow=this.add.ellipse(360,1002,48,15,0x000000,.24).setDepth(899);
-    this.player=this.physics.add.sprite(360,968,"gabriel_idle_01").setScale(.68).setDepth(900);this.player.body.setSize(34,38).setOffset(24,62);this.player.setCollideWorldBounds(true);this.cameras.main.setBounds(0,0,720,1780);this.cameras.main.startFollow(this.player,true,.10,.10,0,135);this.cameras.main.setDeadzone(70,110);this.physics.add.collider(this.player,this.obstacles);
-  this.playerName=this.add.text(360,1028,"Gabriel · Arquero",{fontFamily:"Georgia",fontSize:"14px",color:"#fff1c4",stroke:"#000",strokeThickness:3}).setOrigin(.5).setDepth(901);
-  this.anims.create({key:"gabriel_idle",frames:["gabriel_idle_01","gabriel_idle_02"].map(key=>({key})),frameRate:3,repeat:-1});
-  this.anims.create({key:"gabriel_walk",frames:["gabriel_walk_01","gabriel_walk_02","gabriel_walk_03","gabriel_walk_04"].map(key=>({key})),frameRate:8,repeat:-1});
-  this.player.play("gabriel_idle");this.move={x:0,y:0};this.questDone=false;this.slimeQuest=false;this.slimesKilled=0;this.level=1;this.xp=0;this.xpNeed=100;this.gold=0;this.playerHp=100;this.maxHp=100;this.attackReady=true;this.inventory={slimeGel:0};this.equipment={weapon:"Arco del Aprendiz",armor:"Cuero de Lumen"};this.attackPower=15;this.defense=2;this.potions=1;this.gearBonus={attack:0,defense:0};this.inventoryOpen=false;this.inventorySlots=20;this.maxInventorySlots=60;this.baseSlotPrice=100;this.inventoryItems=[];this.gearDrops=0;this.selectedItem=null;this.shopOpen=false;this.questRewardClaimed=false;this.secondQuest=false;this.secondRewardClaimed=false;this.wolvesKilled=0;this.thirdQuest=false;this.thirdRewardClaimed=false;this.goblinsKilled=0;this.fourthQuest=false;this.fourthRewardClaimed=false;this.skeletonsKilled=0;this.fifthQuest=false;this.orcsKilled=0;this.saveKey="etherial_save_v1";this.npcTargets=[];this.spawnSlimes();
-  this.npcTargets.push({name:"Aldric",x:530,y:675,r:82});this.questMarker=this.add.text(530,613,"!",{fontFamily:"Georgia",fontSize:"28px",color:"#ffd75a",stroke:"#4a3210",strokeThickness:4}).setOrigin(.5).setDepth(9000);this.tweens.add({targets:this.questMarker,y:605,duration:650,yoyo:true,repeat:-1});
-  this.add.rectangle(360,1245,720,58,0x283322,.72).setDepth(-5);
-  this.add.text(360,1230,"PUERTA SUR DE LUMEN",{fontFamily:"Georgia",fontSize:"17px",color:"#e8d5a5",stroke:"#1d2419",strokeThickness:4}).setOrigin(.5).setDepth(3000);
-  
-  this.add.text(360,1265,"⚔  Zona segura termina aquí  ⚔",{fontFamily:"Georgia",fontSize:"12px",color:"#d5c38e"}).setOrigin(.5).setDepth(3000);
-  this.zoneTitle=this.add.text(360,1340,"PRADERAS DE LUMEN",{fontFamily:"Georgia",fontSize:"25px",color:"#f0d69a",stroke:"#26301f",strokeThickness:5}).setOrigin(.5).setDepth(3000);
-  this.add.text(360,1380,"Zona de cacería · Nivel 1–10",{fontFamily:"Georgia",fontSize:"14px",color:"#d8dfc4",stroke:"#26301f",strokeThickness:3}).setOrigin(.5).setDepth(3000);
-  this.add.rectangle(360,1280,620,4,0x9f8a57,.38).setDepth(2999);
-  this.makeHud();this.makeControls();this.makeInteractButton();this.makeInventory();this.makeShop();this.makeZoneHud();this.seedInventory();this.loadProgress();this.time.addEvent({delay:5000,loop:true,callback:()=>this.saveProgress()});
-   // RESET VISUAL TOTAL: mantenemos lógica/estado, pero nada del arte/UI antiguo se renderiza.
-   this.children.list.forEach(obj=>{if(obj&&obj.setVisible)obj.setVisible(false);});
-   this.cameras.main.setBackgroundColor("#171d1b");
+  // LUMEN RESET V16 — blank scene. Legacy visuals are not instantiated.
+  this.physics.world.setBounds(0,0,720,1280);
+  this.cameras.main.setBounds(0,0,720,1280);
+  this.cameras.main.setBackgroundColor("#111714");
+  this.resetVisualTotal=true;
  }
+
  addObstacle(x,y,w,h){const z=this.obstacles.create(x,y,null).setVisible(false);z.body.setSize(w,h);z.refreshBody();return z}
  makeHud(){
   this.add.rectangle(360,52,700,84,0x080d0a,.82).setScrollFactor(0).setDepth(5000).setStrokeStyle(2,0xb79251,.7);
@@ -324,25 +299,6 @@ export class LumenScene extends Phaser.Scene {
   const reset=()=>{this.move.x=this.move.y=0;knob.setPosition(110,1160)};base.on("pointermove",p=>{if(!p.isDown)return;let dx=p.x-110,dy=p.y-1160,d=Math.hypot(dx,dy)||1,m=Math.min(48,d);dx=dx/d*m;dy=dy/d*m;knob.setPosition(110+dx,1160+dy);this.move={x:dx/48,y:dy/48}});base.on("pointerup",reset);base.on("pointerout",reset);
   [["gabriel_attack_01",610,1160],["gabriel_skill_01",520,1080],["gabriel_skill_02",600,1050],["gabriel_skill_03",675,1090]].forEach((a,i)=>{const b=this.add.circle(a[1],a[2],i?34:52,i?0x234c34:0x64251f,.9).setStrokeStyle(3,0xd1aa63,.8).setInteractive().setScrollFactor(0).setDepth(6000);this.add.image(a[1],a[2],a[0]).setDisplaySize(i?46:66,i?54:76).setScrollFactor(0).setDepth(6001);b.on("pointerdown",()=>{this.player.setTexture(a[0]);if(i===0)this.attackNearest()});b.on("pointerup",()=>this.player.play("gabriel_idle"))});
  }
- update(){
-  // Feedback de proximidad para que Lumen se sienta explorable.
-  if(this.player&&this.cityPOI&&this.poiHint){
-   let nearestPOI=null,nearestD=9999;
-   this.cityPOI.forEach(p=>{const d=Phaser.Math.Distance.Between(this.player.x,this.player.y,p.x,p.y);if(d<nearestD){nearestD=d;nearestPOI=p}});
-   if(nearestPOI&&nearestD<nearestPOI.r){
-    this.poiHint.setText("◆ "+nearestPOI.name).setVisible(true).setPosition(360,1080);
-    this.poiAction?.setText(nearestPOI.action||"").setVisible(true);
-   } else {this.poiHint.setVisible(false);this.poiAction?.setVisible(false);}
-  }
-  if(!this.player)return;
-  this.updateZoneState();
-  const now=this.time.now;
-  const hostileTick=(group,speed,damage,range=185)=>group?.getChildren().forEach(e=>{if(!e.active)return;if(this.safeZone){e.setVelocity(0);return;}const d=Phaser.Math.Distance.Between(this.player.x,this.player.y,e.x,e.y);if(d<range&&d>58)this.physics.moveToObject(e,this.player,speed);else e.setVelocity(0);if(d<62&&now-e.lastHit>1250){e.lastHit=now;const hit=Math.max(1,damage-this.defense);this.playerHp=Math.max(0,this.playerHp-hit);this.hpBar.width=260*this.playerHp/this.maxHp;this.showCombatText(this.player.x,this.player.y-72,"-"+hit,"#ff7b72");if(this.playerHp<=0)this.handlePlayerDeath();}e.setDepth(e.y);if(e.hpBg){e.hpBg.setPosition(e.x,e.y-50);e.hpBg.setDepth(e.y+1);}if(e.hpBar){e.hpBar.setPosition(e.x-(e.maxHp===80?33:31),e.y-(e.maxHp===80?52:50));e.hpBar.setDepth(e.y+2);}});
-  hostileTick(this.wolves,38,7);hostileTick(this.goblins,42,10,205);hostileTick(this.skeletons,45,13,220);hostileTick(this.orcs,48,17,235);
-  this.slimes?.getChildren().forEach(s=>{if(!s.active)return;const d=Phaser.Math.Distance.Between(this.player.x,this.player.y,s.x,s.y);
-   if(d<175&&d>55)this.physics.moveToObject(s,this.player,32);else s.setVelocity(0);
-   if(d<62&&now-s.lastHit>1200){s.lastHit=now;const incoming=Math.max(1,5-this.defense);this.playerHp=Math.max(0,this.playerHp-incoming);this.hpBar.width=260*this.playerHp/this.maxHp;if(this.playerHp<=0){this.handlePlayerDeath();}}
-  });
-  const moving=Math.abs(this.move.x)+Math.abs(this.move.y)>.08;this.player.setVelocity(this.move.x*170,this.move.y*170);if(moving){if(this.player.anims.currentAnim?.key!=="gabriel_walk")this.player.play("gabriel_walk");if(this.move.x<-.05)this.player.setFlipX(true);if(this.move.x>.05)this.player.setFlipX(false)}else if(this.player.anims.currentAnim?.key!=="gabriel_idle")this.player.play("gabriel_idle");this.slimes?.getChildren().forEach(s=>{if(s.active){s.setDepth(s.y);if(s.hpBg){s.hpBg.setPosition(s.x,s.y-48);s.hpBg.setDepth(s.y+1);}if(s.hpBar){s.hpBar.setPosition(s.x-28,s.y-48);s.hpBar.setDepth(s.y+2);}}});this.player.setDepth(this.player.y+100);if(this.playerShadow){this.playerShadow.setPosition(this.player.x,this.player.y+38);this.playerShadow.setDepth(this.player.y-1);}this.playerName.setPosition(this.player.x,this.player.y+70).setDepth(this.player.y+102);
- }
+ update(){if(this.resetVisualTotal)return;}
+
 }
