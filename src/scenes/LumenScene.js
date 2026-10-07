@@ -10,6 +10,7 @@ export class LumenScene extends Phaser.Scene {
   this.load.image("lumen_map",A+"maps/lumen_master.png");
   ["inventario","tienda","habilidades","misiones","mapa","configuracion"].forEach(n=>this.load.image("ui_"+n,A+"ui/icons/"+n+".png"));
   this.load.image("enemy_slime",A+"enemies/slime.png");
+  this.load.image("loot_gel",A+"effects/curacion.png");
  }
  create(){
   // Limpia el fondo gris/cuadriculado heredado del sprite sheet.
@@ -37,7 +38,7 @@ export class LumenScene extends Phaser.Scene {
   this.playerName=this.add.text(360,830,"Gabriel · Arquero",{fontFamily:"Georgia",fontSize:"15px",color:"#fff1c4",stroke:"#000",strokeThickness:4}).setOrigin(.5).setDepth(901);
   this.anims.create({key:"gabriel_idle",frames:["gabriel_idle_01","gabriel_idle_02"].map(key=>({key})),frameRate:3,repeat:-1});
   this.anims.create({key:"gabriel_walk",frames:["gabriel_walk_01","gabriel_walk_02","gabriel_walk_03","gabriel_walk_04"].map(key=>({key})),frameRate:8,repeat:-1});
-  this.player.play("gabriel_idle");this.move={x:0,y:0};this.questDone=false;this.slimeQuest=false;this.slimesKilled=0;this.level=1;this.xp=0;this.xpNeed=100;this.gold=0;this.playerHp=100;this.maxHp=100;this.attackReady=true;this.inventory={slimeGel:0};this.npcTargets=[];this.spawnSlimes();
+  this.player.play("gabriel_idle");this.move={x:0,y:0};this.questDone=false;this.slimeQuest=false;this.slimesKilled=0;this.level=1;this.xp=0;this.xpNeed=100;this.gold=0;this.playerHp=100;this.maxHp=100;this.attackReady=true;this.inventory={slimeGel:0};this.equipment={weapon:"Arco del Aprendiz",armor:"Cuero de Lumen"};this.attackPower=15;this.defense=2;this.npcTargets=[];this.spawnSlimes();
   this.npcTargets.push({name:"Aldric",x:560,y:555,r:88});
   this.makeHud();this.makeControls();this.makeInteractButton();
  }
@@ -58,7 +59,7 @@ export class LumenScene extends Phaser.Scene {
   this.levelText=this.add.text(28,22,"Gabriel · Nv.1",{fontFamily:"Georgia",fontSize:"17px",color:"#f4dfad"}).setScrollFactor(0).setDepth(5001);
   this.hpBar=this.add.rectangle(30,52,260,12,0x9e342e).setOrigin(0,.5).setScrollFactor(0).setDepth(5001);this.add.rectangle(30,72,205,9,0x326f9e).setOrigin(0,.5).setScrollFactor(0).setDepth(5001);this.xpText=this.add.text(275,67,"EXP 0/100",{fontFamily:"Georgia",fontSize:"11px",color:"#e7cf91"}).setScrollFactor(0).setDepth(5001);
   [["ui_tienda",430],["ui_inventario",500],["ui_habilidades",570],["ui_misiones",640]].forEach(a=>this.add.image(a[1],52,a[0]).setDisplaySize(46,38).setScrollFactor(0).setDepth(5001));
-  this.invText=this.add.text(350,43,"Gel 0",{fontFamily:"Georgia",fontSize:"11px",color:"#9fe3ae"}).setScrollFactor(0).setDepth(5001);this.goldText=this.add.text(350,22,"Oro 0",{fontFamily:"Georgia",fontSize:"13px",color:"#f5d47a"}).setScrollFactor(0).setDepth(5001);this.add.image(640,145,"lumen_map").setDisplaySize(118,78).setScrollFactor(0).setDepth(5000).setAlpha(.95);
+  this.statsText=this.add.text(275,84,"ATQ 15 · DEF 2",{fontFamily:"Georgia",fontSize:"10px",color:"#d8c79c"}).setScrollFactor(0).setDepth(5001);this.invText=this.add.text(350,43,"Gel 0",{fontFamily:"Georgia",fontSize:"11px",color:"#9fe3ae"}).setScrollFactor(0).setDepth(5001);this.goldText=this.add.text(350,22,"Oro 0",{fontFamily:"Georgia",fontSize:"13px",color:"#f5d47a"}).setScrollFactor(0).setDepth(5001);this.add.image(640,145,"lumen_map").setDisplaySize(118,78).setScrollFactor(0).setDepth(5000).setAlpha(.95);
   this.questText=this.add.text(20,112,"EL INICIO DE UNA LEYENDA\nHabla con Aldric  0/1",{fontFamily:"Georgia",fontSize:"13px",color:"#f0dfb7",backgroundColor:"#080d0acc",padding:{x:9,y:7}}).setScrollFactor(0).setDepth(5001);
  }
  spawnSlimes(){
@@ -74,6 +75,7 @@ export class LumenScene extends Phaser.Scene {
   const angle=Phaser.Math.Angle.Between(arrow.x,arrow.y,target.x,target.y);arrow.setRotation(angle+Math.PI/2);
   this.tweens.add({targets:arrow,x:target.x,y:target.y,duration:180,onComplete:()=>{arrow.destroy();if(target.active)this.damageSlime(target,dmg)}});
  }
+ showCombatText(x,y,msg,color="#ffffff"){const t=this.add.text(x,y,msg,{fontFamily:"Georgia",fontSize:"15px",color,stroke:"#201008",strokeThickness:3}).setOrigin(.5).setDepth(9000);this.tweens.add({targets:t,y:y-24,alpha:0,duration:700,onComplete:()=>t.destroy()});}
  damageSlime(target,dmg){
   target.hp-=dmg;this.tweens.add({targets:target,alpha:.35,duration:80,yoyo:true});target.hpBar.width=56*Math.max(0,target.hp/target.maxHp);
   const hit=this.add.text(target.x,target.y-72,"-"+dmg,{fontFamily:"Georgia",fontSize:"18px",color:"#ffd38a",stroke:"#401510",strokeThickness:3}).setOrigin(.5).setDepth(8000);
@@ -84,10 +86,10 @@ export class LumenScene extends Phaser.Scene {
   this.slimes.getChildren().forEach(s=>{if(!s.active)return;const d=Phaser.Math.Distance.Between(this.player.x,this.player.y,s.x,s.y);if(d<best){best=d;target=s}});
   if(!target){this.showDialogue("No hay enemigos dentro del alcance.");return}
   if(!this.attackReady)return;this.attackReady=false;this.time.delayedCall(480,()=>this.attackReady=true);
-  const dmg=12+Phaser.Math.Between(0,6);this.fireArrow(target,dmg);
+  const crit=Phaser.Math.Between(1,100)<=12;const dmg=Math.floor((this.attackPower+Phaser.Math.Between(0,5))*(crit?1.75:1));this.fireArrow(target,dmg);if(crit)this.showCombatText(target.x,target.y-88,"¡CRÍTICO!","#ffe16b");
  }
  killSlime(s){
-  s.disableBody(true,true);s.hpBg.destroy();s.hpBar.destroy();this.slimesKilled++;this.gainXp(25);this.gold+=Phaser.Math.Between(4,9);if(Phaser.Math.Between(1,100)<=65){this.inventory.slimeGel++;this.spawnLootText(s.x,s.y,"Gel de Slime +1");}
+  s.disableBody(true,true);s.hpBg.destroy();s.hpBar.destroy();this.slimesKilled++;this.gainXp(25);this.gold+=Phaser.Math.Between(4,9);if(Phaser.Math.Between(1,100)<=65){this.spawnLootDrop(s.x,s.y);}
   this.goldText?.setText("Oro "+this.gold);this.updateInventoryHud();
   if(this.slimeQuest){this.questText.setText("PRIMERA CACERÍA\\nDerrota Slimes  "+Math.min(this.slimesKilled,3)+"/3"+(this.slimesKilled>=3?" ✓":""));if(this.slimesKilled===3)this.showDialogue("Misión completada: Primera Cacería. +75 EXP");}
  }
@@ -95,6 +97,14 @@ export class LumenScene extends Phaser.Scene {
   this.xp+=amount;
   while(this.xp>=this.xpNeed){this.xp-=this.xpNeed;this.level++;this.xpNeed=Math.floor(this.xpNeed*1.35);this.maxHp+=15;this.playerHp=this.maxHp;this.hpBar.width=260;this.levelText?.setText("Gabriel · Nv."+this.level);this.showDialogue("¡Nivel "+this.level+" alcanzado! HP máximo +15");}
   this.xpText?.setText("EXP "+this.xp+"/"+this.xpNeed);
+ }
+ spawnLootDrop(x,y){
+  const drop=this.physics.add.image(x,y,"loot_gel").setDisplaySize(28,28).setDepth(y+5).setInteractive();
+  this.tweens.add({targets:drop,y:y-10,duration:500,yoyo:true,repeat:-1});
+  const collect=()=>{if(!drop.active)return;this.inventory.slimeGel++;this.spawnLootText(drop.x,drop.y,"Gel de Slime +1");drop.destroy();this.updateInventoryHud();};
+  drop.on("pointerdown",collect);
+  this.time.addEvent({delay:250,repeat:39,callback:()=>{if(drop.active&&Phaser.Math.Distance.Between(this.player.x,this.player.y,drop.x,drop.y)<55)collect()}});
+  this.time.delayedCall(10000,()=>{if(drop.active)drop.destroy()});
  }
  spawnLootText(x,y,msg){const t=this.add.text(x,y-30,msg,{fontFamily:"Georgia",fontSize:"13px",color:"#8ff0a4",stroke:"#102014",strokeThickness:3}).setOrigin(.5).setDepth(8500);this.tweens.add({targets:t,y:y-70,alpha:0,duration:1200,onComplete:()=>t.destroy()});}
  updateInventoryHud(){this.invText?.setText("Gel "+this.inventory.slimeGel);}
@@ -126,7 +136,7 @@ export class LumenScene extends Phaser.Scene {
   if(!this.player)return;
   const now=this.time.now;this.slimes?.getChildren().forEach(s=>{if(!s.active)return;const d=Phaser.Math.Distance.Between(this.player.x,this.player.y,s.x,s.y);
    if(d<175&&d>55)this.physics.moveToObject(s,this.player,32);else s.setVelocity(0);
-   if(d<62&&now-s.lastHit>1200){s.lastHit=now;this.playerHp=Math.max(0,this.playerHp-5);this.hpBar.width=260*this.playerHp/this.maxHp;if(this.playerHp<=0){this.playerHp=this.maxHp;this.hpBar.width=260;this.player.setPosition(360,760);this.showDialogue("Has caído en combate. Regresas a la plaza de Lumen.");}}
+   if(d<62&&now-s.lastHit>1200){s.lastHit=now;const incoming=Math.max(1,5-this.defense);this.playerHp=Math.max(0,this.playerHp-incoming);this.hpBar.width=260*this.playerHp/this.maxHp;if(this.playerHp<=0){this.playerHp=this.maxHp;this.hpBar.width=260;this.player.setPosition(360,760);this.showDialogue("Has caído en combate. Regresas a la plaza de Lumen.");}}
   });
   const moving=Math.abs(this.move.x)+Math.abs(this.move.y)>.08;this.player.setVelocity(this.move.x*170,this.move.y*170);if(moving){if(this.player.anims.currentAnim?.key!=="gabriel_walk")this.player.play("gabriel_walk");if(this.move.x<-.05)this.player.setFlipX(true);if(this.move.x>.05)this.player.setFlipX(false)}else if(this.player.anims.currentAnim?.key!=="gabriel_idle")this.player.play("gabriel_idle");this.slimes?.getChildren().forEach(s=>{if(s.active){s.setDepth(s.y);s.hpBg?.setPosition(s.x,s.y-48).setDepth(s.y+1);s.hpBar?.setPosition(s.x-28,s.y-48).setDepth(s.y+2)}});this.player.setDepth(this.player.y+100);this.playerShadow.setPosition(this.player.x,this.player.y+38).setDepth(this.player.y-1);this.playerName.setPosition(this.player.x,this.player.y+70).setDepth(this.player.y+102);
  }
