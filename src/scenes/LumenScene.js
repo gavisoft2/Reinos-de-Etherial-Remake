@@ -24,13 +24,18 @@ export class LumenScene extends Phaser.Scene {
    const tile=this.add.image(x+39,y+36,"t_"+(["suelo_01","suelo_02","suelo_03","suelo_04"][(x/78+y/72)%4|0])).setDisplaySize(92,86).setAlpha(.24).setDepth(-28);
    tile.setBlendMode(Phaser.BlendModes.SOFT_LIGHT);tile.setAngle(((x+y)/72)%2?0:180);
   }
-  this.add.image(360,455,"lumen_statue_plaza").setDisplaySize(420,420).setDepth(455); this.addObstacle(360,500,190,95);
-  [["b_posada",130,300],["b_mercado",590,300],["b_herreria",135,690],["b_gremio",585,690],["b_templo",360,190]].forEach(a=>{this.add.image(a[1],a[2],a[0]).setScale(1.42).setDepth(a[2]);this.addObstacle(a[1],a[2]+45,175,78)});
+  // Plaza de Lumen reorganizada por capas: sin imagen cuadrada superpuesta.
+  // Núcleo de la fuente: pedestal/agua construidos en escena; la estatua final irá como sprite transparente.
+  this.add.ellipse(360,470,250,112,0x243b3a,.55).setStrokeStyle(5,0xb7a16c,.9).setDepth(430);
+  this.add.ellipse(360,462,205,78,0x2d7d9c,.82).setStrokeStyle(4,0xd5c48d,.9).setDepth(431);
+  this.add.ellipse(360,450,118,52,0x8b846f,1).setStrokeStyle(3,0xd5c48d,.9).setDepth(432);
+  this.addObstacle(360,468,205,74);
+  [["b_posada",112,300],["b_mercado",608,300],["b_herreria",112,720],["b_gremio",608,720],["b_templo",360,190]].forEach(a=>{this.add.image(a[1],a[2],a[0]).setScale(1.42).setDepth(a[2]);this.addObstacle(a[1],a[2]+45,175,78)});
   [[45,390,"p_arbol_01"],[675,390,"p_arbol_02"],[50,780,"p_arbol_03"],[670,780,"p_arbol_01"],[65,940,"p_arbol_02"],[655,940,"p_arbol_03"]].forEach(a=>{this.add.image(a[0]+5,a[1]+13,a[2]).setTint(0x000000).setAlpha(.18).setScale(1.15,.42).setDepth(a[1]-2);this.add.image(a[0],a[1],a[2]).setScale(1.25).setDepth(a[1])});
-  [["npc_mira",150,555,"Mira"],["npc_guardia",275,570,"Guardia"],["npc_aldric",560,555,"Aldric"],["npc_borin",155,845,"Borin"]].forEach(a=>{this.add.image(a[1],a[2],a[0]).setScale(.62).setDepth(a[2]);this.add.text(a[1],a[2]+62,a[3],{fontFamily:"Georgia",fontSize:"13px",color:"#fff2c7",stroke:"#000",strokeThickness:4}).setOrigin(.5).setDepth(a[2]+2)});
-  this.playerShadow=this.add.ellipse(360,798,55,20,0x000000,.28).setDepth(798);
-  this.player=this.physics.add.sprite(360,760,"gabriel_idle_01").setScale(1.05).setDepth(900);this.player.body.setSize(34,38).setOffset(24,62);this.player.setCollideWorldBounds(true);this.cameras.main.setBounds(0,0,720,1780);this.cameras.main.startFollow(this.player,true,.08,.08);this.cameras.main.setDeadzone(90,160);this.physics.add.collider(this.player,this.obstacles);
-  this.playerName=this.add.text(360,830,"Gabriel · Arquero",{fontFamily:"Georgia",fontSize:"15px",color:"#fff1c4",stroke:"#000",strokeThickness:4}).setOrigin(.5).setDepth(901);
+  [["npc_mira",135,560,"Mira"],["npc_guardia",270,625,"Guardia"],["npc_aldric",585,560,"Aldric"],["npc_borin",135,850,"Borin"]].forEach(a=>{this.add.image(a[1],a[2],a[0]).setScale(.62).setDepth(a[2]);this.add.text(a[1],a[2]+62,a[3],{fontFamily:"Georgia",fontSize:"13px",color:"#fff2c7",stroke:"#000",strokeThickness:4}).setOrigin(.5).setDepth(a[2]+2)});
+  this.playerShadow=this.add.ellipse(360,868,55,20,0x000000,.28).setDepth(798);
+  this.player=this.physics.add.sprite(360,830,"gabriel_idle_01").setScale(1.05).setDepth(900);this.player.body.setSize(34,38).setOffset(24,62);this.player.setCollideWorldBounds(true);this.cameras.main.setBounds(0,0,720,1780);this.cameras.main.startFollow(this.player,true,.08,.08);this.cameras.main.setDeadzone(90,160);this.physics.add.collider(this.player,this.obstacles);
+  this.playerName=this.add.text(360,900,"Gabriel · Arquero",{fontFamily:"Georgia",fontSize:"15px",color:"#fff1c4",stroke:"#000",strokeThickness:4}).setOrigin(.5).setDepth(901);
   this.anims.create({key:"gabriel_idle",frames:["gabriel_idle_01","gabriel_idle_02"].map(key=>({key})),frameRate:3,repeat:-1});
   this.anims.create({key:"gabriel_walk",frames:["gabriel_walk_01","gabriel_walk_02","gabriel_walk_03","gabriel_walk_04"].map(key=>({key})),frameRate:8,repeat:-1});
   this.player.play("gabriel_idle");this.move={x:0,y:0};this.questDone=false;this.slimeQuest=false;this.slimesKilled=0;this.level=1;this.xp=0;this.xpNeed=100;this.gold=0;this.playerHp=100;this.maxHp=100;this.attackReady=true;this.inventory={slimeGel:0};this.equipment={weapon:"Arco del Aprendiz",armor:"Cuero de Lumen"};this.attackPower=15;this.defense=2;this.potions=1;this.gearBonus={attack:0,defense:0};this.inventoryOpen=false;this.inventorySlots=20;this.maxInventorySlots=60;this.baseSlotPrice=100;this.inventoryItems=[];this.gearDrops=0;this.selectedItem=null;this.shopOpen=false;this.questRewardClaimed=false;this.secondQuest=false;this.secondRewardClaimed=false;this.wolvesKilled=0;this.thirdQuest=false;this.thirdRewardClaimed=false;this.goblinsKilled=0;this.fourthQuest=false;this.fourthRewardClaimed=false;this.skeletonsKilled=0;this.fifthQuest=false;this.orcsKilled=0;this.saveKey="etherial_save_v1";this.npcTargets=[];this.spawnSlimes();
