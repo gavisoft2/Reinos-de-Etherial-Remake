@@ -1,7 +1,7 @@
 export class LumenScene extends Phaser.Scene{constructor(){super("Lumen")}create(){const W=720,H=1280;this.cameras.main.setBackgroundColor("#17251b");
 // Base limpia del remake: composición móvil 9:16 inspirada en la referencia aprobada.
 const g=this.add.graphics();g.fillGradientStyle(0x263a29,0x263a29,0x111a13,0x111a13,1);g.fillRect(0,0,W,H);g.fillStyle(0x5e5748,1);g.fillRoundedRect(105,190,510,900,80);g.fillStyle(0x8d8370,.95);g.fillEllipse(360,500,560,330);g.lineStyle(8,0x4a4338,.9);g.strokeEllipse(360,500,560,330);
-// Fuente monumental central, foco visual de Lumen.
+// Fuente monumental central, foco visual de Lumen.\ng.fillStyle(0x413b32,.55);g.fillEllipse(360,525,350,150);g.fillStyle(0xc8b78f,.38);g.fillEllipse(360,516,325,132);
 g.fillStyle(0x293d42,1);g.fillEllipse(360,505,300,125);g.fillStyle(0x70a8aa,.65);g.fillEllipse(360,492,250,82);g.fillStyle(0xb8aa8a,1);g.fillRect(342,365,36,120);g.fillCircle(360,350,42);g.fillTriangle(360,285,312,360,360,338);g.fillTriangle(360,285,408,360,360,338);
 // Masas arquitectónicas cálidas: luego serán sustituidas por arte prerenderizado original.
 const house=(x,y,w,h)=>{g.fillStyle(0x6d5540,1);g.fillRoundedRect(x,y,w,h,14);g.fillStyle(0x3d2c24,1);g.fillTriangle(x-10,y+25,x+w/2,y-55,x+w+10,y+25);g.fillStyle(0xe4ad5c,.55);for(let i=0;i<3;i++)g.fillRect(x+28+i*55,y+45,24,38)};house(40,170,245,190);house(435,170,245,190);house(35,720,250,210);house(435,720,250,210);
