@@ -219,6 +219,29 @@ export class LumenScene extends Phaser.Scene {
   [[260,420],[460,420],[265,880],[455,880]].forEach(([x,y])=>{
     this.add.image(x,y,"p_farol").setScale(.34).setDepth(y+5);
   });
+  // CAPITAL PASS V9 — paseo real: ritmo visual y profundidad sin tocar texturas.
+  const promenade=this.add.graphics().setDepth(145);
+  // Bandas laterales de piedra que enmarcan el corredor central.
+  [[286,470,18,700],[416,470,18,700]].forEach(([x,y,w,h])=>{
+    promenade.fillStyle(0x4b504d,.72); promenade.fillRoundedRect(x,y,w,h,8);
+    promenade.lineStyle(2,0xa38c58,.48); promenade.strokeRoundedRect(x,y,w,h,8);
+  });
+  // Medallones de la avenida, más discretos que los antiguos círculos geométricos.
+  [560,720,1040,1210].forEach((y,i)=>{
+    promenade.fillStyle(0x555a56,.72); promenade.fillCircle(351,y,25);
+    promenade.lineStyle(2,0xb79a54,.62); promenade.strokeCircle(351,y,25);
+    promenade.lineStyle(1,0x557da2,.58); promenade.lineBetween(338,y,364,y); promenade.lineBetween(351,y-13,351,y+13);
+  });
+  // Bancos y faroles alternados para que el eje se sienta transitable.
+  [[255,560],[467,720],[255,1040],[467,1210]].forEach(([x,y],i)=>{
+    this.add.image(x,y,"p_banco").setScale(.29).setDepth(y+3);
+    this.add.image(i%2?x-26:x+26,y-8,"p_farol").setScale(.31).setDepth(y+4);
+  });
+  // Vegetación baja junto a los cruces.
+  [[278,650],[424,650],[278,950],[424,950]].forEach(([x,y])=>{
+    promenade.fillStyle(0x315c34,.86); promenade.fillEllipse(x,y,44,19);
+    promenade.lineStyle(1,0x9b895d,.55); promenade.strokeEllipse(x,y,44,19);
+  });
   // Estatua monumental completa: pedestal + figura central, sin usar el recorte roto anterior.
   this.add.rectangle(360,432,72,72,0x8e8775,1).setStrokeStyle(3,0xd1c29b,.9).setDepth(438);
   const monument=this.add.image(360,365,"npc_guardia").setScale(1.15).setTint(0xc8c1ae).setDepth(439);
