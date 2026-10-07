@@ -17,22 +17,33 @@ export class LumenScene extends Phaser.Scene {
   // Limpia el fondo gris/cuadriculado heredado del sprite sheet.
   const transparentKeys=["gabriel_idle_01","gabriel_idle_02","gabriel_walk_01","gabriel_walk_02","gabriel_walk_03","gabriel_walk_04","gabriel_attack_01","gabriel_attack_02","gabriel_attack_03","npc_aldric","npc_mira","npc_borin","npc_guardia","enemy_slime","enemy_wolf","enemy_goblin"];transparentKeys.forEach(k=>this.removeSheetBackground(k));
   this.physics.world.setBounds(0,0,720,1780);this.inHuntZone=false;this.safeZone=true;this.zoneName="Lumen";this.deathCount=0;this.respawnProtection=false; this.obstacles=this.physics.add.staticGroup();
-  // LUMEN CAPITAL V3 — ciudad vertical, sin background panorámico ni árboles provisionales.
-   this.add.rectangle(360,890,720,1780,0x242a28,1).setDepth(-30);
+  // LUMEN CAPITAL V4 — acabado urbano y lectura visual de distritos.
+   this.add.rectangle(360,890,720,1780,0x202725,1).setDepth(-30);
    this.add.image(360,1515,"t_hierba").setDisplaySize(720,530).setAlpha(.76).setDepth(-29);
    const city=this.add.graphics().setDepth(-28);
-   city.fillStyle(0x414844,1);city.fillRoundedRect(28,120,664,1110,30);city.lineStyle(7,0x8d7a55,.72);city.strokeRoundedRect(28,120,664,1110,30);
-   city.fillStyle(0x696a63,1);city.fillRoundedRect(242,150,236,1070,30);city.lineStyle(4,0xb39a62,.66);city.strokeRoundedRect(242,150,236,1070,30);
-   city.fillStyle(0x737168,1);city.fillCircle(360,555,150);city.lineStyle(6,0xc0a266,.82);city.strokeCircle(360,555,150);city.lineStyle(2,0xa58c58,.48);city.strokeCircle(360,555,112);
-   city.fillStyle(0x60635d,.98);city.fillRoundedRect(62,510,596,86,22);city.fillRoundedRect(90,790,540,76,20);
-   city.fillStyle(0x565b56,.95);city.fillRoundedRect(45,330,190,165,20);city.fillRoundedRect(485,330,190,165,20);city.fillRoundedRect(48,700,190,170,20);city.fillRoundedRect(482,700,190,170,20);
-   [["b_templo",360,245,.70,150,64],["b_posada",140,405,.58,126,58],["b_mercado",580,405,.58,126,58],["b_herreria",140,770,.56,124,58],["b_gremio",580,770,.56,124,58]].forEach(([k,x,y,s,w,h])=>{this.add.image(x,y,k).setScale(s).setDepth(y);this.addObstacle(x,y+34,w,h);});
-   this.add.image(360,555,"p_estatua_fuente").setScale(.64).setDepth(565);this.addObstacle(360,570,110,52);
-   [[278,345],[442,345],[258,650],[462,650],[275,900],[445,900],[290,1090],[430,1090]].forEach(([x,y])=>this.add.image(x,y,"p_farol").setScale(.42).setDepth(y));
-   [[290,370],[430,370],[270,925],[450,925]].forEach(([x,y])=>this.add.image(x,y,"p_bandera").setScale(.36).setDepth(y));
-   [[85,575],[635,575]].forEach(([x,y])=>this.add.image(x,y,"p_puesto").setScale(.50).setDepth(y));
-   [[165,665],[555,665],[165,1010],[555,1010]].forEach(([x,y])=>this.add.image(x,y,"p_banco").setScale(.42).setDepth(y));
-   [["npc_mira",175,610,"Mira"],["npc_guardia",305,705,"Guardia"],["npc_aldric",545,610,"Aldric"],["npc_borin",175,885,"Borin"]].forEach(a=>{this.add.image(a[1],a[2],a[0]).setScale(.37).setDepth(a[2]);this.add.text(a[1],a[2]+52,a[3],{fontFamily:"Georgia",fontSize:"13px",color:"#fff2c7",stroke:"#000",strokeThickness:3}).setOrigin(.5).setDepth(a[2]+2)});
+   city.fillStyle(0x3d4541,1);city.fillRoundedRect(24,116,672,1118,34);city.lineStyle(8,0x8d7a55,.78);city.strokeRoundedRect(24,116,672,1118,34);
+   // avenida principal y bandas de piedra
+   city.fillStyle(0x6d6d65,1);city.fillRoundedRect(238,145,244,1080,30);city.lineStyle(4,0xc0a267,.70);city.strokeRoundedRect(238,145,244,1080,30);
+   for(let y=210;y<1180;y+=118){city.lineStyle(2,0x8f8b7d,.34);city.lineBetween(252,y,468,y);}
+   // plaza central con anillos y cuatro accesos
+   city.fillStyle(0x77746b,1);city.fillCircle(360,555,158);city.lineStyle(7,0xc4a86b,.86);city.strokeCircle(360,555,158);city.lineStyle(2,0x9e895c,.55);city.strokeCircle(360,555,118);
+   city.fillStyle(0x676963,.98);city.fillRoundedRect(52,505,616,98,24);city.fillRoundedRect(86,782,548,82,22);
+   // patios de edificios
+   [[42,325,198,174],[480,325,198,174],[44,696,198,180],[478,696,198,180]].forEach(r=>{city.fillStyle(0x555b56,.98);city.fillRoundedRect(...r,20);city.lineStyle(2,0x8c7c5b,.48);city.strokeRoundedRect(...r,20);});
+   // medallones en avenida
+   [880,1070].forEach(y=>{city.lineStyle(3,0xb49a61,.48);city.strokeCircle(360,y,43);city.lineStyle(1,0xb49a61,.28);city.strokeCircle(360,y,30);});
+   // edificios principales
+   [["b_templo",360,238,.74,154,66],["b_posada",140,405,.60,128,60],["b_mercado",580,405,.60,128,60],["b_herreria",140,770,.58,126,60],["b_gremio",580,770,.58,126,60]].forEach(([k,x,y,s,w,h])=>{this.add.image(x,y,k).setScale(s).setDepth(y);this.addObstacle(x,y+35,w,h);});
+   // rótulos de distrito
+   [["TEMPLO",360,330],["POSADA",140,495],["MERCADO",580,495],["HERRERÍA",140,862],["GREMIO",580,862]].forEach(([t,x,y])=>this.add.text(x,y,t,{fontFamily:"Georgia",fontSize:"11px",color:"#ead9a8",stroke:"#161b18",strokeThickness:3}).setOrigin(.5).setDepth(1200));
+   // fuente y mobiliario
+   this.add.image(360,555,"p_estatua_fuente").setScale(.68).setDepth(565);this.addObstacle(360,570,112,54);
+   [[278,345],[442,345],[255,650],[465,650],[275,905],[445,905],[290,1095],[430,1095]].forEach(([x,y])=>this.add.image(x,y,"p_farol").setScale(.44).setDepth(y));
+   [[290,372],[430,372],[270,930],[450,930]].forEach(([x,y])=>this.add.image(x,y,"p_bandera").setScale(.38).setDepth(y));
+   [[82,575],[638,575]].forEach(([x,y])=>this.add.image(x,y,"p_puesto").setScale(.52).setDepth(y));
+   [[165,665],[555,665],[165,1015],[555,1015]].forEach(([x,y])=>this.add.image(x,y,"p_banco").setScale(.44).setDepth(y));
+   // NPCs
+   [["npc_mira",175,610,"Mira"],["npc_guardia",305,705,"Guardia"],["npc_aldric",545,610,"Aldric"],["npc_borin",175,885,"Borin"]].forEach(a=>{this.add.image(a[1],a[2],a[0]).setScale(.38).setDepth(a[2]);this.add.text(a[1],a[2]+53,a[3],{fontFamily:"Georgia",fontSize:"13px",color:"#fff2c7",stroke:"#000",strokeThickness:3}).setOrigin(.5).setDepth(a[2]+2)});
    this.playerShadow=this.add.ellipse(360,1002,48,15,0x000000,.24).setDepth(899);
     this.player=this.physics.add.sprite(360,968,"gabriel_idle_01").setScale(.68).setDepth(900);this.player.body.setSize(34,38).setOffset(24,62);this.player.setCollideWorldBounds(true);this.cameras.main.setBounds(0,0,720,1780);this.cameras.main.startFollow(this.player,true,.10,.10,0,135);this.cameras.main.setDeadzone(70,110);this.physics.add.collider(this.player,this.obstacles);
   this.playerName=this.add.text(360,1028,"Gabriel · Arquero",{fontFamily:"Georgia",fontSize:"14px",color:"#fff1c4",stroke:"#000",strokeThickness:3}).setOrigin(.5).setDepth(901);
