@@ -286,6 +286,31 @@ export class LumenScene extends Phaser.Scene {
     this.add.image(x,y,"p_banco").setScale(.30).setDepth(y+3);
     this.add.image(x+(i?34:-34),y-9,"p_farol").setScale(.31).setDepth(y+4);
   });
+  // CAPITAL PASS V12 — Plaza de los Fundadores y eje del templo.
+  const v12=this.add.graphics().setDepth(143);
+  // Anillo ceremonial amplio alrededor de la fuente.
+  v12.lineStyle(5,0xb79a54,.68); v12.strokeEllipse(360,510,310,155);
+  v12.lineStyle(2,0x557da2,.62); v12.strokeEllipse(360,510,282,137);
+  // Cuatro accesos radiales a la plaza.
+  [[360,430,360,365],[360,590,360,650],[205,510,285,510],[515,510,435,510]].forEach(([x1,y1,x2,y2])=>{
+    v12.lineStyle(5,0x77705d,.82); v12.lineBetween(x1,y1,x2,y2);
+    v12.lineStyle(2,0xb79a54,.60); v12.lineBetween(x1,y1,x2,y2);
+  });
+  // Jardines ceremoniales que enmarcan el templo sin tapar NPCs.
+  [[255,345],[465,345],[235,455],[485,455]].forEach(([x,y],i)=>{
+    v12.fillStyle(0x315c34,.90); v12.fillEllipse(x,y,76,31);
+    v12.lineStyle(2,0x9b895d,.66); v12.strokeEllipse(x,y,76,31);
+    this.add.image(x+(i%2?13:-13),y-12,i%2?"p_arbol_02":"p_arbol_01").setScale(.16).setDepth(y+4);
+  });
+  // Iluminación ceremonial alrededor del monumento.
+  [[290,445],[430,445],[290,575],[430,575]].forEach(([x,y])=>{
+    this.add.image(x,y,"p_farol").setScale(.34).setDepth(y+5);
+    const halo=this.add.circle(x,y-18,18,0xffd77a,.10).setDepth(y+4);
+    this.tweens.add({targets:halo,alpha:{from:.06,to:.18},scale:{from:.85,to:1.15},duration:1900,yoyo:true,repeat:-1});
+  });
+  // Umbral del templo, reforzando la lectura norte-sur.
+  v12.fillStyle(0x555a56,.90); v12.fillRoundedRect(285,330,150,28,8);
+  v12.lineStyle(3,0xb79a54,.72); v12.strokeRoundedRect(285,330,150,28,8);
   // Estatua monumental completa: pedestal + figura central, sin usar el recorte roto anterior.
   this.add.rectangle(360,432,72,72,0x8e8775,1).setStrokeStyle(3,0xd1c29b,.9).setDepth(438);
   const monument=this.add.image(360,365,"npc_guardia").setScale(1.15).setTint(0xc8c1ae).setDepth(439);
