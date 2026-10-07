@@ -34,7 +34,6 @@ export class LumenScene extends Phaser.Scene {
   plaza.lineStyle(4,0xb49a61,.70);plaza.strokeCircle(360,520,145);
   this.add.image(360,520,"p_estatua_fuente").setScale(.56).setDepth(530);
   this.addObstacle(360,535,105,52);
-  [[120,300,"p_arbol_01"],[600,300,"p_arbol_02"],[115,720,"p_arbol_03"],[605,720,"p_arbol_01"],[120,1040,"p_arbol_02"],[600,1040,"p_arbol_03"]].forEach(([x,y,k])=>this.add.image(x,y,k).setScale(.58).setDepth(y));
   [[285,360],[435,360],[270,680],[450,680],[285,940],[435,940],[295,1140],[425,1140]].forEach(([x,y])=>this.add.image(x,y,"p_farol").setScale(.38).setDepth(y));
   [["npc_mira",205,650,"Mira"],["npc_guardia",300,735,"Guardia"],["npc_aldric",515,650,"Aldric"],["npc_borin",205,880,"Borin"]].forEach(a=>{this.add.image(a[1],a[2],a[0]).setScale(.34).setDepth(a[2]);this.add.text(a[1],a[2]+48,a[3],{fontFamily:"Georgia",fontSize:"12px",color:"#fff2c7",stroke:"#000",strokeThickness:3}).setOrigin(.5).setDepth(a[2]+2)});
     this.playerShadow=this.add.ellipse(360,1000,48,15,0x000000,.24).setDepth(899);
