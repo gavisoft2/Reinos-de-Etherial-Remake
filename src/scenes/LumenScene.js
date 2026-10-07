@@ -261,6 +261,31 @@ export class LumenScene extends Phaser.Scene {
   // Línea ceremonial transversal para cerrar visualmente la capital.
   v10.lineStyle(4,0xb79a54,.55); v10.lineBetween(115,1465,605,1465);
   v10.lineStyle(2,0x557da2,.52); v10.lineBetween(145,1473,575,1473);
+  // CAPITAL PASS V11 — plaza social, simetría y lectura de la ruta principal.
+  const v11=this.add.graphics().setDepth(141);
+  // Cuatro pequeñas plazoletas laterales para llenar sin bloquear el corredor.
+  [[155,555],[565,555],[155,970],[565,970]].forEach(([x,y],i)=>{
+    v11.fillStyle(0x4b504d,.86); v11.fillCircle(x,y,42);
+    v11.lineStyle(2,0xb79a54,.64); v11.strokeCircle(x,y,42);
+    v11.fillStyle(0x315c34,.90); v11.fillCircle(x,y,28);
+    this.add.image(x,y-13,i%2?"p_arbol_01":"p_arbol_02").setScale(.16).setDepth(y+2);
+    this.add.image(x+(i%2?-38:38),y+10,"p_farol").setScale(.28).setDepth(y+3);
+  });
+  // Cruces de piedra unen ambas mitades de la capital.
+  [610,900,1160,1350].forEach(y=>{
+    v11.fillStyle(0x555a56,.72); v11.fillRoundedRect(92,y-9,536,18,7);
+    v11.lineStyle(1,0x9b895d,.58); v11.strokeRoundedRect(92,y-9,536,18,7);
+  });
+  // Marcadores azules/dorados guían visualmente hacia Plaza Real y Puerta Sur.
+  [[315,520],[405,520],[315,1110],[405,1110],[315,1320],[405,1320]].forEach(([x,y],i)=>{
+    v11.fillStyle(0x315f91,.76); v11.fillCircle(x,y,7);
+    v11.lineStyle(2,0xd0ae57,.72); v11.strokeCircle(x,y,7);
+  });
+  // Dos zonas de descanso cerca de la salida.
+  [[205,1370],[515,1370]].forEach(([x,y],i)=>{
+    this.add.image(x,y,"p_banco").setScale(.30).setDepth(y+3);
+    this.add.image(x+(i?34:-34),y-9,"p_farol").setScale(.31).setDepth(y+4);
+  });
   // Estatua monumental completa: pedestal + figura central, sin usar el recorte roto anterior.
   this.add.rectangle(360,432,72,72,0x8e8775,1).setStrokeStyle(3,0xd1c29b,.9).setDepth(438);
   const monument=this.add.image(360,365,"npc_guardia").setScale(1.15).setTint(0xc8c1ae).setDepth(439);
