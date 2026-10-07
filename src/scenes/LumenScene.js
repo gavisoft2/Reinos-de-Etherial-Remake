@@ -123,6 +123,28 @@ export class LumenScene extends Phaser.Scene {
   [["DISTRITO DEL MERCADO",110,615],["DISTRITO DEL GREMIO",610,615],["PLAZA REAL",360,585]].forEach(([t,x,y])=>{
     this.add.text(x,y,t,{fontFamily:"Georgia",fontSize:"10px",color:"#826a36",stroke:"#f3ead6",strokeThickness:3}).setOrigin(.5).setDepth(310);
   });
+  // VISUAL PASS SAFE V5 — remate urbano hacia la zona sur.
+  const south=this.add.graphics().setDepth(-21);
+  // Plaza de llegada al sur con marco de mármol.
+  south.fillStyle(0xf4ead5,.22); south.fillRoundedRect(185,1280,350,235,28);
+  south.lineStyle(4,0xb89545,.42); south.strokeRoundedRect(185,1280,350,235,28);
+  south.lineStyle(2,0x315f91,.34); south.strokeRoundedRect(197,1292,326,211,22);
+  // Motivo heráldico central.
+  south.lineStyle(4,0xb89545,.65); south.strokeCircle(360,1395,62);
+  south.lineStyle(2,0x315f91,.58); south.strokeCircle(360,1395,45);
+  south.lineBetween(315,1395,405,1395); south.lineBetween(360,1350,360,1440);
+  // Paseos laterales y mobiliario.
+  [[120,1325],[600,1325],[120,1460],[600,1460]].forEach(([x,y],i)=>{
+    this.add.image(x,y,i%2===0?"p_farol":"p_bandera").setScale(.42).setDepth(y);
+  });
+  [[205,1345],[515,1345],[205,1470],[515,1470]].forEach(([x,y])=>{
+    this.add.image(x,y,"p_banco").setScale(.34).setDepth(y);
+  });
+  // Árboles pequeños flanqueando la salida sin cerrar el camino.
+  [[75,1275],[645,1275],[75,1510],[645,1510]].forEach(([x,y],i)=>{
+    this.add.image(x,y,i%2?"p_arbol_02":"p_arbol_03").setScale(.25).setDepth(y);
+  });
+  this.add.text(360,1490,"PUERTA SUR",{fontFamily:"Georgia",fontSize:"15px",color:"#755d2a",stroke:"#f4ead5",strokeThickness:4}).setOrigin(.5).setDepth(320);
   // Estatua monumental completa: pedestal + figura central, sin usar el recorte roto anterior.
   this.add.rectangle(360,432,72,72,0x8e8775,1).setStrokeStyle(3,0xd1c29b,.9).setDepth(438);
   const monument=this.add.image(360,365,"npc_guardia").setScale(1.15).setTint(0xc8c1ae).setDepth(439);
