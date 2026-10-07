@@ -11,8 +11,16 @@ export class LumenScene extends Phaser.Scene {
   ["inventario","tienda","habilidades","misiones","mapa","configuracion"].forEach(n=>this.load.image("ui_"+n,A+"ui/icons/"+n+".png"));
  }
  create(){
+  // Limpia el fondo gris/cuadriculado heredado del sprite sheet.
+  const transparentKeys=[
+   "gabriel_idle_01","gabriel_idle_02","gabriel_walk_01","gabriel_walk_02","gabriel_walk_03","gabriel_walk_04","gabriel_attack_01","gabriel_attack_02","gabriel_attack_03","gabriel_skill_01","gabriel_skill_02","gabriel_skill_03",
+   "npc_aldric","npc_mira","npc_borin","npc_guardia",
+   "b_posada","b_mercado","b_herreria","b_gremio","b_templo",
+   "p_arbol_01","p_arbol_02","p_arbol_03","p_farol","p_banco","p_puesto","p_bandera","p_estatua_fuente"
+  ];
+  transparentKeys.forEach(k=>this.removeSheetBackground(k));
   this.physics.world.setBounds(0,0,720,1280); this.obstacles=this.physics.add.staticGroup();
-  for(let y=0;y<1280;y+=76)for(let x=0;x<720;x+=82)this.add.image(x+41,y+38,"t_"+(["suelo_01","suelo_02","suelo_03","suelo_04"][(x/82+y/76)%4|0])).setDisplaySize(84,78).setAlpha(.88);
+  for(let y=0;y<1280;y+=76)for(let x=0;x<720;x+=82)this.add.image(x+41,y+38,"t_"+(["suelo_01","suelo_02","suelo_03","suelo_04"][(x/82+y/76)%4|0])).setDisplaySize(88,82).setAlpha(.96);
   this.add.image(360,455,"p_estatua_fuente").setScale(2.7).setDepth(455); this.addObstacle(360,470,150,70);
   [["b_posada",130,300],["b_mercado",590,300],["b_herreria",135,690],["b_gremio",585,690],["b_templo",360,190]].forEach(a=>{this.add.image(a[1],a[2],a[0]).setScale(1.42).setDepth(a[2]);this.addObstacle(a[1],a[2]+45,175,78)});
   [[45,390,"p_arbol_01"],[675,390,"p_arbol_02"],[50,780,"p_arbol_03"],[670,780,"p_arbol_01"],[65,940,"p_arbol_02"],[655,940,"p_arbol_03"]].forEach(a=>this.add.image(a[0],a[1],a[2]).setScale(1.25).setDepth(a[1]));
@@ -22,6 +30,17 @@ export class LumenScene extends Phaser.Scene {
   this.anims.create({key:"gabriel_idle",frames:["gabriel_idle_01","gabriel_idle_02"].map(key=>({key})),frameRate:3,repeat:-1});
   this.anims.create({key:"gabriel_walk",frames:["gabriel_walk_01","gabriel_walk_02","gabriel_walk_03","gabriel_walk_04"].map(key=>({key})),frameRate:8,repeat:-1});
   this.player.play("gabriel_idle");this.move={x:0,y:0};this.makeHud();this.makeControls();
+ }
+ removeSheetBackground(key){
+  const tex=this.textures.get(key), src=tex?.getSourceImage(); if(!src) return;
+  const w=src.width,h=src.height,cv=document.createElement("canvas");cv.width=w;cv.height=h;
+  const ctx=cv.getContext("2d",{willReadFrequently:true});ctx.drawImage(src,0,0);
+  const img=ctx.getImageData(0,0,w,h),d=img.data,seen=new Uint8Array(w*h),q=[];
+  const bg=i=>{const r=d[i*4],g=d[i*4+1],b=d[i*4+2],a=d[i*4+3];const mx=Math.max(r,g,b),mn=Math.min(r,g,b);return a<245 || (mx-mn<18 && mx<125 && mn>28)};
+  const push=(x,y)=>{if(x<0||y<0||x>=w||y>=h)return;const n=y*w+x;if(seen[n]||!bg(n))return;seen[n]=1;q.push(n)};
+  for(let x=0;x<w;x++){push(x,0);push(x,h-1)}for(let y=0;y<h;y++){push(0,y);push(w-1,y)}
+  for(let p=0;p<q.length;p++){const n=q[p],x=n%w,y=(n/w)|0;d[n*4+3]=0;push(x-1,y);push(x+1,y);push(x,y-1);push(x,y+1)}
+  ctx.putImageData(img,0,0);this.textures.remove(key);this.textures.addCanvas(key,cv);
  }
  addObstacle(x,y,w,h){const z=this.obstacles.create(x,y,null).setVisible(false);z.body.setSize(w,h);z.refreshBody();return z}
  makeHud(){
