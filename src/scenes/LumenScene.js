@@ -5,7 +5,7 @@ export class LumenScene extends Phaser.Scene {
   ["idle_01","idle_02","walk_01","walk_02","walk_03","walk_04","attack_01","attack_02","attack_03","skill_01","skill_02","skill_03"].forEach(n=>this.load.image("gabriel_"+n,A+"characters/gabriel_archer/"+n+".png"));
   [["aldric","aldric"],["mira","mira"],["borin","borin"],["guardia","guardia"]].forEach(a=>this.load.image("npc_"+a[0],A+"npcs/"+a[1]+".png"));
   [["posada","posada"],["mercado","mercado"],["herreria","herreria"],["gremio","gremio"],["templo","templo"]].forEach(a=>this.load.image("b_"+a[0],A+"buildings/lumen/"+a[1]+".png"));
-  ["arbol_01","arbol_02","arbol_03","farol","banco","puesto","bandera","estatua_fuente"].forEach(n=>this.load.image("p_"+n,A+"props/"+n+".png"));
+  ["arbol_01","arbol_02","arbol_03","farol","banco","puesto","bandera","estatua_fuente","barril_01","caja"].forEach(n=>this.load.image("p_"+n,A+"props/"+n+".png"));
   ["suelo_01","suelo_02","suelo_03","suelo_04","hierba"].forEach(n=>this.load.image("t_"+n,A+"tiles/"+n+".png"));
   this.load.image("lumen_map",A+"maps/lumen_master.png");
   this.load.image("lumen_statue_plaza",A+"buildings/lumen/lumen_statue_plaza.png");
@@ -17,33 +17,33 @@ export class LumenScene extends Phaser.Scene {
   // Limpia el fondo gris/cuadriculado heredado del sprite sheet.
   const transparentKeys=["gabriel_idle_01","gabriel_idle_02","gabriel_walk_01","gabriel_walk_02","gabriel_walk_03","gabriel_walk_04","gabriel_attack_01","gabriel_attack_02","gabriel_attack_03","npc_aldric","npc_mira","npc_borin","npc_guardia","enemy_slime","enemy_wolf","enemy_goblin"];transparentKeys.forEach(k=>this.removeSheetBackground(k));
   this.physics.world.setBounds(0,0,720,1780);this.inHuntZone=false;this.safeZone=true;this.zoneName="Lumen";this.deathCount=0;this.respawnProtection=false; this.obstacles=this.physics.add.staticGroup();
-  // LUMEN CAPITAL V5 — profundidad, iluminación y acceso monumental.
-   this.add.rectangle(360,890,720,1780,0x1f2624,1).setDepth(-30);
+  // LUMEN CAPITAL V6 — ambientación social, señalización y acabado de plaza.
+   this.add.rectangle(360,890,720,1780,0x1d2422,1).setDepth(-30);
    this.add.image(360,1515,"t_hierba").setDisplaySize(720,530).setAlpha(.76).setDepth(-29);
    const city=this.add.graphics().setDepth(-28);
-   city.fillStyle(0x3d4541,1);city.fillRoundedRect(24,116,672,1118,34);city.lineStyle(8,0x8d7a55,.78);city.strokeRoundedRect(24,116,672,1118,34);
-   city.fillStyle(0x6d6d65,1);city.fillRoundedRect(238,145,244,1080,30);city.lineStyle(4,0xc0a267,.70);city.strokeRoundedRect(238,145,244,1080,30);
-   for(let y=210;y<1180;y+=118){city.lineStyle(2,0x8f8b7d,.34);city.lineBetween(252,y,468,y);}
-   city.fillStyle(0x77746b,1);city.fillCircle(360,555,158);city.lineStyle(7,0xc4a86b,.86);city.strokeCircle(360,555,158);city.lineStyle(2,0x9e895c,.55);city.strokeCircle(360,555,118);
-   city.fillStyle(0x676963,.98);city.fillRoundedRect(52,505,616,98,24);city.fillRoundedRect(86,782,548,82,22);
-   [[42,325,198,174],[480,325,198,174],[44,696,198,180],[478,696,198,180]].forEach(r=>{city.fillStyle(0x555b56,.98);city.fillRoundedRect(...r,20);city.lineStyle(2,0x8c7c5b,.48);city.strokeRoundedRect(...r,20);});
-   [880,1070].forEach(y=>{city.lineStyle(3,0xb49a61,.48);city.strokeCircle(360,y,43);city.lineStyle(1,0xb49a61,.28);city.strokeCircle(360,y,30);});
-   // Escalinata del templo y acceso sur.
+   city.fillStyle(0x3b4440,1);city.fillRoundedRect(22,112,676,1122,36);city.lineStyle(8,0x927d55,.80);city.strokeRoundedRect(22,112,676,1122,36);
+   city.fillStyle(0x6e6d65,1);city.fillRoundedRect(236,142,248,1085,30);city.lineStyle(4,0xc2a469,.72);city.strokeRoundedRect(236,142,248,1085,30);
+   for(let y=205;y<1185;y+=105){city.lineStyle(2,0x989286,.30);city.lineBetween(252,y,468,y);}
+   city.fillStyle(0x79766c,1);city.fillCircle(360,555,160);city.lineStyle(7,0xc7a96c,.88);city.strokeCircle(360,555,160);city.lineStyle(2,0xa38c5c,.58);city.strokeCircle(360,555,120);
+   city.fillStyle(0x676963,.98);city.fillRoundedRect(50,505,620,98,24);city.fillRoundedRect(84,782,552,82,22);
+   [[40,323,202,176],[478,323,202,176],[42,694,202,182],[476,694,202,182]].forEach(r=>{city.fillStyle(0x555b56,.98);city.fillRoundedRect(...r,20);city.lineStyle(2,0x927e59,.50);city.strokeRoundedRect(...r,20);});
+   [880,1070].forEach(y=>{city.lineStyle(3,0xb89c62,.52);city.strokeCircle(360,y,44);city.lineStyle(1,0xb89c62,.30);city.strokeCircle(360,y,30);});
    city.fillStyle(0x77746b,.98);[0,1,2].forEach(i=>city.fillRoundedRect(292-i*10,305+i*12,136+i*20,9,4));
-   city.fillStyle(0x5b5e58,1);city.fillRoundedRect(250,1165,220,68,14);city.lineStyle(4,0xb89b60,.65);city.strokeRoundedRect(250,1165,220,68,14);
+   city.fillStyle(0x5b5e58,1);city.fillRoundedRect(246,1162,228,72,14);city.lineStyle(4,0xbc9e62,.68);city.strokeRoundedRect(246,1162,228,72,14);
 
-   [["b_templo",360,238,.76,158,68],["b_posada",140,405,.61,130,60],["b_mercado",580,405,.61,130,60],["b_herreria",140,770,.59,128,60],["b_gremio",580,770,.59,128,60]].forEach(([k,x,y,s,w,h])=>{this.add.image(x,y,k).setScale(s).setDepth(y);this.addObstacle(x,y+35,w,h);});
-   [["TEMPLO",360,332],["POSADA",140,496],["MERCADO",580,496],["HERRERÍA",140,864],["GREMIO",580,864]].forEach(([t,x,y])=>this.add.text(x,y,t,{fontFamily:"Georgia",fontSize:"11px",color:"#ead9a8",stroke:"#161b18",strokeThickness:3}).setOrigin(.5).setDepth(1200));
+   [["b_templo",360,238,.77,160,68],["b_posada",140,405,.62,132,60],["b_mercado",580,405,.62,132,60],["b_herreria",140,770,.60,130,60],["b_gremio",580,770,.60,130,60]].forEach(([k,x,y,s,w,h])=>{this.add.image(x,y,k).setScale(s).setDepth(y);this.addObstacle(x,y+35,w,h);});
+   [["TEMPLO DE LUMEN",360,332],["POSADA",140,497],["MERCADO",580,497],["HERRERÍA",140,865],["GREMIO",580,865]].forEach(([t,x,y])=>this.add.text(x,y,t,{fontFamily:"Georgia",fontSize:"11px",color:"#f0dda9",stroke:"#151a17",strokeThickness:3}).setOrigin(.5).setDepth(1200));
 
-   this.add.image(360,555,"p_estatua_fuente").setScale(.70).setDepth(565);this.addObstacle(360,570,114,56);
-   // Faroles con halos cálidos.
-   [[278,345],[442,345],[255,650],[465,650],[275,905],[445,905],[290,1095],[430,1095]].forEach(([x,y])=>{this.add.circle(x,y-12,22,0xffc96b,.07).setDepth(y-2);this.add.image(x,y,"p_farol").setScale(.45).setDepth(y);});
-   [[290,372],[430,372],[270,930],[450,930]].forEach(([x,y])=>this.add.image(x,y,"p_bandera").setScale(.39).setDepth(y));
-   [[82,575],[638,575]].forEach(([x,y])=>this.add.image(x,y,"p_puesto").setScale(.53).setDepth(y));
-   [[165,665],[555,665],[165,1015],[555,1015]].forEach(([x,y])=>this.add.image(x,y,"p_banco").setScale(.45).setDepth(y));
-   // Guardia ceremonial de Puerta Sur.
+   this.add.image(360,555,"p_estatua_fuente").setScale(.71).setDepth(565);this.addObstacle(360,570,114,56);
+   this.add.text(360,690,"PLAZA DE LOS FUNDADORES",{fontFamily:"Georgia",fontSize:"12px",color:"#d9c18b",stroke:"#171c18",strokeThickness:3}).setOrigin(.5).setDepth(1200);
+   [[278,345],[442,345],[255,650],[465,650],[275,905],[445,905],[290,1095],[430,1095]].forEach(([x,y])=>{this.add.circle(x,y-12,24,0xffc96b,.075).setDepth(y-2);this.add.image(x,y,"p_farol").setScale(.46).setDepth(y);});
+   [[290,372],[430,372],[270,930],[450,930]].forEach(([x,y])=>this.add.image(x,y,"p_bandera").setScale(.40).setDepth(y));
+   [[82,575],[638,575]].forEach(([x,y])=>this.add.image(x,y,"p_puesto").setScale(.54).setDepth(y));
+   [[165,665],[555,665],[165,1015],[555,1015]].forEach(([x,y])=>this.add.image(x,y,"p_banco").setScale(.46).setDepth(y));
+   // pequeños props urbanos para dar vida sin volver a llenar de geometría
+   [[105,655],[615,655],[110,1040],[610,1040]].forEach(([x,y])=>this.add.image(x,y,"p_barril_01").setScale(.34).setDepth(y));
+   [[135,675],[585,675]].forEach(([x,y])=>this.add.image(x,y,"p_caja").setScale(.32).setDepth(y));
    [["npc_guardia",285,1185],["npc_guardia",435,1185]].forEach(([k,x,y])=>this.add.image(x,y,k).setScale(.31).setDepth(y));
-
    [["npc_mira",175,610,"Mira"],["npc_guardia",305,705,"Guardia"],["npc_aldric",545,610,"Aldric"],["npc_borin",175,885,"Borin"]].forEach(a=>{this.add.image(a[1],a[2],a[0]).setScale(.38).setDepth(a[2]);this.add.text(a[1],a[2]+53,a[3],{fontFamily:"Georgia",fontSize:"13px",color:"#fff2c7",stroke:"#000",strokeThickness:3}).setOrigin(.5).setDepth(a[2]+2)});
    this.playerShadow=this.add.ellipse(360,1002,48,15,0x000000,.24).setDepth(899);
     this.player=this.physics.add.sprite(360,968,"gabriel_idle_01").setScale(.68).setDepth(900);this.player.body.setSize(34,38).setOffset(24,62);this.player.setCollideWorldBounds(true);this.cameras.main.setBounds(0,0,720,1780);this.cameras.main.startFollow(this.player,true,.10,.10,0,135);this.cameras.main.setDeadzone(70,110);this.physics.add.collider(this.player,this.obstacles);
