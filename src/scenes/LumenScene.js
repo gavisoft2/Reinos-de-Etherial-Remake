@@ -9,36 +9,63 @@ export class LumenScene extends Phaser.Scene {
   this.load.svg("new_gremio",A+"gremio.svg");
  }
  create(){
-  // LUMEN V17 — primera reconstrucción limpia con assets nuevos.
+  // LUMEN V18 — urbanismo, plaza y acceso sur sobre la nueva base.
   const W=720,H=1780;
   this.physics.world.setBounds(0,0,W,H);
   this.cameras.main.setBounds(0,0,W,H);
   this.cameras.main.setBackgroundColor("#18211b");
 
   const world=this.add.graphics();
-  world.fillStyle(0x27352b,1);world.fillRect(0,0,W,H);
-  world.fillStyle(0x6d675b,1);world.fillRoundedRect(238,0,244,H,34);
-  world.fillStyle(0x8b8271,1);world.fillCircle(360,720,215);
-  world.lineStyle(8,0xb79b64,.85);world.strokeCircle(360,720,215);
-  world.lineStyle(4,0xb79b64,.65);world.strokeRoundedRect(238,-20,244,H+40,34);
-  world.fillStyle(0x596653,.8);world.fillRect(0,0,210,H);world.fillRect(510,0,210,H);
+  world.fillStyle(0x26362b,1);world.fillRect(0,0,W,H);
+  // barrios laterales
+  world.fillStyle(0x33483a,1);world.fillRect(0,0,214,H);world.fillRect(506,0,214,H);
+  // avenida principal de piedra
+  world.fillStyle(0x716b60,1);world.fillRoundedRect(232,-20,256,H+40,30);
+  world.lineStyle(5,0xb79b64,.7);world.strokeRoundedRect(232,-20,256,H+40,30);
+  // calles transversales
+  [[445,150],[990,150],[1275,115]].forEach(r=>{world.fillStyle(0x68645b,1);world.fillRoundedRect(65,r[0],590,r[1],24);world.lineStyle(3,0x9e895f,.5);world.strokeRoundedRect(65,r[0],590,r[1],24);});
+  // plaza monumental
+  world.fillStyle(0x8b8271,1);world.fillCircle(360,720,220);
+  world.lineStyle(10,0xb99c63,.9);world.strokeCircle(360,720,220);
+  world.lineStyle(3,0xd0bb8a,.55);world.strokeCircle(360,720,184);
+  // mosaico radial
+  world.lineStyle(3,0xa88d59,.45);
+  for(let i=0;i<8;i++){const a=i*Math.PI/4;world.lineBetween(360+82*Math.cos(a),720+82*Math.sin(a),360+178*Math.cos(a),720+178*Math.sin(a));}
+  // jardines y patios
+  [[55,255,150,145],[515,255,150,145],[45,1115,160,125],[515,1115,160,125]].forEach(r=>{world.fillStyle(0x405744,.9);world.fillRoundedRect(...r,22);world.lineStyle(3,0x8b805e,.5);world.strokeRoundedRect(...r,22);});
 
-  this.add.image(360,190,"new_templo").setDisplaySize(330,245).setDepth(10);
-  this.add.image(145,490,"new_posada").setDisplaySize(245,190).setDepth(20);
-  this.add.image(575,490,"new_mercado").setDisplaySize(245,190).setDepth(20);
-  this.add.image(145,1010,"new_herreria").setDisplaySize(245,190).setDepth(20);
-  this.add.image(575,1010,"new_gremio").setDisplaySize(245,190).setDepth(20);
+  this.add.image(360,190,"new_templo").setDisplaySize(350,255).setDepth(10);
+  this.add.image(145,505,"new_posada").setDisplaySize(250,195).setDepth(20);
+  this.add.image(575,505,"new_mercado").setDisplaySize(250,195).setDepth(20);
+  this.add.image(145,1050,"new_herreria").setDisplaySize(250,195).setDepth(20);
+  this.add.image(575,1050,"new_gremio").setDisplaySize(250,195).setDepth(20);
 
-  const plaza=this.add.graphics().setDepth(15);
-  plaza.fillStyle(0x536b72,1);plaza.fillCircle(360,720,76);
-  plaza.lineStyle(8,0xc0a36b,1);plaza.strokeCircle(360,720,76);
-  plaza.fillStyle(0x9aa7a5,1);plaza.fillCircle(360,720,30);
-  plaza.fillStyle(0xd1b978,1);plaza.fillTriangle(360,648,337,716,383,716);
+  // fuente/monumento provisional NUEVO, construido sin assets antiguos
+  const plaza=this.add.graphics().setDepth(25);
+  plaza.fillStyle(0x415f67,1);plaza.fillCircle(360,720,82);
+  plaza.lineStyle(10,0xc2a76e,1);plaza.strokeCircle(360,720,82);
+  plaza.fillStyle(0x98a7a6,1);plaza.fillCircle(360,720,37);
+  plaza.fillStyle(0xd0bd88,1);plaza.fillTriangle(360,635,330,716,390,716);
+  plaza.fillStyle(0xe0cf9d,1);plaza.fillCircle(360,654,13);
 
-  this.add.text(360,1340,"LUMEN",{fontFamily:"Georgia",fontSize:"34px",color:"#ead8a8",stroke:"#111914",strokeThickness:6}).setOrigin(.5);
-  this.add.text(360,1380,"Capital de Etherial",{fontFamily:"Georgia",fontSize:"15px",color:"#c9c3a5"}).setOrigin(.5);
-  this.cameras.main.scrollY=160;
-  this.resetVisualTotal=false;
+  // acceso sur monumental
+  const gate=this.add.graphics().setDepth(18);
+  gate.fillStyle(0x5f5c54,1);gate.fillRoundedRect(205,1390,95,185,18);gate.fillRoundedRect(420,1390,95,185,18);
+  gate.fillStyle(0x777267,1);gate.fillRoundedRect(180,1360,145,62,14);gate.fillRoundedRect(395,1360,145,62,14);
+  gate.lineStyle(5,0xb89a61,.85);gate.strokeRoundedRect(180,1360,145,62,14);gate.strokeRoundedRect(395,1360,145,62,14);
+  gate.fillStyle(0x222c25,1);gate.fillRoundedRect(300,1425,120,170,42);
+  this.add.text(360,1342,"PUERTA SUR",{fontFamily:"Georgia",fontSize:"20px",color:"#ead7a3",stroke:"#111914",strokeThickness:5}).setOrigin(.5).setDepth(30);
+
+  // iluminación ambiental nueva
+  [[245,420],[475,420],[245,930],[475,930],[260,1260],[460,1260]].forEach(([x,y])=>{
+    const glow=this.add.circle(x,y,26,0xffd98b,.10).setDepth(30);
+    this.add.rectangle(x,y+18,5,42,0x332d25,1).setDepth(31);
+    this.add.circle(x,y,7,0xffd98b,.9).setDepth(32);
+  });
+
+  this.add.text(360,1640,"LUMEN",{fontFamily:"Georgia",fontSize:"36px",color:"#ead8a8",stroke:"#111914",strokeThickness:6}).setOrigin(.5).setDepth(40);
+  this.add.text(360,1682,"Capital de Etherial",{fontFamily:"Georgia",fontSize:"15px",color:"#c9c3a5"}).setOrigin(.5).setDepth(40);
+  this.cameras.main.scrollY=260;
  }
  addObstacle(x,y,w,h){const z=this.obstacles.create(x,y,null).setVisible(false);z.body.setSize(w,h);z.refreshBody();return z}
  makeHud(){
