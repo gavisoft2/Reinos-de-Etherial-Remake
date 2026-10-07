@@ -30,6 +30,21 @@ export class LumenScene extends Phaser.Scene {
   this.add.ellipse(360,462,205,78,0x2d7d9c,.82).setStrokeStyle(4,0xd5c48d,.9).setDepth(431);
   this.add.ellipse(360,450,118,52,0x8b846f,1).setStrokeStyle(3,0xd5c48d,.9).setDepth(432);
   this.addObstacle(360,468,205,74);
+  // Paseos de piedra que conectan la plaza con los cuatro distritos.
+  this.add.rectangle(360,655,190,360,0x8b846f,.42).setDepth(-20).setStrokeStyle(2,0xb6aa88,.28);
+  this.add.rectangle(360,470,560,150,0x8b846f,.32).setDepth(-20).setStrokeStyle(2,0xb6aa88,.22);
+  // Jardines simétricos alrededor de la fuente.
+  [[205,410],[515,410],[205,530],[515,530]].forEach(([x,y])=>{
+   this.add.ellipse(x,y,118,58,0x284a2d,.88).setStrokeStyle(3,0x9b8b62,.72).setDepth(420);
+   this.add.image(x-28,y-6,"p_arbol_03").setScale(.38).setDepth(y);
+   this.add.image(x+30,y+4,"p_arbol_02").setScale(.30).setDepth(y+1);
+  });
+  // Iluminación de plaza.
+  [[245,365],[475,365],[245,575],[475,575]].forEach(([x,y])=>this.add.image(x,y,"p_farol").setScale(.55).setDepth(y));
+  // Estatua monumental completa: pedestal + figura central, sin usar el recorte roto anterior.
+  this.add.rectangle(360,432,72,72,0x8e8775,1).setStrokeStyle(3,0xd1c29b,.9).setDepth(438);
+  const monument=this.add.image(360,365,"npc_guardia").setScale(1.15).setTint(0xc8c1ae).setDepth(439);
+  this.add.text(360,505,"FUENTE DE LOS FUNDADORES",{fontFamily:"Georgia",fontSize:"12px",color:"#ead9aa",stroke:"#17140f",strokeThickness:4}).setOrigin(.5).setDepth(500);
   [["b_posada",112,300],["b_mercado",608,300],["b_herreria",112,720],["b_gremio",608,720],["b_templo",360,190]].forEach(a=>{this.add.image(a[1],a[2],a[0]).setScale(1.42).setDepth(a[2]);this.addObstacle(a[1],a[2]+45,175,78)});
   [[45,390,"p_arbol_01"],[675,390,"p_arbol_02"],[50,780,"p_arbol_03"],[670,780,"p_arbol_01"],[65,940,"p_arbol_02"],[655,940,"p_arbol_03"]].forEach(a=>{this.add.image(a[0]+5,a[1]+13,a[2]).setTint(0x000000).setAlpha(.18).setScale(1.15,.42).setDepth(a[1]-2);this.add.image(a[0],a[1],a[2]).setScale(1.25).setDepth(a[1])});
   [["npc_mira",135,560,"Mira"],["npc_guardia",270,625,"Guardia"],["npc_aldric",585,560,"Aldric"],["npc_borin",135,850,"Borin"]].forEach(a=>{this.add.image(a[1],a[2],a[0]).setScale(.62).setDepth(a[2]);this.add.text(a[1],a[2]+62,a[3],{fontFamily:"Georgia",fontSize:"13px",color:"#fff2c7",stroke:"#000",strokeThickness:4}).setOrigin(.5).setDepth(a[2]+2)});
