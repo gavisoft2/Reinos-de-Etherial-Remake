@@ -242,6 +242,25 @@ export class LumenScene extends Phaser.Scene {
     promenade.fillStyle(0x315c34,.86); promenade.fillEllipse(x,y,44,19);
     promenade.lineStyle(1,0x9b895d,.55); promenade.strokeEllipse(x,y,44,19);
   });
+  // CAPITAL PASS V10 — jardines de transición y entrada monumental.
+  const v10=this.add.graphics().setDepth(142);
+  // Jardines longitudinales suavizan los grandes vacíos laterales de la avenida.
+  [[185,1080],[535,1080],[185,1260],[535,1260]].forEach(([x,y],i)=>{
+    v10.fillStyle(0x315c34,.88); v10.fillRoundedRect(x-58,y-25,116,50,22);
+    v10.lineStyle(2,0x9b895d,.66); v10.strokeRoundedRect(x-58,y-25,116,50,22);
+    this.add.image(x+(i%2?18:-18),y-12,i%2?"p_arbol_02":"p_arbol_03").setScale(.17).setDepth(y+3);
+    this.add.image(x+(i%2?-32:32),y+8,"p_banco").setScale(.25).setDepth(y+4);
+  });
+  // Acceso monumental previo a Puerta Sur.
+  [[292,1420],[428,1420]].forEach(([x,y],i)=>{
+    v10.fillStyle(0x555a56,.95); v10.fillRoundedRect(x-18,y-40,36,80,8);
+    v10.lineStyle(2,0xb79a54,.75); v10.strokeRoundedRect(x-18,y-40,36,80,8);
+    this.add.image(x+(i?-28:28),y-5,"p_bandera").setScale(.40).setDepth(y+4);
+    this.add.image(x,y-32,"p_farol").setScale(.34).setDepth(y+5);
+  });
+  // Línea ceremonial transversal para cerrar visualmente la capital.
+  v10.lineStyle(4,0xb79a54,.55); v10.lineBetween(115,1465,605,1465);
+  v10.lineStyle(2,0x557da2,.52); v10.lineBetween(145,1473,575,1473);
   // Estatua monumental completa: pedestal + figura central, sin usar el recorte roto anterior.
   this.add.rectangle(360,432,72,72,0x8e8775,1).setStrokeStyle(3,0xd1c29b,.9).setDepth(438);
   const monument=this.add.image(360,365,"npc_guardia").setScale(1.15).setTint(0xc8c1ae).setDepth(439);
