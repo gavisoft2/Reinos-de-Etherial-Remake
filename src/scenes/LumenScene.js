@@ -5,7 +5,7 @@ const g=this.add.graphics();g.fillGradientStyle(0x263a29,0x263a29,0x111a13,0x111
 g.fillStyle(0x293d42,1);g.fillEllipse(360,505,300,125);g.fillStyle(0x70a8aa,.65);g.fillEllipse(360,492,250,82);g.fillStyle(0xb8aa8a,1);g.fillRect(342,365,36,120);g.fillCircle(360,350,42);g.fillTriangle(360,285,312,360,360,338);g.fillTriangle(360,285,408,360,360,338);
 // Masas arquitectónicas cálidas: luego serán sustituidas por arte prerenderizado original.
 const house=(x,y,w,h)=>{g.fillStyle(0x6d5540,1);g.fillRoundedRect(x,y,w,h,14);g.fillStyle(0x3d2c24,1);g.fillTriangle(x-10,y+25,x+w/2,y-55,x+w+10,y+25);g.fillStyle(0xe4ad5c,.55);for(let i=0;i<3;i++)g.fillRect(x+28+i*55,y+45,24,38)};house(40,170,245,190);house(435,170,245,190);house(35,720,250,210);house(435,720,250,210);
-// Avenida hacia la capital/castillo.
+// Adoquines y anillos de plaza.\ng.lineStyle(2,0xc0b59d,.16);for(let r=170;r<300;r+=34)g.strokeEllipse(360,500,r*2,r);for(let a=0;a<Math.PI*2;a+=Math.PI/10){g.lineBetween(360+Math.cos(a)*95,500+Math.sin(a)*48,360+Math.cos(a)*285,500+Math.sin(a)*142)}\n// Avenida hacia la capital/castillo.
 g.fillStyle(0x736b5d,.95);g.fillTriangle(275,1280,445,1280,405,610);g.fillStyle(0x1b311e,.9);g.fillRect(0,980,190,300);g.fillRect(530,980,190,300);
 this.add.text(360,42,"REINOS DE ETHERIAL",{fontFamily:"Georgia",fontSize:"30px",color:"#f0d89a",stroke:"#17110b",strokeThickness:6}).setOrigin(.5);this.add.text(360,82,"LUMEN · CAPITAL DEL REINO",{fontFamily:"Georgia",fontSize:"15px",color:"#d8c49a",letterSpacing:2}).setOrigin(.5);
 // Héroe temporal: proporción y presencia correctas; el arte final será sprite semi-realista original.
