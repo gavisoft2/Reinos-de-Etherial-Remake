@@ -37,7 +37,7 @@ export class LumenScene extends Phaser.Scene {
   this.playerName=this.add.text(360,830,"Gabriel · Arquero",{fontFamily:"Georgia",fontSize:"15px",color:"#fff1c4",stroke:"#000",strokeThickness:4}).setOrigin(.5).setDepth(901);
   this.anims.create({key:"gabriel_idle",frames:["gabriel_idle_01","gabriel_idle_02"].map(key=>({key})),frameRate:3,repeat:-1});
   this.anims.create({key:"gabriel_walk",frames:["gabriel_walk_01","gabriel_walk_02","gabriel_walk_03","gabriel_walk_04"].map(key=>({key})),frameRate:8,repeat:-1});
-  this.player.play("gabriel_idle");this.move={x:0,y:0};this.questDone=false;this.slimeQuest=false;this.slimesKilled=0;this.xp=0;this.gold=0;this.playerHp=100;this.attackReady=true;this.npcTargets=[];this.spawnSlimes();
+  this.player.play("gabriel_idle");this.move={x:0,y:0};this.questDone=false;this.slimeQuest=false;this.slimesKilled=0;this.level=1;this.xp=0;this.xpNeed=100;this.gold=0;this.playerHp=100;this.maxHp=100;this.attackReady=true;this.inventory={slimeGel:0};this.npcTargets=[];this.spawnSlimes();
   this.npcTargets.push({name:"Aldric",x:560,y:555,r:88});
   this.makeHud();this.makeControls();this.makeInteractButton();
  }
@@ -55,10 +55,10 @@ export class LumenScene extends Phaser.Scene {
  addObstacle(x,y,w,h){const z=this.obstacles.create(x,y,null).setVisible(false);z.body.setSize(w,h);z.refreshBody();return z}
  makeHud(){
   this.add.rectangle(360,52,700,84,0x080d0a,.82).setScrollFactor(0).setDepth(5000).setStrokeStyle(2,0xb79251,.7);
-  this.add.text(28,22,"Gabriel · Nv.1",{fontFamily:"Georgia",fontSize:"17px",color:"#f4dfad"}).setScrollFactor(0).setDepth(5001);
+  this.levelText=this.add.text(28,22,"Gabriel · Nv.1",{fontFamily:"Georgia",fontSize:"17px",color:"#f4dfad"}).setScrollFactor(0).setDepth(5001);
   this.hpBar=this.add.rectangle(30,52,260,12,0x9e342e).setOrigin(0,.5).setScrollFactor(0).setDepth(5001);this.add.rectangle(30,72,205,9,0x326f9e).setOrigin(0,.5).setScrollFactor(0).setDepth(5001);this.xpText=this.add.text(275,67,"EXP 0/100",{fontFamily:"Georgia",fontSize:"11px",color:"#e7cf91"}).setScrollFactor(0).setDepth(5001);
   [["ui_tienda",430],["ui_inventario",500],["ui_habilidades",570],["ui_misiones",640]].forEach(a=>this.add.image(a[1],52,a[0]).setDisplaySize(46,38).setScrollFactor(0).setDepth(5001));
-  this.goldText=this.add.text(350,22,"Oro 0",{fontFamily:"Georgia",fontSize:"13px",color:"#f5d47a"}).setScrollFactor(0).setDepth(5001);this.add.image(640,145,"lumen_map").setDisplaySize(118,78).setScrollFactor(0).setDepth(5000).setAlpha(.95);
+  this.invText=this.add.text(350,43,"Gel 0",{fontFamily:"Georgia",fontSize:"11px",color:"#9fe3ae"}).setScrollFactor(0).setDepth(5001);this.goldText=this.add.text(350,22,"Oro 0",{fontFamily:"Georgia",fontSize:"13px",color:"#f5d47a"}).setScrollFactor(0).setDepth(5001);this.add.image(640,145,"lumen_map").setDisplaySize(118,78).setScrollFactor(0).setDepth(5000).setAlpha(.95);
   this.questText=this.add.text(20,112,"EL INICIO DE UNA LEYENDA\nHabla con Aldric  0/1",{fontFamily:"Georgia",fontSize:"13px",color:"#f0dfb7",backgroundColor:"#080d0acc",padding:{x:9,y:7}}).setScrollFactor(0).setDepth(5001);
  }
  spawnSlimes(){
@@ -87,10 +87,17 @@ export class LumenScene extends Phaser.Scene {
   const dmg=12+Phaser.Math.Between(0,6);this.fireArrow(target,dmg);
  }
  killSlime(s){
-  s.disableBody(true,true);s.hpBg.destroy();s.hpBar.destroy();this.slimesKilled++;this.xp+=25;this.gold+=Phaser.Math.Between(4,9);
-  this.xpText?.setText("EXP "+this.xp+"/100");this.goldText?.setText("Oro "+this.gold);
+  s.disableBody(true,true);s.hpBg.destroy();s.hpBar.destroy();this.slimesKilled++;this.gainXp(25);this.gold+=Phaser.Math.Between(4,9);if(Phaser.Math.Between(1,100)<=65){this.inventory.slimeGel++;this.spawnLootText(s.x,s.y,"Gel de Slime +1");}
+  this.goldText?.setText("Oro "+this.gold);this.updateInventoryHud();
   if(this.slimeQuest){this.questText.setText("PRIMERA CACERÍA\\nDerrota Slimes  "+Math.min(this.slimesKilled,3)+"/3"+(this.slimesKilled>=3?" ✓":""));if(this.slimesKilled===3)this.showDialogue("Misión completada: Primera Cacería. +75 EXP");}
  }
+ gainXp(amount){
+  this.xp+=amount;
+  while(this.xp>=this.xpNeed){this.xp-=this.xpNeed;this.level++;this.xpNeed=Math.floor(this.xpNeed*1.35);this.maxHp+=15;this.playerHp=this.maxHp;this.hpBar.width=260;this.levelText?.setText("Gabriel · Nv."+this.level);this.showDialogue("¡Nivel "+this.level+" alcanzado! HP máximo +15");}
+  this.xpText?.setText("EXP "+this.xp+"/"+this.xpNeed);
+ }
+ spawnLootText(x,y,msg){const t=this.add.text(x,y-30,msg,{fontFamily:"Georgia",fontSize:"13px",color:"#8ff0a4",stroke:"#102014",strokeThickness:3}).setOrigin(.5).setDepth(8500);this.tweens.add({targets:t,y:y-70,alpha:0,duration:1200,onComplete:()=>t.destroy()});}
+ updateInventoryHud(){this.invText?.setText("Gel "+this.inventory.slimeGel);}
  makeInteractButton(){
   this.interactBtn=this.add.circle(500,1180,34,0x6a552b,.88).setStrokeStyle(3,0xe1c77d,.85).setScrollFactor(0).setDepth(6000).setInteractive();
   this.add.text(500,1180,"💬",{fontSize:"23px"}).setOrigin(.5).setScrollFactor(0).setDepth(6001);
@@ -119,7 +126,7 @@ export class LumenScene extends Phaser.Scene {
   if(!this.player)return;
   const now=this.time.now;this.slimes?.getChildren().forEach(s=>{if(!s.active)return;const d=Phaser.Math.Distance.Between(this.player.x,this.player.y,s.x,s.y);
    if(d<175&&d>55)this.physics.moveToObject(s,this.player,32);else s.setVelocity(0);
-   if(d<62&&now-s.lastHit>1200){s.lastHit=now;this.playerHp=Math.max(0,this.playerHp-5);this.hpBar.width=260*this.playerHp/100;if(this.playerHp<=0){this.playerHp=100;this.hpBar.width=260;this.player.setPosition(360,760);this.showDialogue("Has caído en combate. Regresas a la plaza de Lumen.");}}
+   if(d<62&&now-s.lastHit>1200){s.lastHit=now;this.playerHp=Math.max(0,this.playerHp-5);this.hpBar.width=260*this.playerHp/this.maxHp;if(this.playerHp<=0){this.playerHp=this.maxHp;this.hpBar.width=260;this.player.setPosition(360,760);this.showDialogue("Has caído en combate. Regresas a la plaza de Lumen.");}}
   });
   const moving=Math.abs(this.move.x)+Math.abs(this.move.y)>.08;this.player.setVelocity(this.move.x*170,this.move.y*170);if(moving){if(this.player.anims.currentAnim?.key!=="gabriel_walk")this.player.play("gabriel_walk");if(this.move.x<-.05)this.player.setFlipX(true);if(this.move.x>.05)this.player.setFlipX(false)}else if(this.player.anims.currentAnim?.key!=="gabriel_idle")this.player.play("gabriel_idle");this.slimes?.getChildren().forEach(s=>{if(s.active){s.setDepth(s.y);s.hpBg?.setPosition(s.x,s.y-48).setDepth(s.y+1);s.hpBar?.setPosition(s.x-28,s.y-48).setDepth(s.y+2)}});this.player.setDepth(this.player.y+100);this.playerShadow.setPosition(this.player.x,this.player.y+38).setDepth(this.player.y-1);this.playerName.setPosition(this.player.x,this.player.y+70).setDepth(this.player.y+102);
  }
