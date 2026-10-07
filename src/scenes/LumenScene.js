@@ -15,7 +15,7 @@ export class LumenScene extends Phaser.Scene {
  }
  create(){
   this.physics.world.setBounds(0,0,720,1780);this.inHuntZone=false;this.safeZone=true;this.zoneName="Lumen";this.deathCount=0;this.respawnProtection=false; this.obstacles=this.physics.add.staticGroup();
-  // LUMEN CAPITAL V9 — composición basada en la referencia final aprobada.
+  // LUMEN CAPITAL V10 — interacción de edificios y servicios de ciudad.
    this.add.rectangle(360,890,720,1780,0x1d2422,1).setDepth(-30);
    this.add.image(360,1515,"t_hierba").setDisplaySize(720,530).setAlpha(.76).setDepth(-29);
    const city=this.add.graphics().setDepth(-28);
@@ -56,14 +56,15 @@ export class LumenScene extends Phaser.Scene {
    // Puntos de interés reales: preparan entrada a edificios y mejoran exploración.
    this.add.text(360,118,"LUMEN · CAPITAL DEL REINO",{fontFamily:"Georgia",fontSize:"15px",color:"#f0d79b",backgroundColor:"#101613dd",padding:{x:14,y:6},stroke:"#000",strokeThickness:3}).setOrigin(.5).setDepth(3100);
    this.cityPOI=[
-    {name:"Templo de Lumen",x:360,y:315,r:105},
-    {name:"Posada",x:140,y:485,r:92},
-    {name:"Mercado",x:580,y:485,r:92},
-    {name:"Herrería",x:140,y:850,r:92},
-    {name:"Gremio",x:580,y:850,r:92},
-    {name:"Plaza de los Fundadores",x:360,y:555,r:145}
+    {name:"Templo de Lumen",x:360,y:315,r:105,action:"Santuario: recuperación y bendiciones"},
+    {name:"Posada",x:140,y:485,r:92,action:"Descanso y punto de retorno"},
+    {name:"Mercado",x:580,y:485,r:92,action:"Compra y venta de objetos"},
+    {name:"Herrería",x:140,y:850,r:92,action:"Mejorar armas y armaduras"},
+    {name:"Gremio",x:580,y:850,r:92,action:"Misiones y contratos"},
+    {name:"Plaza de los Fundadores",x:360,y:555,r:145,action:"Centro social de Lumen"}
    ];
    this.poiHint=this.add.text(360,1080,"",{fontFamily:"Georgia",fontSize:"13px",color:"#ffe6a8",backgroundColor:"#111713dd",padding:{x:10,y:6},stroke:"#000",strokeThickness:2}).setOrigin(.5).setDepth(3500);
+   this.poiAction=this.add.text(360,1112,"",{fontFamily:"Georgia",fontSize:"11px",color:"#d8c69b",backgroundColor:"#0b100edd",padding:{x:8,y:5}}).setOrigin(.5).setDepth(3500);
    this.playerShadow=this.add.ellipse(360,1002,48,15,0x000000,.24).setDepth(899);
     this.player=this.physics.add.sprite(360,968,"gabriel_idle_01").setScale(.68).setDepth(900);this.player.body.setSize(34,38).setOffset(24,62);this.player.setCollideWorldBounds(true);this.cameras.main.setBounds(0,0,720,1780);this.cameras.main.startFollow(this.player,true,.10,.10,0,135);this.cameras.main.setDeadzone(70,110);this.physics.add.collider(this.player,this.obstacles);
   this.playerName=this.add.text(360,1028,"Gabriel · Arquero",{fontFamily:"Georgia",fontSize:"14px",color:"#fff1c4",stroke:"#000",strokeThickness:3}).setOrigin(.5).setDepth(901);
@@ -363,8 +364,10 @@ export class LumenScene extends Phaser.Scene {
   if(this.player&&this.cityPOI&&this.poiHint){
    let nearestPOI=null,nearestD=9999;
    this.cityPOI.forEach(p=>{const d=Phaser.Math.Distance.Between(this.player.x,this.player.y,p.x,p.y);if(d<nearestD){nearestD=d;nearestPOI=p}});
-   if(nearestPOI&&nearestD<nearestPOI.r){this.poiHint.setText("◆ "+nearestPOI.name).setVisible(true).setPosition(360,1080);}
-   else this.poiHint.setVisible(false);
+   if(nearestPOI&&nearestD<nearestPOI.r){
+    this.poiHint.setText("◆ "+nearestPOI.name).setVisible(true).setPosition(360,1080);
+    this.poiAction?.setText(nearestPOI.action||"").setVisible(true);
+   } else {this.poiHint.setVisible(false);this.poiAction?.setVisible(false);}
   }
   if(!this.player)return;
   this.updateZoneState();
