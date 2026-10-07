@@ -9,7 +9,7 @@ export class LumenScene extends Phaser.Scene {
   ["suelo_01","suelo_02","suelo_03","suelo_04","hierba"].forEach(n=>this.load.image("t_"+n,A+"tiles/"+n+".png"));
   this.load.image("lumen_map",A+"maps/lumen_master.png");
   ["inventario","tienda","habilidades","misiones","mapa","configuracion"].forEach(n=>this.load.image("ui_"+n,A+"ui/icons/"+n+".png"));
-  this.load.image("enemy_slime",A+"enemies/slime.png");this.load.image("enemy_wolf",A+"enemies/lobo_salvaje.png");this.load.image("enemy_goblin",A+"enemies/goblin.png");this.load.image("enemy_skeleton",A+"enemies/esqueleto.png");
+  this.load.image("enemy_slime",A+"enemies/slime.png");this.load.image("enemy_wolf",A+"enemies/lobo_salvaje.png");this.load.image("enemy_goblin",A+"enemies/goblin.png");this.load.image("enemy_skeleton",A+"enemies/esqueleto.png");this.load.image("enemy_orc",A+"enemies/orco.png");
   this.load.image("loot_gel",A+"effects/curacion.png");
  }
  create(){
@@ -32,7 +32,7 @@ export class LumenScene extends Phaser.Scene {
   this.playerName=this.add.text(360,830,"Gabriel · Arquero",{fontFamily:"Georgia",fontSize:"15px",color:"#fff1c4",stroke:"#000",strokeThickness:4}).setOrigin(.5).setDepth(901);
   this.anims.create({key:"gabriel_idle",frames:["gabriel_idle_01","gabriel_idle_02"].map(key=>({key})),frameRate:3,repeat:-1});
   this.anims.create({key:"gabriel_walk",frames:["gabriel_walk_01","gabriel_walk_02","gabriel_walk_03","gabriel_walk_04"].map(key=>({key})),frameRate:8,repeat:-1});
-  this.player.play("gabriel_idle");this.move={x:0,y:0};this.questDone=false;this.slimeQuest=false;this.slimesKilled=0;this.level=1;this.xp=0;this.xpNeed=100;this.gold=0;this.playerHp=100;this.maxHp=100;this.attackReady=true;this.inventory={slimeGel:0};this.equipment={weapon:"Arco del Aprendiz",armor:"Cuero de Lumen"};this.attackPower=15;this.defense=2;this.potions=1;this.gearBonus={attack:0,defense:0};this.inventoryOpen=false;this.inventorySlots=20;this.maxInventorySlots=60;this.baseSlotPrice=100;this.inventoryItems=[];this.gearDrops=0;this.selectedItem=null;this.shopOpen=false;this.questRewardClaimed=false;this.secondQuest=false;this.secondRewardClaimed=false;this.wolvesKilled=0;this.thirdQuest=false;this.thirdRewardClaimed=false;this.goblinsKilled=0;this.fourthQuest=false;this.skeletonsKilled=0;this.saveKey="etherial_save_v1";this.npcTargets=[];this.spawnSlimes();
+  this.player.play("gabriel_idle");this.move={x:0,y:0};this.questDone=false;this.slimeQuest=false;this.slimesKilled=0;this.level=1;this.xp=0;this.xpNeed=100;this.gold=0;this.playerHp=100;this.maxHp=100;this.attackReady=true;this.inventory={slimeGel:0};this.equipment={weapon:"Arco del Aprendiz",armor:"Cuero de Lumen"};this.attackPower=15;this.defense=2;this.potions=1;this.gearBonus={attack:0,defense:0};this.inventoryOpen=false;this.inventorySlots=20;this.maxInventorySlots=60;this.baseSlotPrice=100;this.inventoryItems=[];this.gearDrops=0;this.selectedItem=null;this.shopOpen=false;this.questRewardClaimed=false;this.secondQuest=false;this.secondRewardClaimed=false;this.wolvesKilled=0;this.thirdQuest=false;this.thirdRewardClaimed=false;this.goblinsKilled=0;this.fourthQuest=false;this.fourthRewardClaimed=false;this.skeletonsKilled=0;this.fifthQuest=false;this.orcsKilled=0;this.saveKey="etherial_save_v1";this.npcTargets=[];this.spawnSlimes();
   this.npcTargets.push({name:"Aldric",x:560,y:555,r:88});this.questMarker=this.add.text(560,495,"!",{fontFamily:"Georgia",fontSize:"30px",color:"#ffd75a",stroke:"#4a3210",strokeThickness:4}).setOrigin(.5).setDepth(9000);this.tweens.add({targets:this.questMarker,y:487,duration:650,yoyo:true,repeat:-1});
   this.makeHud();this.makeControls();this.makeInteractButton();this.makeInventory();this.makeShop();this.seedInventory();this.loadProgress();this.time.addEvent({delay:5000,loop:true,callback:()=>this.saveProgress()});
  }
@@ -56,6 +56,13 @@ export class LumenScene extends Phaser.Scene {
   this.statsText=this.add.text(275,84,"ATQ 15 · DEF 2",{fontFamily:"Georgia",fontSize:"10px",color:"#d8c79c"}).setScrollFactor(0).setDepth(5001);this.invText=this.add.text(350,43,"Gel 0",{fontFamily:"Georgia",fontSize:"11px",color:"#9fe3ae"}).setScrollFactor(0).setDepth(5001);this.goldText=this.add.text(350,22,"Oro 0",{fontFamily:"Georgia",fontSize:"13px",color:"#f5d47a"}).setScrollFactor(0).setDepth(5001);this.add.image(640,145,"lumen_map").setDisplaySize(118,78).setScrollFactor(0).setDepth(5000).setAlpha(.95);
   this.questText=this.add.text(20,112,"EL INICIO DE UNA LEYENDA\nHabla con Aldric  0/1",{fontFamily:"Georgia",fontSize:"13px",color:"#f0dfb7",backgroundColor:"#080d0acc",padding:{x:9,y:7}}).setScrollFactor(0).setDepth(5001);
  }
+ spawnOrcs(){
+  this.orcs=this.physics.add.group();[[80,1010],[180,1165],[300,1070],[420,1190],[550,1090],[650,1000]].forEach(p=>{const e=this.orcs.create(p[0],p[1],"enemy_orc").setScale(.76).setDepth(p[1]);e.hp=165;e.maxHp=165;e.lastHit=0;e.hpBg=this.add.rectangle(p[0],p[1]-58,78,8,0x1b1512,.9).setDepth(p[1]+1);e.hpBar=this.add.rectangle(p[0]-38,p[1]-58,76,6,0xa82f29).setOrigin(0,.5).setDepth(p[1]+2);});
+ }
+ attackOrc(){
+  if(!this.orcs)return false;let t=null,b=255;this.orcs.getChildren().forEach(e=>{if(e.active){const d=Phaser.Math.Distance.Between(this.player.x,this.player.y,e.x,e.y);if(d<b){b=d;t=e}}});if(!t)return false;if(!this.attackReady)return true;this.attackReady=false;this.time.delayedCall(480,()=>this.attackReady=true);const crit=Phaser.Math.Between(1,100)<=12,dmg=Math.floor((this.attackPower+Phaser.Math.Between(2,7))*(crit?1.75:1));const a=this.add.image(this.player.x,this.player.y-18,"gabriel_attack_01").setDisplaySize(30,38).setDepth(9000);this.tweens.add({targets:a,x:t.x,y:t.y,duration:180,onComplete:()=>{a.destroy();if(!t.active)return;t.hp-=dmg;t.hpBar.width=76*Math.max(0,t.hp/t.maxHp);this.showCombatText(t.x,t.y-78,"-"+dmg,crit?"#ffe16b":"#ffd38a");if(t.hp<=0){const rx=t.x,ry=t.y;t.disableBody(true,true);t.hpBg.destroy();t.hpBar.destroy();this.respawnOrc(rx,ry);if(this.orcsKilled<6)this.orcsKilled++;this.gainXp(120);this.gold+=Phaser.Math.Between(28,42);this.goldText?.setText("Oro "+this.gold);if(Phaser.Math.Between(1,100)<=42)this.spawnGearDrop(rx,ry);this.questText.setText("LA AMENAZA ORCA\nDerrota Orcos  "+this.orcsKilled+"/6"+(this.orcsKilled>=6?" ✓":""));if(this.orcsKilled===6)this.showDialogue("La avanzada orca ha sido destruida. Regresa con Aldric.");}}});return true;
+ }
+ respawnOrc(x,y){this.time.delayedCall(12500,()=>{if(!this.orcs)return;const e=this.orcs.create(x,y,"enemy_orc").setScale(.76).setDepth(y);e.hp=165;e.maxHp=165;e.lastHit=0;e.hpBg=this.add.rectangle(x,y-58,78,8,0x1b1512,.9).setDepth(y+1);e.hpBar=this.add.rectangle(x-38,y-58,76,6,0xa82f29).setOrigin(0,.5).setDepth(y+2);});}
  spawnSkeletons(){
   this.skeletons=this.physics.add.group();[[85,1040],[210,1140],[355,1080],[505,1170],[635,1050]].forEach(p=>{const e=this.skeletons.create(p[0],p[1],"enemy_skeleton").setScale(.72).setDepth(p[1]);e.hp=115;e.maxHp=115;e.lastHit=0;e.hpBg=this.add.rectangle(p[0],p[1]-54,72,7,0x1b1512,.85).setDepth(p[1]+1);e.hpBar=this.add.rectangle(p[0]-35,p[1]-54,70,5,0xb63c35).setOrigin(0,.5).setDepth(p[1]+2);});
  }
@@ -105,7 +112,7 @@ export class LumenScene extends Phaser.Scene {
   const hit=this.add.text(target.x,target.y-72,"-"+dmg,{fontFamily:"Georgia",fontSize:"18px",color:"#ffd38a",stroke:"#401510",strokeThickness:3}).setOrigin(.5).setDepth(8000);
   this.tweens.add({targets:hit,y:hit.y-28,alpha:0,duration:650,onComplete:()=>hit.destroy()});if(target.hp<=0)this.killSlime(target);
  }
- attackNearest(){if(this.fourthQuest&&this.attackSkeleton())return;if(this.thirdQuest&&this.attackGoblin())return;if(this.secondQuest&&this.attackWolf())return;
+ attackNearest(){if(this.fifthQuest&&this.attackOrc())return;if(this.fourthQuest&&this.attackSkeleton())return;if(this.thirdQuest&&this.attackGoblin())return;if(this.secondQuest&&this.attackWolf())return;
   if(!this.slimes)return;let target=null,best=210;
   this.slimes.getChildren().forEach(s=>{if(!s.active)return;const d=Phaser.Math.Distance.Between(this.player.x,this.player.y,s.x,s.y);if(d<best){best=d;target=s}});
   if(!target){this.showDialogue("No hay enemigos dentro del alcance.");return}
@@ -154,16 +161,16 @@ export class LumenScene extends Phaser.Scene {
   ];this.renderSlots();
  }
  saveProgress(){
-  try{localStorage.setItem(this.saveKey,JSON.stringify({level:this.level,xp:this.xp,xpNeed:this.xpNeed,gold:this.gold,playerHp:this.playerHp,maxHp:this.maxHp,potions:this.potions,inventorySlots:this.inventorySlots,slimeGel:this.inventory.slimeGel,questDone:this.questDone,questRewardClaimed:this.questRewardClaimed,secondQuest:this.secondQuest,secondRewardClaimed:this.secondRewardClaimed,wolvesKilled:this.wolvesKilled,thirdQuest:this.thirdQuest,thirdRewardClaimed:this.thirdRewardClaimed,goblinsKilled:this.goblinsKilled,fourthQuest:this.fourthQuest,skeletonsKilled:this.skeletonsKilled,items:this.inventoryItems.filter(i=>!["potion","gel"].includes(i.id))}));}catch(e){}
+  try{localStorage.setItem(this.saveKey,JSON.stringify({level:this.level,xp:this.xp,xpNeed:this.xpNeed,gold:this.gold,playerHp:this.playerHp,maxHp:this.maxHp,potions:this.potions,inventorySlots:this.inventorySlots,slimeGel:this.inventory.slimeGel,questDone:this.questDone,questRewardClaimed:this.questRewardClaimed,secondQuest:this.secondQuest,secondRewardClaimed:this.secondRewardClaimed,wolvesKilled:this.wolvesKilled,thirdQuest:this.thirdQuest,thirdRewardClaimed:this.thirdRewardClaimed,goblinsKilled:this.goblinsKilled,fourthQuest:this.fourthQuest,fourthRewardClaimed:this.fourthRewardClaimed,skeletonsKilled:this.skeletonsKilled,fifthQuest:this.fifthQuest,orcsKilled:this.orcsKilled,items:this.inventoryItems.filter(i=>!["potion","gel"].includes(i.id))}));}catch(e){}
  }
  loadProgress(){
-  try{const d=JSON.parse(localStorage.getItem(this.saveKey)||"null");if(!d)return;["level","xp","xpNeed","gold","playerHp","maxHp","potions","inventorySlots","questDone","questRewardClaimed","secondQuest","secondRewardClaimed","wolvesKilled","thirdQuest","thirdRewardClaimed","goblinsKilled","fourthQuest","skeletonsKilled"].forEach(k=>{if(d[k]!==undefined)this[k]=d[k]});if(d.slimeGel!==undefined)this.inventory.slimeGel=d.slimeGel;if(Array.isArray(d.items)){const basics=this.inventoryItems.filter(i=>["potion","gel"].includes(i.id));this.inventoryItems=[...d.items,...basics];}
+  try{const d=JSON.parse(localStorage.getItem(this.saveKey)||"null");if(!d)return;["level","xp","xpNeed","gold","playerHp","maxHp","potions","inventorySlots","questDone","questRewardClaimed","secondQuest","secondRewardClaimed","wolvesKilled","thirdQuest","thirdRewardClaimed","goblinsKilled","fourthQuest","fourthRewardClaimed","skeletonsKilled","fifthQuest","orcsKilled"].forEach(k=>{if(d[k]!==undefined)this[k]=d[k]});if(d.slimeGel!==undefined)this.inventory.slimeGel=d.slimeGel;if(Array.isArray(d.items)){const basics=this.inventoryItems.filter(i=>["potion","gel"].includes(i.id));this.inventoryItems=[...d.items,...basics];}
    const w=this.inventoryItems.find(i=>i.type==="Arma"&&i.equipped),a=this.inventoryItems.find(i=>i.type==="Armadura"&&i.equipped);this.attackPower=w?.attack||15;this.defense=a?.defense||2;
    this.levelText?.setText("Gabriel · Nv."+this.level);this.xpText?.setText("EXP "+this.xp+"/"+this.xpNeed);this.goldText?.setText("Oro "+this.gold);this.hpBar.width=260*this.playerHp/this.maxHp;this.statsText?.setText("ATQ "+this.attackPower+" · DEF "+this.defense);this.updateInventoryHud();this.renderSlots();this.restoreQuestState();
   }catch(e){}
  }
  restoreQuestState(){
-  if(this.fourthQuest){this.questText.setText("LOS MUERTOS CAMINAN\\nDerrota Esqueletos  "+Math.min(5,this.skeletonsKilled)+"/5");this.spawnSkeletons();this.questMarker?.setText("…");}\n  else if(this.thirdQuest){this.questText.setText("SAQUEADORES VERDES\nDerrota Goblins  "+Math.min(4,this.goblinsKilled)+"/4");this.spawnGoblins();this.questMarker?.setText("…");}
+  if(this.fifthQuest){this.questText.setText("LA AMENAZA ORCA\\nDerrota Orcos  "+Math.min(6,this.orcsKilled)+"/6");this.spawnOrcs();this.questMarker?.setText("…");}\n  else if(this.fourthQuest){this.questText.setText("LOS MUERTOS CAMINAN\\nDerrota Esqueletos  "+Math.min(5,this.skeletonsKilled)+"/5");this.spawnSkeletons();this.questMarker?.setText("…");}\n  else if(this.thirdQuest){this.questText.setText("SAQUEADORES VERDES\nDerrota Goblins  "+Math.min(4,this.goblinsKilled)+"/4");this.spawnGoblins();this.questMarker?.setText("…");}
   else if(this.secondQuest){this.questText.setText("PELIGRO EN EL BOSQUE\nDerrota Lobos  "+Math.min(3,this.wolvesKilled)+"/3");this.spawnWolves();this.questMarker?.setText("…");}
   else if(this.questDone){this.questText.setText("PRIMERA CACERÍA\nDerrota Slimes  "+Math.min(3,this.slimesKilled)+"/3");this.questMarker?.setText("…");}
  }
@@ -263,6 +270,12 @@ export class LumenScene extends Phaser.Scene {
    this.showDialogue("Aldric: Buen trabajo, Gabriel. Recompensa: 75 Oro, 50 EXP y 2 Pociones.");
    return;
   }
+  if(this.fourthQuest&&this.skeletonsKilled>=5&&!this.fourthRewardClaimed){
+   this.fourthRewardClaimed=true;this.gold+=260;this.gainXp(220);this.potions+=3;this.goldText?.setText("Oro "+this.gold);this.updateInventoryHud();this.questText.setText("LOS MUERTOS CAMINAN  ✓\nRecompensa recibida");this.showDialogue("Aldric: Has limpiado las ruinas. Recompensa: 260 Oro, 220 EXP y 3 Pociones.");this.time.delayedCall(4300,()=>this.questMarker?.setText("!"));this.saveProgress();return;
+  }
+  if(this.fourthRewardClaimed&&!this.fifthQuest){
+   this.fifthQuest=true;this.questMarker?.setText("…");this.questText.setText("LA AMENAZA ORCA\nDerrota Orcos  0/6");this.spawnOrcs();this.showDialogue("Aldric: Una avanzada orca cruza las praderas. Derrota 6 Orcos antes de que alcancen las murallas.");this.saveProgress();return;
+  }
   if(this.thirdQuest&&this.goblinsKilled>=4&&!this.thirdRewardClaimed){
    this.thirdRewardClaimed=true;this.gold+=180;this.gainXp(140);this.potions+=2;this.goldText?.setText("Oro "+this.gold);this.updateInventoryHud();this.questText.setText("SAQUEADORES VERDES  ✓\nRecompensa recibida");this.showDialogue("Aldric: Las caravanas vuelven a estar seguras. Recompensa: 180 Oro, 140 EXP y 2 Pociones.");this.time.delayedCall(4300,()=>this.questMarker?.setText("!"));this.saveProgress();return;
   }
@@ -298,7 +311,7 @@ export class LumenScene extends Phaser.Scene {
   if(!this.player)return;
   const now=this.time.now;
   const hostileTick=(group,speed,damage,range=185)=>group?.getChildren().forEach(e=>{if(!e.active)return;const d=Phaser.Math.Distance.Between(this.player.x,this.player.y,e.x,e.y);if(d<range&&d>58)this.physics.moveToObject(e,this.player,speed);else e.setVelocity(0);if(d<62&&now-e.lastHit>1250){e.lastHit=now;const hit=Math.max(1,damage-this.defense);this.playerHp=Math.max(0,this.playerHp-hit);this.hpBar.width=260*this.playerHp/this.maxHp;this.showCombatText(this.player.x,this.player.y-72,"-"+hit,"#ff7b72");if(this.playerHp<=0){this.playerHp=this.maxHp;this.hpBar.width=260;this.player.setPosition(360,760);this.showDialogue("Has caído en combate. Regresas a la plaza de Lumen.");}}e.setDepth(e.y);e.hpBg?.setPosition(e.x,e.y-50).setDepth(e.y+1);e.hpBar?.setPosition(e.x-(e.maxHp===80?33:31),e.y-(e.maxHp===80?52:50)).setDepth(e.y+2);});
-  hostileTick(this.wolves,38,7);hostileTick(this.goblins,42,10,205);hostileTick(this.skeletons,45,13,220);
+  hostileTick(this.wolves,38,7);hostileTick(this.goblins,42,10,205);hostileTick(this.skeletons,45,13,220);hostileTick(this.orcs,48,17,235);
   this.slimes?.getChildren().forEach(s=>{if(!s.active)return;const d=Phaser.Math.Distance.Between(this.player.x,this.player.y,s.x,s.y);
    if(d<175&&d>55)this.physics.moveToObject(s,this.player,32);else s.setVelocity(0);
    if(d<62&&now-s.lastHit>1200){s.lastHit=now;const incoming=Math.max(1,5-this.defense);this.playerHp=Math.max(0,this.playerHp-incoming);this.hpBar.width=260*this.playerHp/this.maxHp;if(this.playerHp<=0){this.playerHp=this.maxHp;this.hpBar.width=260;this.player.setPosition(360,760);this.showDialogue("Has caído en combate. Regresas a la plaza de Lumen.");}}
