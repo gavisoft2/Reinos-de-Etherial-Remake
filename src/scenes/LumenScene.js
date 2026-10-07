@@ -123,8 +123,26 @@ export class LumenScene extends Phaser.Scene {
   let target=null,best=range;[this.orcs,this.skeletons,this.goblins,this.wolves,this.slimes].forEach(g=>g?.getChildren().forEach(e=>{if(!e.active)return;const d=Phaser.Math.Distance.Between(this.player.x,this.player.y,e.x,e.y);if(d<best){best=d;target=e}}));return target;
  }
  basicDamageEnemy(t,dmg){
-  if(!t?.active)return;t.hp-=dmg;if(t.hpBar)t.hpBar.width=Math.max(2,(t.maxHp===165?76:t.maxHp===115?62:t.maxHp===80?66:56)*Math.max(0,t.hp/t.maxHp));this.showCombatText(t.x,t.y-72,"-"+dmg,"#ffd38a");
-  if(t.hp<=0){if(this.slimes?.contains(t))this.killSlime(t);else{t.hp=1;this.showCombatText(t.x,t.y-92,"¡Remátalo!","#ffe16b");}}
+  if(!t?.active)return;t.hp-=dmg;const widths={30:56,55:62,80:66,115:70,165:76},w=widths[t.maxHp]||62;if(t.hpBar)t.hpBar.width=w*Math.max(0,t.hp/t.maxHp);this.showCombatText(t.x,t.y-72,"-"+dmg,"#ffd38a");if(t.hp<=0)this.defeatEnemy(t);
+ }
+ defeatEnemy(t){
+  if(!t?.active)return;const x=t.x,y=t.y;let kind="",xp=0,gold=[0,0],gear=0,delay=6500;
+  if(this.slimes?.contains(t)){kind="slime";xp=25;gold=[4,9];delay=5500;if(this.slimesKilled<3)this.slimesKilled++;if(Phaser.Math.Between(1,100)<=65)this.spawnLootDrop(x,y);}
+  else if(this.wolves?.contains(t)){kind="wolf";xp=40;gold=[8,14];delay=7000;if(this.wolvesKilled<3)this.wolvesKilled++;}
+  else if(this.goblins?.contains(t)){kind="goblin";xp=60;gold=[12,20];gear=28;delay=8500;if(this.goblinsKilled<4)this.goblinsKilled++;}
+  else if(this.skeletons?.contains(t)){kind="skeleton";xp=85;gold=[18,28];gear=35;delay=10000;if(this.skeletonsKilled<5)this.skeletonsKilled++;}
+  else if(this.orcs?.contains(t)){kind="orc";xp=120;gold=[28,42];gear=42;delay=12500;if(this.orcsKilled<6)this.orcsKilled++;}
+  if(!kind)return;t.disableBody(true,true);t.hpBg?.destroy();t.hpBar?.destroy();this.gainXp(xp);this.gold+=Phaser.Math.Between(gold[0],gold[1]);this.goldText?.setText("Oro "+this.gold);if(gear&&Phaser.Math.Between(1,100)<=gear)this.spawnGearDrop(x,y);this.updateInventoryHud();this.updateQuestAfterKill(kind);this.respawnUnified(kind,x,y,delay);
+ }
+ updateQuestAfterKill(kind){
+  if(kind==="slime"&&this.slimeQuest){this.questText.setText("PRIMERA CACERÍA\nDerrota Slimes  "+Math.min(this.slimesKilled,3)+"/3"+(this.slimesKilled>=3?" ✓":""));if(this.slimesKilled===3)this.showDialogue("Misión completada. Regresa con Aldric.");}
+  if(kind==="wolf"&&this.secondQuest){this.questText.setText("PELIGRO EN EL BOSQUE\nDerrota Lobos  "+Math.min(this.wolvesKilled,3)+"/3"+(this.wolvesKilled>=3?" ✓":""));if(this.wolvesKilled===3)this.showDialogue("Objetivo cumplido. Regresa con Aldric.");}
+  if(kind==="goblin"&&this.thirdQuest){this.questText.setText("SAQUEADORES VERDES\nDerrota Goblins  "+Math.min(this.goblinsKilled,4)+"/4"+(this.goblinsKilled>=4?" ✓":""));if(this.goblinsKilled===4)this.showDialogue("Los saqueadores han caído. Regresa con Aldric.");}
+  if(kind==="skeleton"&&this.fourthQuest){this.questText.setText("LOS MUERTOS CAMINAN\nDerrota Esqueletos  "+Math.min(this.skeletonsKilled,5)+"/5"+(this.skeletonsKilled>=5?" ✓":""));if(this.skeletonsKilled===5)this.showDialogue("La energía oscura se debilita. Regresa con Aldric.");}
+  if(kind==="orc"&&this.fifthQuest){this.questText.setText("LA AMENAZA ORCA\nDerrota Orcos  "+Math.min(this.orcsKilled,6)+"/6"+(this.orcsKilled>=6?" ✓":""));if(this.orcsKilled===6)this.showDialogue("La avanzada orca ha sido destruida. Regresa con Aldric.");}
+ }
+ respawnUnified(kind,x,y,delay){
+  if(kind==="skeleton"){this.respawnSkeleton(x,y);return}if(kind==="orc"){this.respawnOrc(x,y);return}this.respawnEnemy(kind,x,y,delay);
  }
  attackNearestWarrior(){
   const t=this.getNearestEnemy(92);if(!t){this.showDialogue("Acércate más para atacar con la espada.");return}if(!this.attackReady)return;this.attackReady=false;this.time.delayedCall(620,()=>this.attackReady=true);this.player.setTexture("thoran_attack_01");const dmg=Math.floor(this.attackPower+Phaser.Math.Between(3,8));const fx=this.add.image(t.x,t.y,"fx_sword_wave").setDisplaySize(58,58).setDepth(9000);this.tweens.add({targets:fx,alpha:0,scale:1.25,duration:260,onComplete:()=>fx.destroy()});this.basicDamageEnemy(t,dmg);this.time.delayedCall(220,()=>{if(this.playerClass==="warrior")this.player.play("thoran_idle")});
@@ -346,7 +364,7 @@ export class LumenScene extends Phaser.Scene {
   const groups=[this.slimes,this.wolves,this.goblins,this.skeletons,this.orcs],targets=[];groups.forEach(g=>g?.getChildren().forEach(e=>{if(e.active&&Phaser.Math.Distance.Between(this.player.x,this.player.y,e.x,e.y)<260)targets.push(e)}));if(!targets.length){this.showDialogue("No hay enemigos al alcance.");return;}
   this.mana-=costs[i];this.skillReady[i]=false;this.time.delayedCall(cooldowns[i],()=>this.skillReady[i]=true);
   const count=[1,3,4,6][i],mult=[1.6,1.05,1.25,1.4][i],key=["fx_arrow","fx_multi","fx_explosive","fx_arrow_storm"][i];
-  targets.slice(0,count).forEach((t,n)=>this.time.delayedCall(n*80,()=>{if(!t.active)return;const p=this.add.image(this.player.x,this.player.y-18,key).setDisplaySize(i===3?72:(i===2?58:46),i===3?72:(i===2?34:20)).setDepth(9000);this.tweens.add({targets:p,x:t.x,y:t.y,duration:190,onComplete:()=>{p.destroy();if(!t.active)return;const dmg=Math.floor(this.attackPower*mult);t.hp=Math.max(1,t.hp-dmg);if(t.hpBar)t.hpBar.width=Math.max(2,t.hpBar.width*(t.hp/t.maxHp));this.showCombatText(t.x,t.y-75,"-"+dmg,"#ffd86a");}})}); 
+  targets.slice(0,count).forEach((t,n)=>this.time.delayedCall(n*80,()=>{if(!t.active)return;const p=this.add.image(this.player.x,this.player.y-18,key).setDisplaySize(i===3?72:(i===2?58:46),i===3?72:(i===2?34:20)).setDepth(9000);this.tweens.add({targets:p,x:t.x,y:t.y,duration:190,onComplete:()=>{p.destroy();if(!t.active)return;const dmg=Math.floor(this.attackPower*mult);this.basicDamageEnemy(t,dmg);}})}); 
  }
  setMageClass(){
   this.playerClass="mage";this.player.setTexture("selene_idle_01");this.playerName.setText("Selene · Mago");this.attackPower=25;this.defense=2;this.maxHp=85;this.playerHp=this.maxHp;this.maxMana=150;this.mana=150;
@@ -359,7 +377,7 @@ export class LumenScene extends Phaser.Scene {
   const groups=[this.slimes,this.wolves,this.goblins,this.skeletons,this.orcs],targets=[];groups.forEach(g=>g?.getChildren().forEach(e=>{if(e.active&&Phaser.Math.Distance.Between(this.player.x,this.player.y,e.x,e.y)<300)targets.push(e)}));if(!targets.length)return;
   this.mana-=costs[i];this.skillReady[i]=false;this.time.delayedCall(cd[i],()=>this.skillReady[i]=true);
   const count=[1,2,3,6][i],mult=[1.55,1.25,1.05,1.45][i],key=["fx_fireball","fx_lightning","fx_ice","fx_magic_circle"][i];
-  targets.slice(0,count).forEach((t,n)=>this.time.delayedCall(n*70,()=>{if(!t.active)return;const fx=this.add.image(i===0?this.player.x:t.x,i===0?this.player.y-18:t.y,key).setDisplaySize(i===3?82:56,i===3?82:56).setDepth(9000);if(i===0)this.tweens.add({targets:fx,x:t.x,y:t.y,duration:220,onComplete:()=>fx.destroy()});else this.tweens.add({targets:fx,alpha:0,scale:1.3,duration:420,onComplete:()=>fx.destroy()});const dmg=Math.floor(this.attackPower*mult);t.hp=Math.max(1,t.hp-dmg);this.showCombatText(t.x,t.y-75,"-"+dmg,i===2?"#bdeaff":"#ffd17a");}));
+  targets.slice(0,count).forEach((t,n)=>this.time.delayedCall(n*70,()=>{if(!t.active)return;const fx=this.add.image(i===0?this.player.x:t.x,i===0?this.player.y-18:t.y,key).setDisplaySize(i===3?82:56,i===3?82:56).setDepth(9000);if(i===0)this.tweens.add({targets:fx,x:t.x,y:t.y,duration:220,onComplete:()=>fx.destroy()});else this.tweens.add({targets:fx,alpha:0,scale:1.3,duration:420,onComplete:()=>fx.destroy()});const dmg=Math.floor(this.attackPower*mult);this.basicDamageEnemy(t,dmg);}));
  }
  setWarriorClass(){
   this.playerClass="warrior";this.player.setTexture("thoran_idle_01");this.playerName.setText("Thoran · Guerrero");this.attackPower=22;this.defense=6;this.maxHp=145;this.playerHp=this.maxHp;this.maxMana=75;this.mana=75;
@@ -368,7 +386,7 @@ export class LumenScene extends Phaser.Scene {
   this.player.play("thoran_idle");this.statsText?.setText("ATQ "+this.attackPower+" · DEF "+this.defense);this.hpBar.width=260;
  }
  castWarriorSkill(i){
-  const costs=[10,18,22,30],cd=[2200,4500,6000,9000];if(!this.skillReady[i]||this.mana<costs[i])return;const groups=[this.slimes,this.wolves,this.goblins,this.skeletons,this.orcs],targets=[];groups.forEach(g=>g?.getChildren().forEach(e=>{if(e.active&&Phaser.Math.Distance.Between(this.player.x,this.player.y,e.x,e.y)<150)targets.push(e)}));if(!targets.length)return;this.mana-=costs[i];this.skillReady[i]=false;this.time.delayedCall(cd[i],()=>this.skillReady[i]=true);const mult=[1.5,1.15,.9,1.65][i],count=[1,4,1,6][i],key=["fx_sword_wave","fx_sword_spin","fx_shield","fx_sword_wave"][i];targets.slice(0,count).forEach(t=>{const fx=this.add.image(t.x,t.y,key).setDisplaySize(i===1?72:58,i===1?72:58).setDepth(9000);this.tweens.add({targets:fx,alpha:0,scale:1.35,duration:350,onComplete:()=>fx.destroy()});const dmg=Math.floor(this.attackPower*mult);t.hp=Math.max(1,t.hp-dmg);this.showCombatText(t.x,t.y-70,"-"+dmg,"#ffd38a")});if(i===2){this.defense+=5;this.time.delayedCall(3500,()=>this.defense=Math.max(6,this.defense-5));}
+  const costs=[10,18,22,30],cd=[2200,4500,6000,9000];if(!this.skillReady[i]||this.mana<costs[i])return;const groups=[this.slimes,this.wolves,this.goblins,this.skeletons,this.orcs],targets=[];groups.forEach(g=>g?.getChildren().forEach(e=>{if(e.active&&Phaser.Math.Distance.Between(this.player.x,this.player.y,e.x,e.y)<150)targets.push(e)}));if(!targets.length)return;this.mana-=costs[i];this.skillReady[i]=false;this.time.delayedCall(cd[i],()=>this.skillReady[i]=true);const mult=[1.5,1.15,.9,1.65][i],count=[1,4,1,6][i],key=["fx_sword_wave","fx_sword_spin","fx_shield","fx_sword_wave"][i];targets.slice(0,count).forEach(t=>{const fx=this.add.image(t.x,t.y,key).setDisplaySize(i===1?72:58,i===1?72:58).setDepth(9000);this.tweens.add({targets:fx,alpha:0,scale:1.35,duration:350,onComplete:()=>fx.destroy()});const dmg=Math.floor(this.attackPower*mult);this.basicDamageEnemy(t,dmg)});if(i===2){this.defense+=5;this.time.delayedCall(3500,()=>this.defense=Math.max(6,this.defense-5));}
  }
  makeControls(){
   const base=this.add.circle(110,1160,72,0x08100b,.55).setStrokeStyle(3,0xb99b64,.6).setInteractive().setScrollFactor(0).setDepth(6000), knob=this.add.circle(110,1160,30,0x65736a,.8).setScrollFactor(0).setDepth(6001);
