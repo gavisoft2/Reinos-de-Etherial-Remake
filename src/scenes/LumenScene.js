@@ -1,8 +1,8 @@
 export class LumenScene extends Phaser.Scene {
- constructor(){super("Lumen")} init(data){this.selectedClass=data?.playerClass||localStorage.getItem("etherial_class")||"archer"}
+ constructor(){super("Lumen")}
  preload(){
   const A="assets/";
-  ["idle_01","idle_02","walk_01","walk_02","walk_03","walk_04","attack_01","attack_02","attack_03","skill_01","skill_02","skill_03"].forEach(n=>this.load.image("gabriel_"+n,A+"characters/gabriel_archer/"+n+".png"));["idle_01","idle_02","walk_01","walk_02","walk_03","walk_04","attack_01","attack_02","attack_03","skill_01","skill_02","skill_03"].forEach(n=>this.load.image("selene_"+n,A+"characters/selene_mage/"+n+".png"));["idle_01","idle_02","walk_01","walk_02","walk_03","walk_04","attack_01","attack_02","attack_03","skill_01","skill_02","skill_03"].forEach(n=>this.load.image("thoran_"+n,A+"characters/thoran_warrior/"+n+".png"));
+  ["idle_01","idle_02","walk_01","walk_02","walk_03","walk_04","attack_01","attack_02","attack_03","skill_01","skill_02","skill_03"].forEach(n=>this.load.image("gabriel_"+n,A+"characters/gabriel_archer/"+n+".png"));
   [["aldric","aldric"],["mira","mira"],["borin","borin"],["guardia","guardia"]].forEach(a=>this.load.image("npc_"+a[0],A+"npcs/"+a[1]+".png"));
   [["posada","posada"],["mercado","mercado"],["herreria","herreria"],["gremio","gremio"],["templo","templo"]].forEach(a=>this.load.image("b_"+a[0],A+"buildings/lumen/"+a[1]+".png"));
   ["arbol_01","arbol_02","arbol_03","farol","banco","puesto","bandera","estatua_fuente"].forEach(n=>this.load.image("p_"+n,A+"props/"+n+".png"));
@@ -10,7 +10,7 @@ export class LumenScene extends Phaser.Scene {
   this.load.image("lumen_map",A+"maps/lumen_master.png");
   ["inventario","tienda","habilidades","misiones","mapa","configuracion"].forEach(n=>this.load.image("ui_"+n,A+"ui/icons/"+n+".png"));
   this.load.image("enemy_slime",A+"enemies/slime.png");this.load.image("enemy_wolf",A+"enemies/lobo_salvaje.png");this.load.image("enemy_goblin",A+"enemies/goblin.png");this.load.image("enemy_skeleton",A+"enemies/esqueleto.png");this.load.image("enemy_orc",A+"enemies/orco.png");
-  this.load.image("loot_gel",A+"effects/curacion.png");this.load.image("fx_arrow",A+"effects/flecha.png");this.load.image("fx_multi",A+"effects/flecha_multiple.png");this.load.image("fx_explosive",A+"effects/flecha_explosiva.png");this.load.image("fx_arrow_storm",A+"effects/circulo_magico.png");this.load.image("fx_fireball",A+"effects/bola_fuego.png");this.load.image("fx_lightning",A+"effects/rayo.png");this.load.image("fx_ice",A+"effects/hielo.png");this.load.image("fx_magic_circle",A+"effects/circulo_magico.png");this.load.image("fx_sword_wave",A+"effects/espada_onda.png");this.load.image("fx_sword_spin",A+"effects/espada_giro.png");this.load.image("fx_shield",A+"effects/escudo.png");
+  this.load.image("loot_gel",A+"effects/curacion.png");
  }
  create(){
   // Limpia el fondo gris/cuadriculado heredado del sprite sheet.
@@ -32,7 +32,7 @@ export class LumenScene extends Phaser.Scene {
   this.playerName=this.add.text(360,830,"Gabriel · Arquero",{fontFamily:"Georgia",fontSize:"15px",color:"#fff1c4",stroke:"#000",strokeThickness:4}).setOrigin(.5).setDepth(901);
   this.anims.create({key:"gabriel_idle",frames:["gabriel_idle_01","gabriel_idle_02"].map(key=>({key})),frameRate:3,repeat:-1});
   this.anims.create({key:"gabriel_walk",frames:["gabriel_walk_01","gabriel_walk_02","gabriel_walk_03","gabriel_walk_04"].map(key=>({key})),frameRate:8,repeat:-1});
-  this.player.play("gabriel_idle");this.playerClass="archer";if(this.selectedClass==="warrior")this.time.delayedCall(50,()=>this.setWarriorClass());if(this.selectedClass==="mage")this.time.delayedCall(50,()=>this.setMageClass());this.move={x:0,y:0};this.questDone=false;this.slimeQuest=false;this.slimesKilled=0;this.level=1;this.xp=0;this.xpNeed=100;this.gold=0;this.playerHp=100;this.maxHp=100;this.attackReady=true;this.inventory={slimeGel:0};this.equipment={weapon:"Arco del Aprendiz",armor:"Cuero de Lumen"};this.attackPower=15;this.defense=2;this.potions=1;this.gearBonus={attack:0,defense:0};this.inventoryOpen=false;this.inventorySlots=20;this.maxInventorySlots=60;this.baseSlotPrice=100;this.inventoryItems=[];this.gearDrops=0;this.selectedItem=null;this.shopOpen=false;this.questRewardClaimed=false;this.secondQuest=false;this.secondRewardClaimed=false;this.wolvesKilled=0;this.thirdQuest=false;this.thirdRewardClaimed=false;this.goblinsKilled=0;this.fourthQuest=false;this.fourthRewardClaimed=false;this.skeletonsKilled=0;this.fifthQuest=false;this.orcsKilled=0;this.saveKey="etherial_save_v1";this.npcTargets=[];this.spawnSlimes();
+  this.player.play("gabriel_idle");this.move={x:0,y:0};this.questDone=false;this.slimeQuest=false;this.slimesKilled=0;this.level=1;this.xp=0;this.xpNeed=100;this.gold=0;this.playerHp=100;this.maxHp=100;this.attackReady=true;this.inventory={slimeGel:0};this.equipment={weapon:"Arco del Aprendiz",armor:"Cuero de Lumen"};this.attackPower=15;this.defense=2;this.potions=1;this.gearBonus={attack:0,defense:0};this.inventoryOpen=false;this.inventorySlots=20;this.maxInventorySlots=60;this.baseSlotPrice=100;this.inventoryItems=[];this.gearDrops=0;this.selectedItem=null;this.shopOpen=false;this.questRewardClaimed=false;this.secondQuest=false;this.secondRewardClaimed=false;this.wolvesKilled=0;this.thirdQuest=false;this.thirdRewardClaimed=false;this.goblinsKilled=0;this.fourthQuest=false;this.fourthRewardClaimed=false;this.skeletonsKilled=0;this.fifthQuest=false;this.orcsKilled=0;this.saveKey="etherial_save_v1";this.npcTargets=[];this.spawnSlimes();
   this.npcTargets.push({name:"Aldric",x:560,y:555,r:88});this.questMarker=this.add.text(560,495,"!",{fontFamily:"Georgia",fontSize:"30px",color:"#ffd75a",stroke:"#4a3210",strokeThickness:4}).setOrigin(.5).setDepth(9000);this.tweens.add({targets:this.questMarker,y:487,duration:650,yoyo:true,repeat:-1});
   this.add.rectangle(360,1270,720,70,0x283322,.72).setDepth(-5);
   this.add.text(360,1248,"PUERTA SUR DE LUMEN",{fontFamily:"Georgia",fontSize:"17px",color:"#e8d5a5",stroke:"#1d2419",strokeThickness:4}).setOrigin(.5).setDepth(3000);
@@ -67,14 +67,14 @@ export class LumenScene extends Phaser.Scene {
   this.orcs=this.physics.add.group();[[75,1420],[180,1650],[300,1510],[420,1710],[550,1570],[650,1430]].forEach(p=>{const e=this.orcs.create(p[0],p[1],"enemy_orc").setScale(.76).setDepth(p[1]);e.hp=165;e.maxHp=165;e.lastHit=0;e.hpBg=this.add.rectangle(p[0],p[1]-58,78,8,0x1b1512,.9).setDepth(p[1]+1);e.hpBar=this.add.rectangle(p[0]-38,p[1]-58,76,6,0xa82f29).setOrigin(0,.5).setDepth(p[1]+2);});
  }
  attackOrc(){
-  if(!this.orcs)return false;let t=null,b=255;this.orcs.getChildren().forEach(e=>{if(e.active){const d=Phaser.Math.Distance.Between(this.player.x,this.player.y,e.x,e.y);if(d<b){b=d;t=e}}});if(!t)return false;if(!this.attackReady)return true;this.attackReady=false;this.time.delayedCall(480,()=>this.attackReady=true);const crit=Phaser.Math.Between(1,100)<=12,dmg=Math.floor((this.attackPower+Phaser.Math.Between(2,7))*(crit?1.75:1));const a=this.add.image(this.player.x,this.player.y-18,"fx_arrow").setDisplaySize(42,18).setDepth(9000);this.tweens.add({targets:a,x:t.x,y:t.y,duration:180,onComplete:()=>{a.destroy();if(!t.active)return;t.hp-=dmg;t.hpBar.width=76*Math.max(0,t.hp/t.maxHp);this.showCombatText(t.x,t.y-78,"-"+dmg,crit?"#ffe16b":"#ffd38a");if(t.hp<=0){const rx=t.x,ry=t.y;t.disableBody(true,true);t.hpBg.destroy();t.hpBar.destroy();this.respawnOrc(rx,ry);if(this.orcsKilled<6)this.orcsKilled++;this.gainXp(120);this.gold+=Phaser.Math.Between(28,42);this.goldText?.setText("Oro "+this.gold);if(Phaser.Math.Between(1,100)<=42)this.spawnGearDrop(rx,ry);this.questText.setText("LA AMENAZA ORCA\nDerrota Orcos  "+this.orcsKilled+"/6"+(this.orcsKilled>=6?" ✓":""));if(this.orcsKilled===6)this.showDialogue("La avanzada orca ha sido destruida. Regresa con Aldric.");}}});return true;
+  if(!this.orcs)return false;let t=null,b=255;this.orcs.getChildren().forEach(e=>{if(e.active){const d=Phaser.Math.Distance.Between(this.player.x,this.player.y,e.x,e.y);if(d<b){b=d;t=e}}});if(!t)return false;if(!this.attackReady)return true;this.attackReady=false;this.time.delayedCall(480,()=>this.attackReady=true);const crit=Phaser.Math.Between(1,100)<=12,dmg=Math.floor((this.attackPower+Phaser.Math.Between(2,7))*(crit?1.75:1));const a=this.add.image(this.player.x,this.player.y-18,"gabriel_attack_01").setDisplaySize(30,38).setDepth(9000);this.tweens.add({targets:a,x:t.x,y:t.y,duration:180,onComplete:()=>{a.destroy();if(!t.active)return;t.hp-=dmg;t.hpBar.width=76*Math.max(0,t.hp/t.maxHp);this.showCombatText(t.x,t.y-78,"-"+dmg,crit?"#ffe16b":"#ffd38a");if(t.hp<=0){const rx=t.x,ry=t.y;t.disableBody(true,true);t.hpBg.destroy();t.hpBar.destroy();this.respawnOrc(rx,ry);if(this.orcsKilled<6)this.orcsKilled++;this.gainXp(120);this.gold+=Phaser.Math.Between(28,42);this.goldText?.setText("Oro "+this.gold);if(Phaser.Math.Between(1,100)<=42)this.spawnGearDrop(rx,ry);this.questText.setText("LA AMENAZA ORCA\nDerrota Orcos  "+this.orcsKilled+"/6"+(this.orcsKilled>=6?" ✓":""));if(this.orcsKilled===6)this.showDialogue("La avanzada orca ha sido destruida. Regresa con Aldric.");}}});return true;
  }
  respawnOrc(x,y){this.time.delayedCall(12500,()=>{if(!this.orcs)return;const e=this.orcs.create(x,y,"enemy_orc").setScale(.76).setDepth(y);e.hp=165;e.maxHp=165;e.lastHit=0;e.hpBg=this.add.rectangle(x,y-58,78,8,0x1b1512,.9).setDepth(y+1);e.hpBar=this.add.rectangle(x-38,y-58,76,6,0xa82f29).setOrigin(0,.5).setDepth(y+2);});}
  spawnSkeletons(){
   this.skeletons=this.physics.add.group();[[80,1435],[205,1580],[355,1495],[505,1690],[635,1450]].forEach(p=>{const e=this.skeletons.create(p[0],p[1],"enemy_skeleton").setScale(.72).setDepth(p[1]);e.hp=115;e.maxHp=115;e.lastHit=0;e.hpBg=this.add.rectangle(p[0],p[1]-54,72,7,0x1b1512,.85).setDepth(p[1]+1);e.hpBar=this.add.rectangle(p[0]-35,p[1]-54,70,5,0xb63c35).setOrigin(0,.5).setDepth(p[1]+2);});
  }
  attackSkeleton(){
-  if(!this.skeletons)return false;let t=null,b=245;this.skeletons.getChildren().forEach(e=>{if(e.active){const d=Phaser.Math.Distance.Between(this.player.x,this.player.y,e.x,e.y);if(d<b){b=d;t=e}}});if(!t)return false;if(!this.attackReady)return true;this.attackReady=false;this.time.delayedCall(480,()=>this.attackReady=true);const crit=Phaser.Math.Between(1,100)<=12,dmg=Math.floor((this.attackPower+Phaser.Math.Between(1,6))*(crit?1.75:1));const a=this.add.image(this.player.x,this.player.y-18,"fx_arrow").setDisplaySize(42,18).setDepth(9000);this.tweens.add({targets:a,x:t.x,y:t.y,duration:180,onComplete:()=>{a.destroy();if(!t.active)return;t.hp-=dmg;t.hpBar.width=70*Math.max(0,t.hp/t.maxHp);this.showCombatText(t.x,t.y-74,"-"+dmg,crit?"#ffe16b":"#ffd38a");if(t.hp<=0){const rx=t.x,ry=t.y;t.disableBody(true,true);t.hpBg.destroy();t.hpBar.destroy();this.respawnSkeleton(rx,ry);if(this.skeletonsKilled<5)this.skeletonsKilled++;this.gainXp(85);this.gold+=Phaser.Math.Between(18,28);this.goldText?.setText("Oro "+this.gold);if(Phaser.Math.Between(1,100)<=35)this.spawnGearDrop(rx,ry);this.questText.setText("LOS MUERTOS CAMINAN\nDerrota Esqueletos  "+this.skeletonsKilled+"/5"+(this.skeletonsKilled>=5?" ✓":""));if(this.skeletonsKilled===5)this.showDialogue("La energía oscura se debilita. Regresa con Aldric.");}}});return true;
+  if(!this.skeletons)return false;let t=null,b=245;this.skeletons.getChildren().forEach(e=>{if(e.active){const d=Phaser.Math.Distance.Between(this.player.x,this.player.y,e.x,e.y);if(d<b){b=d;t=e}}});if(!t)return false;if(!this.attackReady)return true;this.attackReady=false;this.time.delayedCall(480,()=>this.attackReady=true);const crit=Phaser.Math.Between(1,100)<=12,dmg=Math.floor((this.attackPower+Phaser.Math.Between(1,6))*(crit?1.75:1));const a=this.add.image(this.player.x,this.player.y-18,"gabriel_attack_01").setDisplaySize(30,38).setDepth(9000);this.tweens.add({targets:a,x:t.x,y:t.y,duration:180,onComplete:()=>{a.destroy();if(!t.active)return;t.hp-=dmg;t.hpBar.width=70*Math.max(0,t.hp/t.maxHp);this.showCombatText(t.x,t.y-74,"-"+dmg,crit?"#ffe16b":"#ffd38a");if(t.hp<=0){const rx=t.x,ry=t.y;t.disableBody(true,true);t.hpBg.destroy();t.hpBar.destroy();this.respawnSkeleton(rx,ry);if(this.skeletonsKilled<5)this.skeletonsKilled++;this.gainXp(85);this.gold+=Phaser.Math.Between(18,28);this.goldText?.setText("Oro "+this.gold);if(Phaser.Math.Between(1,100)<=35)this.spawnGearDrop(rx,ry);this.questText.setText("LOS MUERTOS CAMINAN\nDerrota Esqueletos  "+this.skeletonsKilled+"/5"+(this.skeletonsKilled>=5?" ✓":""));if(this.skeletonsKilled===5)this.showDialogue("La energía oscura se debilita. Regresa con Aldric.");}}});return true;
  }
  respawnSkeleton(x,y){this.time.delayedCall(10000,()=>{if(!this.skeletons)return;const e=this.skeletons.create(x,y,"enemy_skeleton").setScale(.72).setDepth(y);e.hp=115;e.maxHp=115;e.lastHit=0;e.hpBg=this.add.rectangle(x,y-54,72,7,0x1b1512,.85).setDepth(y+1);e.hpBar=this.add.rectangle(x-35,y-54,70,5,0xb63c35).setOrigin(0,.5).setDepth(y+2);});}
  spawnGoblins(){
@@ -82,7 +82,7 @@ export class LumenScene extends Phaser.Scene {
  }
  attackGoblin(){
   if(!this.goblins)return false;let t=null,b=235;this.goblins.getChildren().forEach(g=>{if(g.active){const d=Phaser.Math.Distance.Between(this.player.x,this.player.y,g.x,g.y);if(d<b){b=d;t=g}}});if(!t)return false;if(!this.attackReady)return true;
-  this.attackReady=false;this.time.delayedCall(480,()=>this.attackReady=true);const crit=Phaser.Math.Between(1,100)<=12,dmg=Math.floor((this.attackPower+Phaser.Math.Between(0,5))*(crit?1.75:1));const a=this.add.image(this.player.x,this.player.y-18,"fx_arrow").setDisplaySize(42,18).setDepth(9000);
+  this.attackReady=false;this.time.delayedCall(480,()=>this.attackReady=true);const crit=Phaser.Math.Between(1,100)<=12,dmg=Math.floor((this.attackPower+Phaser.Math.Between(0,5))*(crit?1.75:1));const a=this.add.image(this.player.x,this.player.y-18,"gabriel_attack_01").setDisplaySize(30,38).setDepth(9000);
   this.tweens.add({targets:a,x:t.x,y:t.y,duration:180,onComplete:()=>{a.destroy();if(!t.active)return;t.hp-=dmg;t.hpBar.width=66*Math.max(0,t.hp/t.maxHp);this.showCombatText(t.x,t.y-72,"-"+dmg,crit?"#ffe16b":"#ffd38a");if(t.hp<=0){const rx=t.x,ry=t.y;t.disableBody(true,true);t.hpBg.destroy();t.hpBar.destroy();this.respawnEnemy("goblin",rx,ry,8500);if(this.goblinsKilled<4)this.goblinsKilled++;this.gainXp(60);this.gold+=Phaser.Math.Between(12,20);this.goldText?.setText("Oro "+this.gold);if(Phaser.Math.Between(1,100)<=28)this.spawnGearDrop(t.x,t.y);this.questText.setText("SAQUEADORES VERDES\nDerrota Goblins  "+Math.min(4,this.goblinsKilled)+"/4"+(this.goblinsKilled>=4?" ✓":""));if(this.goblinsKilled===4)this.showDialogue("Los saqueadores han caído. Regresa con Aldric.");}}});return true;
  }
  spawnWolves(){
@@ -92,7 +92,7 @@ export class LumenScene extends Phaser.Scene {
   if(!this.wolves)return false;let t=null,b=225;this.wolves.getChildren().forEach(w=>{if(w.active){const d=Phaser.Math.Distance.Between(this.player.x,this.player.y,w.x,w.y);if(d<b){b=d;t=w}}});if(!t)return false;
   if(!this.attackReady)return true;this.attackReady=false;this.time.delayedCall(480,()=>this.attackReady=true);const crit=Phaser.Math.Between(1,100)<=12,dmg=Math.floor((this.attackPower+Phaser.Math.Between(0,5))*(crit?1.75:1));this.fireArrowWolf(t,dmg);return true;
  }
- fireArrowWolf(t,dmg){const a=this.add.image(this.player.x,this.player.y-18,"fx_arrow").setDisplaySize(42,18).setDepth(9000);this.tweens.add({targets:a,x:t.x,y:t.y,duration:180,onComplete:()=>{a.destroy();if(!t.active)return;t.hp-=dmg;t.hpBar.width=62*Math.max(0,t.hp/t.maxHp);this.showCombatText(t.x,t.y-70,"-"+dmg,"#ffd38a");if(t.hp<=0){const rx=t.x,ry=t.y;t.disableBody(true,true);t.hpBg.destroy();t.hpBar.destroy();this.respawnEnemy("wolf",rx,ry,7000);if(this.wolvesKilled<3)this.wolvesKilled++;this.gainXp(40);this.gold+=Phaser.Math.Between(8,14);this.goldText?.setText("Oro "+this.gold);this.questText.setText("PELIGRO EN EL BOSQUE\nDerrota Lobos  "+Math.min(3,this.wolvesKilled)+"/3"+(this.wolvesKilled>=3?" ✓":""));if(this.wolvesKilled===3)this.showDialogue("Objetivo cumplido. Regresa con Aldric.");}}});}
+ fireArrowWolf(t,dmg){const a=this.add.image(this.player.x,this.player.y-18,"gabriel_attack_01").setDisplaySize(30,38).setDepth(9000);this.tweens.add({targets:a,x:t.x,y:t.y,duration:180,onComplete:()=>{a.destroy();if(!t.active)return;t.hp-=dmg;t.hpBar.width=62*Math.max(0,t.hp/t.maxHp);this.showCombatText(t.x,t.y-70,"-"+dmg,"#ffd38a");if(t.hp<=0){const rx=t.x,ry=t.y;t.disableBody(true,true);t.hpBg.destroy();t.hpBar.destroy();this.respawnEnemy("wolf",rx,ry,7000);if(this.wolvesKilled<3)this.wolvesKilled++;this.gainXp(40);this.gold+=Phaser.Math.Between(8,14);this.goldText?.setText("Oro "+this.gold);this.questText.setText("PELIGRO EN EL BOSQUE\nDerrota Lobos  "+Math.min(3,this.wolvesKilled)+"/3"+(this.wolvesKilled>=3?" ✓":""));if(this.wolvesKilled===3)this.showDialogue("Objetivo cumplido. Regresa con Aldric.");}}});}
  respawnEnemy(kind,x,y,delay=6500){
   this.time.delayedCall(delay,()=>{
    if(kind==="slime"&&this.slimes){const s=this.slimes.create(x,y,"enemy_slime").setScale(.72).setDepth(y);s.hp=30;s.maxHp=30;s.homeX=x;s.homeY=y;s.lastHit=0;s.setImmovable(false);s.hpBg=this.add.rectangle(x,y-48,58,7,0x1b1512,.85).setDepth(y+1);s.hpBar=this.add.rectangle(x-28,y-48,56,5,0xb63c35,1).setOrigin(0,.5).setDepth(y+2);}
@@ -109,7 +109,7 @@ export class LumenScene extends Phaser.Scene {
   });
  }
  fireArrow(target,dmg){
-  const arrow=this.add.image(this.player.x,this.player.y-18,"fx_arrow").setDisplaySize(42,18).setDepth(9000);
+  const arrow=this.add.image(this.player.x,this.player.y-18,"gabriel_attack_01").setDisplaySize(30,38).setDepth(9000);
   const angle=Phaser.Math.Angle.Between(arrow.x,arrow.y,target.x,target.y);arrow.setRotation(angle+Math.PI/2);
   this.tweens.add({targets:arrow,x:target.x,y:target.y,duration:180,onComplete:()=>{arrow.destroy();if(target.active)this.damageSlime(target,dmg)}});
  }
@@ -119,41 +119,7 @@ export class LumenScene extends Phaser.Scene {
   const hit=this.add.text(target.x,target.y-72,"-"+dmg,{fontFamily:"Georgia",fontSize:"18px",color:"#ffd38a",stroke:"#401510",strokeThickness:3}).setOrigin(.5).setDepth(8000);
   this.tweens.add({targets:hit,y:hit.y-28,alpha:0,duration:650,onComplete:()=>hit.destroy()});if(target.hp<=0)this.killSlime(target);
  }
- getNearestEnemy(range){
-  let target=null,best=range;[this.orcs,this.skeletons,this.goblins,this.wolves,this.slimes].forEach(g=>g?.getChildren().forEach(e=>{if(!e.active)return;const d=Phaser.Math.Distance.Between(this.player.x,this.player.y,e.x,e.y);if(d<best){best=d;target=e}}));return target;
- }
- basicDamageEnemy(t,dmg){
-  if(!t?.active)return;t.hp-=dmg;const widths={30:56,55:62,80:66,115:70,165:76},w=widths[t.maxHp]||62;if(t.hpBar)t.hpBar.width=w*Math.max(0,t.hp/t.maxHp);this.showCombatText(t.x,t.y-72,"-"+dmg,"#ffd38a");if(t.hp<=0)this.defeatEnemy(t);
- }
- defeatEnemy(t){
-  if(!t?.active)return;const x=t.x,y=t.y;let kind="",xp=0,gold=[0,0],gear=0,delay=6500;
-  if(this.slimes?.contains(t)){kind="slime";xp=25;gold=[4,9];delay=5500;if(this.slimesKilled<3)this.slimesKilled++;if(Phaser.Math.Between(1,100)<=65)this.spawnLootDrop(x,y);}
-  else if(this.wolves?.contains(t)){kind="wolf";xp=40;gold=[8,14];delay=7000;if(this.wolvesKilled<3)this.wolvesKilled++;}
-  else if(this.goblins?.contains(t)){kind="goblin";xp=60;gold=[12,20];gear=28;delay=8500;if(this.goblinsKilled<4)this.goblinsKilled++;}
-  else if(this.skeletons?.contains(t)){kind="skeleton";xp=85;gold=[18,28];gear=35;delay=10000;if(this.skeletonsKilled<5)this.skeletonsKilled++;}
-  else if(this.orcs?.contains(t)){kind="orc";xp=120;gold=[28,42];gear=42;delay=12500;if(this.orcsKilled<6)this.orcsKilled++;}
-  if(!kind)return;t.disableBody(true,true);t.hpBg?.destroy();t.hpBar?.destroy();this.gainXp(xp);this.gold+=Phaser.Math.Between(gold[0],gold[1]);this.goldText?.setText("Oro "+this.gold);if(gear&&Phaser.Math.Between(1,100)<=gear)this.spawnGearDrop(x,y);this.updateInventoryHud();this.updateQuestAfterKill(kind);this.respawnUnified(kind,x,y,delay);
- }
- updateQuestAfterKill(kind){
-  if(kind==="slime"&&this.slimeQuest){this.questText.setText("PRIMERA CACERÍA\nDerrota Slimes  "+Math.min(this.slimesKilled,3)+"/3"+(this.slimesKilled>=3?" ✓":""));if(this.slimesKilled===3)this.showDialogue("Misión completada. Regresa con Aldric.");}
-  if(kind==="wolf"&&this.secondQuest){this.questText.setText("PELIGRO EN EL BOSQUE\nDerrota Lobos  "+Math.min(this.wolvesKilled,3)+"/3"+(this.wolvesKilled>=3?" ✓":""));if(this.wolvesKilled===3)this.showDialogue("Objetivo cumplido. Regresa con Aldric.");}
-  if(kind==="goblin"&&this.thirdQuest){this.questText.setText("SAQUEADORES VERDES\nDerrota Goblins  "+Math.min(this.goblinsKilled,4)+"/4"+(this.goblinsKilled>=4?" ✓":""));if(this.goblinsKilled===4)this.showDialogue("Los saqueadores han caído. Regresa con Aldric.");}
-  if(kind==="skeleton"&&this.fourthQuest){this.questText.setText("LOS MUERTOS CAMINAN\nDerrota Esqueletos  "+Math.min(this.skeletonsKilled,5)+"/5"+(this.skeletonsKilled>=5?" ✓":""));if(this.skeletonsKilled===5)this.showDialogue("La energía oscura se debilita. Regresa con Aldric.");}
-  if(kind==="orc"&&this.fifthQuest){this.questText.setText("LA AMENAZA ORCA\nDerrota Orcos  "+Math.min(this.orcsKilled,6)+"/6"+(this.orcsKilled>=6?" ✓":""));if(this.orcsKilled===6)this.showDialogue("La avanzada orca ha sido destruida. Regresa con Aldric.");}
- }
- respawnUnified(kind,x,y,delay){
-  if(kind==="skeleton"){this.respawnSkeleton(x,y);return}if(kind==="orc"){this.respawnOrc(x,y);return}this.respawnEnemy(kind,x,y,delay);
- }
- attackNearestWarrior(){
-  const t=this.getNearestEnemy(92);if(!t){this.showDialogue("Acércate más para atacar con la espada.");return}if(!this.attackReady)return;this.attackReady=false;this.time.delayedCall(620,()=>this.attackReady=true);this.player.setTexture("thoran_attack_01");const dmg=Math.floor(this.attackPower+Phaser.Math.Between(3,8));const fx=this.add.image(t.x,t.y,"fx_sword_wave").setDisplaySize(58,58).setDepth(9000);this.tweens.add({targets:fx,alpha:0,scale:1.25,duration:260,onComplete:()=>fx.destroy()});this.basicDamageEnemy(t,dmg);this.time.delayedCall(220,()=>{if(this.playerClass==="warrior")this.player.play("thoran_idle")});
- }
- attackNearestMage(){
-  const t=this.getNearestEnemy(285);if(!t){this.showDialogue("No hay enemigos dentro del alcance mágico.");return}if(!this.attackReady)return;this.attackReady=false;this.time.delayedCall(700,()=>this.attackReady=true);this.player.setTexture("selene_attack_01");const dmg=Math.floor(this.attackPower+Phaser.Math.Between(2,7));const p=this.add.image(this.player.x,this.player.y-18,"fx_fireball").setDisplaySize(38,38).setDepth(9000);this.tweens.add({targets:p,x:t.x,y:t.y,duration:260,onComplete:()=>{p.destroy();this.basicDamageEnemy(t,dmg)}});this.time.delayedCall(280,()=>{if(this.playerClass==="mage")this.player.play("selene_idle")});
- }
- attackNearest(){
-  if(this.playerClass==="warrior")return this.attackNearestWarrior();
-  if(this.playerClass==="mage")return this.attackNearestMage();
-  if(this.fifthQuest&&this.attackOrc())return;if(this.fourthQuest&&this.attackSkeleton())return;if(this.thirdQuest&&this.attackGoblin())return;if(this.secondQuest&&this.attackWolf())return;
+ attackNearest(){if(this.fifthQuest&&this.attackOrc())return;if(this.fourthQuest&&this.attackSkeleton())return;if(this.thirdQuest&&this.attackGoblin())return;if(this.secondQuest&&this.attackWolf())return;
   if(!this.slimes)return;let target=null,best=210;
   this.slimes.getChildren().forEach(s=>{if(!s.active)return;const d=Phaser.Math.Distance.Between(this.player.x,this.player.y,s.x,s.y);if(d<best){best=d;target=s}});
   if(!target){this.showDialogue("No hay enemigos dentro del alcance.");return}
@@ -211,9 +177,7 @@ export class LumenScene extends Phaser.Scene {
   }catch(e){}
  }
  restoreQuestState(){
-  if(this.fifthQuest){this.questText.setText("LA AMENAZA ORCA\\nDerrota Orcos  "+Math.min(6,this.orcsKilled)+"/6");this.spawnOrcs();this.questMarker?.setText("…");}
-  else if(this.fourthQuest){this.questText.setText("LOS MUERTOS CAMINAN\\nDerrota Esqueletos  "+Math.min(5,this.skeletonsKilled)+"/5");this.spawnSkeletons();this.questMarker?.setText("…");}
-  else if(this.thirdQuest){this.questText.setText("SAQUEADORES VERDES\nDerrota Goblins  "+Math.min(4,this.goblinsKilled)+"/4");this.spawnGoblins();this.questMarker?.setText("…");}
+  if(this.fifthQuest){this.questText.setText("LA AMENAZA ORCA\\nDerrota Orcos  "+Math.min(6,this.orcsKilled)+"/6");this.spawnOrcs();this.questMarker?.setText("…");}\n  else if(this.fourthQuest){this.questText.setText("LOS MUERTOS CAMINAN\\nDerrota Esqueletos  "+Math.min(5,this.skeletonsKilled)+"/5");this.spawnSkeletons();this.questMarker?.setText("…");}\n  else if(this.thirdQuest){this.questText.setText("SAQUEADORES VERDES\nDerrota Goblins  "+Math.min(4,this.goblinsKilled)+"/4");this.spawnGoblins();this.questMarker?.setText("…");}
   else if(this.secondQuest){this.questText.setText("PELIGRO EN EL BOSQUE\nDerrota Lobos  "+Math.min(3,this.wolvesKilled)+"/3");this.spawnWolves();this.questMarker?.setText("…");}
   else if(this.questDone){this.questText.setText("PRIMERA CACERÍA\nDerrota Slimes  "+Math.min(3,this.slimesKilled)+"/3");this.questMarker?.setText("…");}
  }
@@ -361,50 +325,21 @@ export class LumenScene extends Phaser.Scene {
   this.dialogueText=this.add.text(60,925,msg,{fontFamily:"Georgia",fontSize:"16px",color:"#f4e4b9",wordWrap:{width:595},lineSpacing:5}).setScrollFactor(0).setDepth(7001);
   this.time.delayedCall(4200,()=>{this.dialogueBox?.destroy();this.dialogueText?.destroy();this.dialogueBox=null;this.dialogueText=null});
  }
- castSafeSkill(i){
-  if(!this.skillReady[i])return;const costs=[15,25,30,40],cooldowns=[2500,5000,6500,10000];if(this.mana<costs[i]){this.showDialogue("No tienes suficiente maná.");return;}
-  const groups=[this.slimes,this.wolves,this.goblins,this.skeletons,this.orcs],targets=[];groups.forEach(g=>g?.getChildren().forEach(e=>{if(e.active&&Phaser.Math.Distance.Between(this.player.x,this.player.y,e.x,e.y)<260)targets.push(e)}));if(!targets.length){this.showDialogue("No hay enemigos al alcance.");return;}
-  this.mana-=costs[i];this.skillReady[i]=false;this.time.delayedCall(cooldowns[i],()=>this.skillReady[i]=true);
-  const count=[1,3,4,6][i],mult=[1.6,1.05,1.25,1.4][i],key=["fx_arrow","fx_multi","fx_explosive","fx_arrow_storm"][i];
-  targets.slice(0,count).forEach((t,n)=>this.time.delayedCall(n*80,()=>{if(!t.active)return;const p=this.add.image(this.player.x,this.player.y-18,key).setDisplaySize(i===3?72:(i===2?58:46),i===3?72:(i===2?34:20)).setDepth(9000);this.tweens.add({targets:p,x:t.x,y:t.y,duration:190,onComplete:()=>{p.destroy();if(!t.active)return;const dmg=Math.floor(this.attackPower*mult);this.basicDamageEnemy(t,dmg);}})}); 
- }
- setMageClass(){
-  this.playerClass="mage";this.player.setTexture("selene_idle_01");this.playerName.setText("Selene · Mago");this.attackPower=25;this.defense=2;this.maxHp=85;this.playerHp=this.maxHp;this.maxMana=150;this.mana=150;
-  if(!this.anims.exists("selene_idle"))this.anims.create({key:"selene_idle",frames:["selene_idle_01","selene_idle_02"].map(key=>({key})),frameRate:3,repeat:-1});
-  if(!this.anims.exists("selene_walk"))this.anims.create({key:"selene_walk",frames:["selene_walk_01","selene_walk_02","selene_walk_03","selene_walk_04"].map(key=>({key})),frameRate:8,repeat:-1});
-  this.player.play("selene_idle");this.statsText?.setText("ATQ "+this.attackPower+" · DEF "+this.defense);this.hpBar.width=260;
- }
- castMageSkill(i){
-  const costs=[18,28,32,45],cd=[2200,4800,6200,9500];if(!this.skillReady[i]||this.mana<costs[i]){if(this.mana<costs[i])this.showDialogue("No tienes suficiente maná.");return;}
-  const groups=[this.slimes,this.wolves,this.goblins,this.skeletons,this.orcs],targets=[];groups.forEach(g=>g?.getChildren().forEach(e=>{if(e.active&&Phaser.Math.Distance.Between(this.player.x,this.player.y,e.x,e.y)<300)targets.push(e)}));if(!targets.length)return;
-  this.mana-=costs[i];this.skillReady[i]=false;this.time.delayedCall(cd[i],()=>this.skillReady[i]=true);
-  const count=[1,2,3,6][i],mult=[1.55,1.25,1.05,1.45][i],key=["fx_fireball","fx_lightning","fx_ice","fx_magic_circle"][i];
-  targets.slice(0,count).forEach((t,n)=>this.time.delayedCall(n*70,()=>{if(!t.active)return;const fx=this.add.image(i===0?this.player.x:t.x,i===0?this.player.y-18:t.y,key).setDisplaySize(i===3?82:56,i===3?82:56).setDepth(9000);if(i===0)this.tweens.add({targets:fx,x:t.x,y:t.y,duration:220,onComplete:()=>fx.destroy()});else this.tweens.add({targets:fx,alpha:0,scale:1.3,duration:420,onComplete:()=>fx.destroy()});const dmg=Math.floor(this.attackPower*mult);this.basicDamageEnemy(t,dmg);}));
- }
- setWarriorClass(){
-  this.playerClass="warrior";this.player.setTexture("thoran_idle_01");this.playerName.setText("Thoran · Guerrero");this.attackPower=22;this.defense=6;this.maxHp=145;this.playerHp=this.maxHp;this.maxMana=75;this.mana=75;
-  if(!this.anims.exists("thoran_idle"))this.anims.create({key:"thoran_idle",frames:["thoran_idle_01","thoran_idle_02"].map(key=>({key})),frameRate:3,repeat:-1});
-  if(!this.anims.exists("thoran_walk"))this.anims.create({key:"thoran_walk",frames:["thoran_walk_01","thoran_walk_02","thoran_walk_03","thoran_walk_04"].map(key=>({key})),frameRate:8,repeat:-1});
-  this.player.play("thoran_idle");this.statsText?.setText("ATQ "+this.attackPower+" · DEF "+this.defense);this.hpBar.width=260;
- }
- castWarriorSkill(i){
-  const costs=[10,18,22,30],cd=[2200,4500,6000,9000];if(!this.skillReady[i]||this.mana<costs[i])return;const groups=[this.slimes,this.wolves,this.goblins,this.skeletons,this.orcs],targets=[];groups.forEach(g=>g?.getChildren().forEach(e=>{if(e.active&&Phaser.Math.Distance.Between(this.player.x,this.player.y,e.x,e.y)<150)targets.push(e)}));if(!targets.length)return;this.mana-=costs[i];this.skillReady[i]=false;this.time.delayedCall(cd[i],()=>this.skillReady[i]=true);const mult=[1.5,1.15,.9,1.65][i],count=[1,4,1,6][i],key=["fx_sword_wave","fx_sword_spin","fx_shield","fx_sword_wave"][i];targets.slice(0,count).forEach(t=>{const fx=this.add.image(t.x,t.y,key).setDisplaySize(i===1?72:58,i===1?72:58).setDepth(9000);this.tweens.add({targets:fx,alpha:0,scale:1.35,duration:350,onComplete:()=>fx.destroy()});const dmg=Math.floor(this.attackPower*mult);this.basicDamageEnemy(t,dmg)});if(i===2){this.defense+=5;this.time.delayedCall(3500,()=>this.defense=Math.max(6,this.defense-5));}
- }
  makeControls(){
   const base=this.add.circle(110,1160,72,0x08100b,.55).setStrokeStyle(3,0xb99b64,.6).setInteractive().setScrollFactor(0).setDepth(6000), knob=this.add.circle(110,1160,30,0x65736a,.8).setScrollFactor(0).setDepth(6001);
   const reset=()=>{this.move.x=this.move.y=0;knob.setPosition(110,1160)};base.on("pointermove",p=>{if(!p.isDown)return;let dx=p.x-110,dy=p.y-1160,d=Math.hypot(dx,dy)||1,m=Math.min(48,d);dx=dx/d*m;dy=dy/d*m;knob.setPosition(110+dx,1160+dy);this.move={x:dx/48,y:dy/48}});base.on("pointerup",reset);base.on("pointerout",reset);
-  [["gabriel_attack_01",610,1160],["gabriel_skill_01",500,1095],["gabriel_skill_02",565,1045],["gabriel_skill_03",635,1060],["gabriel_skill_03",680,1125]].forEach((a,i)=>{const b=this.add.circle(a[1],a[2],i?34:52,i?0x234c34:0x64251f,.9).setStrokeStyle(3,0xd1aa63,.8).setInteractive().setScrollFactor(0).setDepth(6000);this.add.image(a[1],a[2],a[0]).setDisplaySize(i?46:66,i?54:76).setScrollFactor(0).setDepth(6001);b.on("pointerdown",()=>{this.player.setTexture(a[0]);if(i===0)this.attackNearest();else if(this.playerClass==="warrior")this.castWarriorSkill(i-1);else if(this.playerClass==="mage")this.castMageSkill(i-1);else this.castSafeSkill(i-1)});b.on("pointerup",()=>this.player.play(this.playerClass==="warrior"?"thoran_idle":this.playerClass==="mage"?"selene_idle":"gabriel_idle"))});
+  [["gabriel_attack_01",610,1160],["gabriel_skill_01",520,1080],["gabriel_skill_02",600,1050],["gabriel_skill_03",675,1090]].forEach((a,i)=>{const b=this.add.circle(a[1],a[2],i?34:52,i?0x234c34:0x64251f,.9).setStrokeStyle(3,0xd1aa63,.8).setInteractive().setScrollFactor(0).setDepth(6000);this.add.image(a[1],a[2],a[0]).setDisplaySize(i?46:66,i?54:76).setScrollFactor(0).setDepth(6001);b.on("pointerdown",()=>{this.player.setTexture(a[0]);if(i===0)this.attackNearest()});b.on("pointerup",()=>this.player.play("gabriel_idle"))});
  }
  update(){
   if(!this.player)return;
-  this.updateZoneState();this.mana=Math.min(this.maxMana,this.mana+.03);
+  this.updateZoneState();
   const now=this.time.now;
   const hostileTick=(group,speed,damage,range=185)=>group?.getChildren().forEach(e=>{if(!e.active)return;if(this.safeZone){e.setVelocity(0);return;}const d=Phaser.Math.Distance.Between(this.player.x,this.player.y,e.x,e.y);if(d<range&&d>58)this.physics.moveToObject(e,this.player,speed);else e.setVelocity(0);if(d<62&&now-e.lastHit>1250){e.lastHit=now;const hit=Math.max(1,damage-this.defense);this.playerHp=Math.max(0,this.playerHp-hit);this.hpBar.width=260*this.playerHp/this.maxHp;this.showCombatText(this.player.x,this.player.y-72,"-"+hit,"#ff7b72");if(this.playerHp<=0)this.handlePlayerDeath();}e.setDepth(e.y);e.hpBg?.setPosition(e.x,e.y-50).setDepth(e.y+1);e.hpBar?.setPosition(e.x-(e.maxHp===80?33:31),e.y-(e.maxHp===80?52:50)).setDepth(e.y+2);});
   hostileTick(this.wolves,38,7);hostileTick(this.goblins,42,10,205);hostileTick(this.skeletons,45,13,220);hostileTick(this.orcs,48,17,235);
   this.slimes?.getChildren().forEach(s=>{if(!s.active)return;const d=Phaser.Math.Distance.Between(this.player.x,this.player.y,s.x,s.y);
-   if(this.safeZone){s.setVelocity(0);return;}if(d<175&&d>55)this.physics.moveToObject(s,this.player,32);else s.setVelocity(0);
+   if(d<175&&d>55)this.physics.moveToObject(s,this.player,32);else s.setVelocity(0);
    if(d<62&&now-s.lastHit>1200){s.lastHit=now;const incoming=Math.max(1,5-this.defense);this.playerHp=Math.max(0,this.playerHp-incoming);this.hpBar.width=260*this.playerHp/this.maxHp;if(this.playerHp<=0){this.handlePlayerDeath();}}
   });
-  const moving=Math.abs(this.move.x)+Math.abs(this.move.y)>.08;const walkKey=this.playerClass==="warrior"?"thoran_walk":this.playerClass==="mage"?"selene_walk":"gabriel_walk",idleKey=this.playerClass==="warrior"?"thoran_idle":this.playerClass==="mage"?"selene_idle":"gabriel_idle";this.player.setVelocity(this.move.x*170,this.move.y*170);if(moving){if(this.player.anims.currentAnim?.key!==walkKey)this.player.play(walkKey);if(this.move.x<-.05)this.player.setFlipX(true);if(this.move.x>.05)this.player.setFlipX(false)}else if(this.player.anims.currentAnim?.key!==idleKey)this.player.play(idleKey);this.slimes?.getChildren().forEach(s=>{if(s.active){s.setDepth(s.y);s.hpBg?.setPosition(s.x,s.y-48).setDepth(s.y+1);s.hpBar?.setPosition(s.x-28,s.y-48).setDepth(s.y+2)}});this.player.setDepth(this.player.y+100);this.playerShadow.setPosition(this.player.x,this.player.y+38).setDepth(this.player.y-1);this.playerName.setPosition(this.player.x,this.player.y+70).setDepth(this.player.y+102);
+  const moving=Math.abs(this.move.x)+Math.abs(this.move.y)>.08;this.player.setVelocity(this.move.x*170,this.move.y*170);if(moving){if(this.player.anims.currentAnim?.key!=="gabriel_walk")this.player.play("gabriel_walk");if(this.move.x<-.05)this.player.setFlipX(true);if(this.move.x>.05)this.player.setFlipX(false)}else if(this.player.anims.currentAnim?.key!=="gabriel_idle")this.player.play("gabriel_idle");this.slimes?.getChildren().forEach(s=>{if(s.active){s.setDepth(s.y);s.hpBg?.setPosition(s.x,s.y-48).setDepth(s.y+1);s.hpBar?.setPosition(s.x-28,s.y-48).setDepth(s.y+2)}});this.player.setDepth(this.player.y+100);this.playerShadow.setPosition(this.player.x,this.player.y+38).setDepth(this.player.y-1);this.playerName.setPosition(this.player.x,this.player.y+70).setDepth(this.player.y+102);
  }
 }
