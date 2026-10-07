@@ -10,7 +10,12 @@ g.fillStyle(0x736b5d,.95);g.fillTriangle(275,1280,445,1280,405,610);g.fillStyle(
 this.add.text(360,42,"REINOS DE ETHERIAL",{fontFamily:"Georgia",fontSize:"30px",color:"#f0d89a",stroke:"#17110b",strokeThickness:6}).setOrigin(.5);this.add.text(360,82,"LUMEN · CAPITAL DEL REINO",{fontFamily:"Georgia",fontSize:"15px",color:"#d8c49a",letterSpacing:2}).setOrigin(.5);
 // Héroe temporal: proporción y presencia correctas; el arte final será sprite semi-realista original.
 const hero=this.add.container(360,660);hero.add([this.add.ellipse(0,42,72,20,0x000000,.35),this.add.circle(0,-25,18,0xd1a17a),this.add.rectangle(0,10,38,66,0x263a2a).setStrokeStyle(4,0x8a744e),this.add.triangle(0,-28,-25,-8,25,-8,0,-65,0x183023),this.add.rectangle(27,0,5,88,0x8a5b30).setRotation(.18)]);this.add.text(360,716,"Gabriel · Arquero",{fontFamily:"Georgia",fontSize:"16px",color:"#fff2c7",stroke:"#000",strokeThickness:4}).setOrigin(.5);
-// NPCs clave de la referencia visual: mercader, guardias, capitán y sanadora.
+// Señalética diegética y puntos de interés de Lumen, pensados para pantalla vertical.
+ const poi=(x,y,title,sub)=>{this.add.rectangle(x,y,150,44,0x17120d,.76).setStrokeStyle(2,0xb28c50,.7);this.add.text(x,y-7,title,{fontFamily:"Georgia",fontSize:"14px",color:"#f0d9a1",stroke:"#000",strokeThickness:3}).setOrigin(.5);this.add.text(x,y+10,sub,{fontFamily:"Georgia",fontSize:"10px",color:"#c9c1aa"}).setOrigin(.5)};
+ poi(155,390,"POSADA","El Ciervo Dorado");poi(565,390,"MERCADO","Galería de Lumen");poi(155,955,"HERRERÍA","Forja de Borin");poi(565,955,"GREMIO","Casa de Aventureros");
+ // Luz cálida urbana para reforzar el aspecto de capital fantástica.
+ [[95,430],[625,430],[92,970],[628,970]].forEach((p,i)=>{const glow=this.add.circle(p[0],p[1],54,0xffb45d,.08).setBlendMode(Phaser.BlendModes.ADD);this.add.circle(p[0],p[1],7,0xffd47c,.92);this.tweens.add({targets:glow,alpha:{from:.045,to:.13},scale:{from:.85,to:1.12},duration:1500+i*170,yoyo:true,repeat:-1})});
+ // NPCs clave de la referencia visual: mercader, guardias, capitán y sanadora.
  const npc=(x,y,label,role,tint)=>{this.add.ellipse(x,y+35,54,16,0x000000,.32);this.add.circle(x,y-28,14,0xd4a27c);this.add.rectangle(x,y+5,32,60,tint).setStrokeStyle(3,0xc7a55f,.7);this.add.text(x,y+52,label,{fontFamily:"Georgia",fontSize:"15px",color:"#fff3cf",stroke:"#000",strokeThickness:4}).setOrigin(.5);this.add.text(x,y+70,role,{fontFamily:"Georgia",fontSize:"11px",color:"#c9dfd2",stroke:"#000",strokeThickness:3}).setOrigin(.5)};
  npc(120,610,"Mercader","Tienda General",0x743c35);npc(270,625,"Guardia","",0x263b55);npc(455,625,"Guardia","",0x263b55);npc(585,610,"Capitán","",0x263b55);npc(650,745,"Sanadora","Recupera tu HP/MP",0xd9d4c7);
  // Ambiente vivo: fuente brillante y partículas mágicas muy suaves.
