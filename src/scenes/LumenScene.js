@@ -14,10 +14,8 @@ export class LumenScene extends Phaser.Scene {
   this.load.image("loot_gel",A+"effects/curacion.png");
  }
  create(){
-  // Limpia el fondo gris/cuadriculado heredado del sprite sheet.
-  const transparentKeys=["gabriel_idle_01","gabriel_idle_02","gabriel_walk_01","gabriel_walk_02","gabriel_walk_03","gabriel_walk_04","gabriel_attack_01","gabriel_attack_02","gabriel_attack_03","npc_aldric","npc_mira","npc_borin","npc_guardia","enemy_slime","enemy_wolf","enemy_goblin"];transparentKeys.forEach(k=>this.removeSheetBackground(k));
   this.physics.world.setBounds(0,0,720,1780);this.inHuntZone=false;this.safeZone=true;this.zoneName="Lumen";this.deathCount=0;this.respawnProtection=false; this.obstacles=this.physics.add.staticGroup();
-  // LUMEN CAPITAL V6 — ambientación social, señalización y acabado de plaza.
+  // LUMEN CAPITAL V7 — estabilidad visual, identidad urbana y navegación.
    this.add.rectangle(360,890,720,1780,0x1d2422,1).setDepth(-30);
    this.add.image(360,1515,"t_hierba").setDisplaySize(720,530).setAlpha(.76).setDepth(-29);
    const city=this.add.graphics().setDepth(-28);
@@ -44,6 +42,10 @@ export class LumenScene extends Phaser.Scene {
    [[105,655],[615,655],[110,1040],[610,1040]].forEach(([x,y])=>this.add.image(x,y,"p_barril_01").setScale(.34).setDepth(y));
    [[135,675],[585,675]].forEach(([x,y])=>this.add.image(x,y,"p_caja").setScale(.32).setDepth(y));
    [["npc_guardia",285,1185],["npc_guardia",435,1185]].forEach(([k,x,y])=>this.add.image(x,y,k).setScale(.31).setDepth(y));
+   // Señales de navegación integradas a la capital.
+   [["NORTE · TEMPLO",360,155],["OESTE · COMERCIO",118,548],["ESTE · MERCADO",602,548],["SUR · PRADERAS",360,1140]].forEach(([t,x,y])=>this.add.text(x,y,t,{fontFamily:"Georgia",fontSize:"10px",color:"#cbb889",stroke:"#111713",strokeThickness:3}).setOrigin(.5).setDepth(1180));
+   // Sombras suaves bajo NPCs para mejorar profundidad sin alterar gameplay.
+   [[175,625],[305,720],[545,625],[175,900],[285,1200],[435,1200]].forEach(([x,y])=>this.add.ellipse(x,y,34,10,0x000000,.22).setDepth(y-2));
    [["npc_mira",175,610,"Mira"],["npc_guardia",305,705,"Guardia"],["npc_aldric",545,610,"Aldric"],["npc_borin",175,885,"Borin"]].forEach(a=>{this.add.image(a[1],a[2],a[0]).setScale(.38).setDepth(a[2]);this.add.text(a[1],a[2]+53,a[3],{fontFamily:"Georgia",fontSize:"13px",color:"#fff2c7",stroke:"#000",strokeThickness:3}).setOrigin(.5).setDepth(a[2]+2)});
    this.playerShadow=this.add.ellipse(360,1002,48,15,0x000000,.24).setDepth(899);
     this.player=this.physics.add.sprite(360,968,"gabriel_idle_01").setScale(.68).setDepth(900);this.player.body.setSize(34,38).setOffset(24,62);this.player.setCollideWorldBounds(true);this.cameras.main.setBounds(0,0,720,1780);this.cameras.main.startFollow(this.player,true,.10,.10,0,135);this.cameras.main.setDeadzone(70,110);this.physics.add.collider(this.player,this.obstacles);
