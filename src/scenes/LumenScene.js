@@ -18,7 +18,7 @@ export class LumenScene extends Phaser.Scene {
   const transparentKeys=["gabriel_idle_01","gabriel_idle_02","gabriel_walk_01","gabriel_walk_02","gabriel_walk_03","gabriel_walk_04","gabriel_attack_01","gabriel_attack_02","gabriel_attack_03","npc_aldric","npc_mira","npc_borin","npc_guardia","enemy_slime","enemy_wolf","enemy_goblin"];transparentKeys.forEach(k=>this.removeSheetBackground(k));
   this.physics.world.setBounds(0,0,720,1780);this.inHuntZone=false;this.safeZone=true;this.zoneName="Lumen";this.deathCount=0;this.respawnProtection=false; this.obstacles=this.physics.add.staticGroup();
   // Base continua: elimina el efecto de mosaico/cuadricula del suelo.
-  this.add.rectangle(360,890,720,1780,0x3f4938,1).setDepth(-30);
+  this.add.rectangle(360,890,720,1780,0xe8dfca,1).setDepth(-30);
   this.add.image(360,640,"lumen_map").setDisplaySize(720,1280).setAlpha(.16).setDepth(-29);
   for(let y=0;y<1780;y+=72)for(let x=0;x<720;x+=78){
    const tile=this.add.image(x+39,y+36,"t_"+(["suelo_01","suelo_02","suelo_03","suelo_04"][(x/78+y/72)%4|0])).setDisplaySize(92,86).setAlpha(.24).setDepth(-28);
