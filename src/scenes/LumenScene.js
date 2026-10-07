@@ -21,25 +21,25 @@ export class LumenScene extends Phaser.Scene {
   this.add.rectangle(360,890,720,1780,0x484d4a,1).setDepth(-30);
   // FINAL CITY RESET — lumen_master queda fuera: tenía horneado el diseño antiguo.
   // Ciudad encajada sin estiramiento vertical extremo.
-  this.add.image(360,545,"t_suelo_01").setDisplaySize(720,900).setAlpha(.90).setDepth(-29);
+  this.add.image(360,520,"t_suelo_01").setDisplaySize(620,820).setAlpha(.96).setDepth(-29);
   // Transición al exterior: la ciudad termina antes y las praderas ocupan el sur.
-  this.add.image(360,1335,"t_hierba").setDisplaySize(720,890).setAlpha(.76).setDepth(-29);
+  this.add.image(360,1280,"t_hierba").setDisplaySize(720,1000).setAlpha(.80).setDepth(-29);
   // Plaza de Lumen limpia: colisión de fuente; el aspecto visual usa el asset dedicado.
   this.addObstacle(360,468,205,74);
   // Composición limpia con props independientes.
-  [[290,350],[430,350],[285,610],[435,610],[285,900],[435,900],[285,1160],[435,1160]].forEach(([x,y])=>this.add.image(x,y,"p_farol").setScale(.38).setDepth(y));
-  [[70,420,"p_arbol_01"],[650,420,"p_arbol_02"],[70,900,"p_arbol_03"],[650,900,"p_arbol_01"],[75,1160,"p_arbol_02"],[645,1160,"p_arbol_03"]].forEach(([x,y,k])=>this.add.image(x,y,k).setScale(.62).setDepth(y));
-  this.add.image(360,470,"p_estatua_fuente").setScale(.72).setDepth(470);
+  [[300,330],[420,330],[295,560],[425,560],[300,780],[420,780],[305,980],[415,980]].forEach(([x,y])=>this.add.image(x,y,"p_farol").setScale(.38).setDepth(y));
+  [[105,390,"p_arbol_01"],[615,390,"p_arbol_02"],[110,690,"p_arbol_03"],[610,690,"p_arbol_01"],[125,930,"p_arbol_02"],[595,930,"p_arbol_03"]].forEach(([x,y,k])=>this.add.image(x,y,k).setScale(.62).setDepth(y));
+  this.add.image(360,455,"p_estatua_fuente").setScale(.58).setDepth(470);
   // EDIFICIOS DE LUMEN — el mapa maestro aporta el arte; estas huellas conservan colisiones.
   [[118,300],[602,300],[125,760],[595,760],[360,190]].forEach(([x,y])=>this.addObstacle(x,y+45,175,78));
-  [["npc_mira",145,500,"Mira"],["npc_guardia",255,650,"Guardia"],["npc_aldric",575,500,"Aldric"],["npc_borin",145,760,"Borin"]].forEach(a=>{this.add.image(a[1],a[2],a[0]).setScale(.52).setDepth(a[2]);this.add.text(a[1],a[2]+62,a[3],{fontFamily:"Georgia",fontSize:"13px",color:"#fff2c7",stroke:"#000",strokeThickness:4}).setOrigin(.5).setDepth(a[2]+2)});
+  [["npc_mira",235,505,"Mira"],["npc_guardia",315,575,"Guardia"],["npc_aldric",485,505,"Aldric"],["npc_borin",235,690,"Borin"]].forEach(a=>{this.add.image(a[1],a[2],a[0]).setScale(.43).setDepth(a[2]);this.add.text(a[1],a[2]+62,a[3],{fontFamily:"Georgia",fontSize:"13px",color:"#fff2c7",stroke:"#000",strokeThickness:4}).setOrigin(.5).setDepth(a[2]+2)});
   this.playerShadow=this.add.ellipse(360,868,55,20,0x000000,.28).setDepth(798);
-  this.player=this.physics.add.sprite(360,760,"gabriel_idle_01").setScale(.92).setDepth(900);this.player.body.setSize(34,38).setOffset(24,62);this.player.setCollideWorldBounds(true);this.cameras.main.setBounds(0,0,720,1780);this.cameras.main.startFollow(this.player,true,.08,.08,0,150);this.cameras.main.setDeadzone(80,130);this.physics.add.collider(this.player,this.obstacles);
-  this.playerName=this.add.text(360,830,"Gabriel · Arquero",{fontFamily:"Georgia",fontSize:"15px",color:"#fff1c4",stroke:"#000",strokeThickness:4}).setOrigin(.5).setDepth(901);
+  this.player=this.physics.add.sprite(360,675,"gabriel_idle_01").setScale(.78).setDepth(900);this.player.body.setSize(34,38).setOffset(24,62);this.player.setCollideWorldBounds(true);this.cameras.main.setBounds(0,0,720,1780);this.cameras.main.startFollow(this.player,true,.10,.10,0,105);this.cameras.main.setDeadzone(70,110);this.physics.add.collider(this.player,this.obstacles);
+  this.playerName=this.add.text(360,735,"Gabriel · Arquero",{fontFamily:"Georgia",fontSize:"15px",color:"#fff1c4",stroke:"#000",strokeThickness:4}).setOrigin(.5).setDepth(901);
   this.anims.create({key:"gabriel_idle",frames:["gabriel_idle_01","gabriel_idle_02"].map(key=>({key})),frameRate:3,repeat:-1});
   this.anims.create({key:"gabriel_walk",frames:["gabriel_walk_01","gabriel_walk_02","gabriel_walk_03","gabriel_walk_04"].map(key=>({key})),frameRate:8,repeat:-1});
   this.player.play("gabriel_idle");this.move={x:0,y:0};this.questDone=false;this.slimeQuest=false;this.slimesKilled=0;this.level=1;this.xp=0;this.xpNeed=100;this.gold=0;this.playerHp=100;this.maxHp=100;this.attackReady=true;this.inventory={slimeGel:0};this.equipment={weapon:"Arco del Aprendiz",armor:"Cuero de Lumen"};this.attackPower=15;this.defense=2;this.potions=1;this.gearBonus={attack:0,defense:0};this.inventoryOpen=false;this.inventorySlots=20;this.maxInventorySlots=60;this.baseSlotPrice=100;this.inventoryItems=[];this.gearDrops=0;this.selectedItem=null;this.shopOpen=false;this.questRewardClaimed=false;this.secondQuest=false;this.secondRewardClaimed=false;this.wolvesKilled=0;this.thirdQuest=false;this.thirdRewardClaimed=false;this.goblinsKilled=0;this.fourthQuest=false;this.fourthRewardClaimed=false;this.skeletonsKilled=0;this.fifthQuest=false;this.orcsKilled=0;this.saveKey="etherial_save_v1";this.npcTargets=[];this.spawnSlimes();
-  this.npcTargets.push({name:"Aldric",x:575,y:500,r:88});this.questMarker=this.add.text(575,438,"!",{fontFamily:"Georgia",fontSize:"30px",color:"#ffd75a",stroke:"#4a3210",strokeThickness:4}).setOrigin(.5).setDepth(9000);this.tweens.add({targets:this.questMarker,y:430,duration:650,yoyo:true,repeat:-1});
+  this.npcTargets.push({name:"Aldric",x:485,y:505,r:78});this.questMarker=this.add.text(485,450,"!",{fontFamily:"Georgia",fontSize:"30px",color:"#ffd75a",stroke:"#4a3210",strokeThickness:4}).setOrigin(.5).setDepth(9000);this.tweens.add({targets:this.questMarker,y:442,duration:650,yoyo:true,repeat:-1});
   this.add.rectangle(360,1065,720,70,0x283322,.72).setDepth(-5);
   this.add.text(360,1040,"PUERTA SUR DE LUMEN",{fontFamily:"Georgia",fontSize:"17px",color:"#e8d5a5",stroke:"#1d2419",strokeThickness:4}).setOrigin(.5).setDepth(3000);
   this.add.rectangle(170,1060,90,150,0x4b4432,.55).setDepth(-2);this.add.rectangle(550,1060,90,150,0x4b4432,.55).setDepth(-2);
