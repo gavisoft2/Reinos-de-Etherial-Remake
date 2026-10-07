@@ -97,6 +97,32 @@ export class LumenScene extends Phaser.Scene {
   });
   // Señal visual hacia Puerta Sur.
   this.add.text(360,1235,"◆  AVENIDA REAL  ◆",{fontFamily:"Georgia",fontSize:"13px",color:"#7a622b",stroke:"#f1e6cd",strokeThickness:3}).setOrigin(.5).setDepth(300);
+  // VISUAL PASS SAFE V4 — profundidad, barrios y ambientación de capital.
+  // Zócalos ornamentales frente a edificios principales.
+  const district=this.add.graphics().setDepth(-22);
+  [[35,245,180,145],[505,245,180,145],[35,700,185,150],[500,700,185,150]].forEach(([x,y,w,h])=>{
+    district.fillStyle(0xf5ecd8,.20); district.fillRoundedRect(x,y,w,h,16);
+    district.lineStyle(3,0xb89545,.30); district.strokeRoundedRect(x,y,w,h,16);
+  });
+  // Escalinatas ceremoniales del templo y accesos a barrios.
+  [[310,265,100],[310,285,100],[75,825,95],[550,825,95]].forEach(([x,y,w])=>{
+    this.add.rectangle(x+w/2,y,w,12,0xd9ceb5,.92).setStrokeStyle(1,0x9f874d,.55).setDepth(y);
+  });
+  // Fuentes menores laterales para repetir el lenguaje visual de la plaza central.
+  [[115,1030],[605,1030]].forEach(([x,y])=>{
+    this.add.ellipse(x,y,86,40,0xd9ceb5,.96).setStrokeStyle(3,0xb89545,.70).setDepth(y);
+    this.add.ellipse(x,y-3,65,25,0x4d91aa,.78).setDepth(y+1);
+    this.add.circle(x,y-12,9,0xe7ddc7,1).setDepth(y+2);
+  });
+  // Lámparas dobles y bancos en zonas de descanso.
+  [[155,1180],[565,1180],[155,1320],[565,1320]].forEach(([x,y])=>{
+    this.add.image(x-28,y,"p_farol").setScale(.40).setDepth(y);
+    this.add.image(x+28,y,"p_banco").setScale(.36).setDepth(y+1);
+  });
+  // Nombres discretos de distritos para orientar al jugador.
+  [["DISTRITO DEL MERCADO",110,615],["DISTRITO DEL GREMIO",610,615],["PLAZA REAL",360,585]].forEach(([t,x,y])=>{
+    this.add.text(x,y,t,{fontFamily:"Georgia",fontSize:"10px",color:"#826a36",stroke:"#f3ead6",strokeThickness:3}).setOrigin(.5).setDepth(310);
+  });
   // Estatua monumental completa: pedestal + figura central, sin usar el recorte roto anterior.
   this.add.rectangle(360,432,72,72,0x8e8775,1).setStrokeStyle(3,0xd1c29b,.9).setDepth(438);
   const monument=this.add.image(360,365,"npc_guardia").setScale(1.15).setTint(0xc8c1ae).setDepth(439);
