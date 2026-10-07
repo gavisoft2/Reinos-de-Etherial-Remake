@@ -36,7 +36,7 @@ export class LumenScene extends Phaser.Scene {
   city.lineStyle(3,0xb89545,.48); city.strokeRoundedRect(250,570,220,650,24);
   // Jardines de la plaza principal.
   [[185,405],[535,405],[185,535],[535,535],[175,760],[545,760],[175,980],[545,980]].forEach(([x,y],idx)=>{
-   this.add.ellipse(x,y,118,58,0x315c34,.92).setStrokeStyle(3,0xb79b55,.62).setDepth(420);
+   this.add.ellipse(x,y,118,58,0x4b504d,.16).setStrokeStyle(3,0xb79b55,.62).setDepth(420);
    this.add.image(x+(idx%2?24:-24),y-8,idx%3===0?"p_arbol_03":"p_arbol_02").setScale(idx<4?.34:.28).setDepth(y);
   });
   // Faroles reales y bancos alineados a la avenida.
@@ -69,61 +69,6 @@ export class LumenScene extends Phaser.Scene {
   // Maceteros y faroles en accesos a los distritos.
   [[220,690],[500,690],[220,910],[500,910],[220,1120],[500,1120]].forEach(([x,y],i)=>{
     this.add.image(x,y,i%2===0?"p_maceta":"p_farol").setScale(i%2===0?.34:.42).setDepth(y);
-  });
-  // VISUAL PASS SAFE V3 — ciudad más viva sin tocar texturas ni lógica.
-  // Terrazas laterales y conexiones de mármol.
-  const urban=this.add.graphics().setDepth(-23);
-  urban.fillStyle(0xf0e6cf,.22);
-  urban.fillRoundedRect(18,640,205,520,18);
-  urban.fillRoundedRect(497,640,205,520,18);
-  urban.lineStyle(3,0xb89545,.34);
-  urban.strokeRoundedRect(18,640,205,520,18);
-  urban.strokeRoundedRect(497,640,205,520,18);
-  // Cruces laterales conectados a la avenida real.
-  [700,900,1100].forEach(y=>{
-    urban.lineStyle(4,0xb89545,.34);
-    urban.lineBetween(70,y,650,y);
-    urban.lineStyle(2,0x315f91,.30);
-    urban.lineBetween(90,y+8,630,y+8);
-  });
-  // Balizas ceremoniales con arte real: faroles y estandartes reemplazan columnas geométricas.
-  [[300,690],[420,690],[300,890],[420,890],[300,1090],[420,1090]].forEach(([x,y],i)=>{
-    this.add.image(x,y,"p_farol").setScale(.38).setDepth(y+2);
-    this.add.image(x+(i%2?-24:24),y+4,"p_bandera").setScale(.30).setDepth(y+1);
-    const lampGlow=this.add.circle(x,y-22,15,0xffd77a,.08).setDepth(y+1);
-    this.tweens.add({targets:lampGlow,alpha:{from:.05,to:.16},scale:{from:.85,to:1.12},duration:2000+i*90,yoyo:true,repeat:-1});
-  });
-  // Vegetación baja para dar continuidad entre jardines y calles.
-  [[70,680],[650,680],[72,880],[648,880],[72,1080],[648,1080],[185,1160],[535,1160]].forEach(([x,y],i)=>{
-    this.add.image(x,y,i%3===0?"p_arbol_01":"p_maceta").setScale(i%3===0?.24:.30).setDepth(y);
-  });
-  // Señal visual hacia Puerta Sur.
-  this.add.text(360,1235,"◆  AVENIDA REAL  ◆",{fontFamily:"Georgia",fontSize:"13px",color:"#7a622b",stroke:"#f1e6cd",strokeThickness:3}).setOrigin(.5).setDepth(300);
-  // VISUAL PASS SAFE V4 — profundidad, barrios y ambientación de capital.
-  // Zócalos ornamentales frente a edificios principales.
-  const district=this.add.graphics().setDepth(-22);
-  [[35,245,180,145],[505,245,180,145],[35,700,185,150],[500,700,185,150]].forEach(([x,y,w,h])=>{
-    district.fillStyle(0xf5ecd8,.20); district.fillRoundedRect(x,y,w,h,16);
-    district.lineStyle(3,0xb89545,.30); district.strokeRoundedRect(x,y,w,h,16);
-  });
-  // Escalinatas ceremoniales del templo y accesos a barrios.
-  [[310,265,100],[310,285,100],[75,825,95],[550,825,95]].forEach(([x,y,w])=>{
-    this.add.rectangle(x+w/2,y,w,12,0xd9ceb5,.92).setStrokeStyle(1,0x9f874d,.55).setDepth(y);
-  });
-  // Fuentes laterales con asset real para eliminar placeholders geométricos.
-  [[115,1030],[605,1030]].forEach(([x,y])=>{
-    const basin=this.add.image(x,y,"p_estatua_fuente").setScale(.30).setDepth(y+2);
-    const waterGlow=this.add.ellipse(x,y+18,72,24,0x4d91aa,.18).setDepth(y+1);
-    this.tweens.add({targets:waterGlow,alpha:{from:.10,to:.24},scaleX:{from:.92,to:1.05},duration:1800,yoyo:true,repeat:-1});
-  });
-  // Lámparas dobles y bancos en zonas de descanso.
-  [[155,1180],[565,1180],[155,1320],[565,1320]].forEach(([x,y])=>{
-    this.add.image(x-28,y,"p_farol").setScale(.40).setDepth(y);
-    this.add.image(x+28,y,"p_banco").setScale(.36).setDepth(y+1);
-  });
-  // Nombres discretos de distritos para orientar al jugador.
-  [["DISTRITO DEL MERCADO",110,615],["DISTRITO DEL GREMIO",610,615],["PLAZA REAL",360,585]].forEach(([t,x,y])=>{
-    this.add.text(x,y,t,{fontFamily:"Georgia",fontSize:"10px",color:"#826a36",stroke:"#f3ead6",strokeThickness:3}).setOrigin(.5).setDepth(310);
   });
   // VISUAL PASS SAFE V5 — remate urbano hacia la zona sur.
   const south=this.add.graphics().setDepth(-21);
@@ -161,7 +106,7 @@ export class LumenScene extends Phaser.Scene {
   });
   // Dos zonas sociales a los lados de la avenida.
   [[115,1185],[605,1185]].forEach(([x,y],i)=>{
-    this.add.ellipse(x,y,128,62,0x315c34,.72).setStrokeStyle(3,0xb89545,.48).setDepth(y-5);
+    this.add.ellipse(x,y,128,62,0x4b504d,.20).setStrokeStyle(3,0xb89545,.48).setDepth(y-5);
     this.add.image(x,y-8,i?"p_arbol_02":"p_arbol_03").setScale(.27).setDepth(y);
     this.add.image(x+(i?-48:48),y+15,"p_banco").setScale(.32).setDepth(y+1);
     this.add.image(x+(i?48:-48),y-8,"p_farol").setScale(.38).setDepth(y+2);
@@ -199,92 +144,6 @@ export class LumenScene extends Phaser.Scene {
   // Marcadores discretos de zonas de servicio.
   [["COMERCIO",112,690],["ARTESANOS",608,690]].forEach(([t,x,y])=>{
     this.add.text(x,y,t,{fontFamily:"Georgia",fontSize:"9px",color:"#d9c994",stroke:"#f3e8d1",strokeThickness:3}).setOrigin(.5).setDepth(330);
-  });
-  // CAPITAL PASS V8 — transición orgánica entre distritos y avenida real.
-  const capital=this.add.graphics().setDepth(150);
-  // Aceras de piedra conectan las bases de edificios con la avenida.
-  [[118,405,242,34],[602,405,242,34],[125,865,242,34],[595,865,242,34]].forEach(([x,y,w,h])=>{
-    capital.fillStyle(0x555a56,.88); capital.fillRoundedRect(x-w/2,y-h/2,w,h,10);
-    capital.lineStyle(2,0x9b895d,.62); capital.strokeRoundedRect(x-w/2,y-h/2,w,h,10);
-  });
-  // Entradas doradas desde cada distrito.
-  [[235,405,315,405],[485,405,405,405],[245,865,315,865],[475,865,405,865]].forEach(([x1,y1,x2,y2])=>{
-    capital.lineStyle(3,0xb89a52,.52); capital.lineBetween(x1,y1,x2,y2);
-  });
-  // Jardineras para romper esquinas rectangulares y dar profundidad.
-  [[215,370],[505,370],[220,825],[500,825]].forEach(([x,y],i)=>{
-    this.add.image(x,y-11,i%2?"p_arbol_02":"p_arbol_01").setScale(.20).setDepth(y+4);
-    this.add.image(x+(i%2?-23:23),y+12,"p_maceta").setScale(.24).setDepth(y+5);
-  });
-  // Faroles marcan accesos principales.
-  [[260,420],[460,420],[265,880],[455,880]].forEach(([x,y])=>{
-    this.add.image(x,y,"p_farol").setScale(.34).setDepth(y+5);
-  });
-  // CAPITAL PASS V9 — paseo real: ritmo visual y profundidad sin tocar texturas.
-  const promenade=this.add.graphics().setDepth(145);
-  // Bandas laterales de piedra que enmarcan el corredor central.
-  [[286,470,18,700],[416,470,18,700]].forEach(([x,y,w,h])=>{
-    promenade.fillStyle(0x4b504d,.72); promenade.fillRoundedRect(x,y,w,h,8);
-    promenade.lineStyle(2,0xa38c58,.48); promenade.strokeRoundedRect(x,y,w,h,8);
-  });
-  // Medallones de la avenida, más discretos que los antiguos círculos geométricos.
-  [560,720,1040,1210].forEach((y,i)=>{
-    promenade.fillStyle(0x555a56,.72); promenade.fillCircle(351,y,25);
-    promenade.lineStyle(2,0xb79a54,.62); promenade.strokeCircle(351,y,25);
-    promenade.lineStyle(1,0x557da2,.58); promenade.lineBetween(338,y,364,y); promenade.lineBetween(351,y-13,351,y+13);
-  });
-  // Bancos y faroles alternados para que el eje se sienta transitable.
-  [[255,560],[467,720],[255,1040],[467,1210]].forEach(([x,y],i)=>{
-    this.add.image(x,y,"p_banco").setScale(.29).setDepth(y+3);
-    this.add.image(i%2?x-26:x+26,y-8,"p_farol").setScale(.31).setDepth(y+4);
-  });
-  // Vegetación baja junto a los cruces.
-  [[278,650],[424,650],[278,950],[424,950]].forEach(([x,y])=>{
-    this.add.image(x,y,"p_maceta").setScale(.27).setDepth(y+2);
-  });
-  // CAPITAL PASS V10 — jardines de transición y entrada monumental.
-  const v10=this.add.graphics().setDepth(142);
-  // Jardines longitudinales suavizan los grandes vacíos laterales de la avenida.
-  [[185,1080],[535,1080],[185,1260],[535,1260]].forEach(([x,y],i)=>{
-    v10.fillStyle(0x315c34,.88); v10.fillRoundedRect(x-58,y-25,116,50,22);
-    v10.lineStyle(2,0x9b895d,.66); v10.strokeRoundedRect(x-58,y-25,116,50,22);
-    this.add.image(x+(i%2?18:-18),y-12,i%2?"p_arbol_02":"p_arbol_03").setScale(.17).setDepth(y+3);
-    this.add.image(x+(i%2?-32:32),y+8,"p_banco").setScale(.25).setDepth(y+4);
-  });
-  // Acceso monumental previo a Puerta Sur.
-  [[292,1420],[428,1420]].forEach(([x,y],i)=>{
-    v10.fillStyle(0x555a56,.95); v10.fillRoundedRect(x-18,y-40,36,80,8);
-    v10.lineStyle(2,0xb79a54,.75); v10.strokeRoundedRect(x-18,y-40,36,80,8);
-    this.add.image(x+(i?-28:28),y-5,"p_bandera").setScale(.40).setDepth(y+4);
-    this.add.image(x,y-32,"p_farol").setScale(.34).setDepth(y+5);
-  });
-  // Línea ceremonial transversal para cerrar visualmente la capital.
-  v10.lineStyle(4,0xb79a54,.55); v10.lineBetween(115,1465,605,1465);
-  v10.lineStyle(2,0x557da2,.52); v10.lineBetween(145,1473,575,1473);
-  // CAPITAL PASS V11 — plaza social, simetría y lectura de la ruta principal.
-  const v11=this.add.graphics().setDepth(141);
-  // Cuatro pequeñas plazoletas laterales para llenar sin bloquear el corredor.
-  [[155,555],[565,555],[155,970],[565,970]].forEach(([x,y],i)=>{
-    v11.fillStyle(0x4b504d,.55); v11.fillRoundedRect(x-42,y-25,84,50,14);
-    v11.lineStyle(2,0xb79a54,.48); v11.strokeRoundedRect(x-42,y-25,84,50,14);
-    this.add.image(x,y-10,i%2?"p_arbol_01":"p_arbol_02").setScale(.20).setDepth(y+2);
-    this.add.image(x+(i%2?-22:22),y+13,"p_maceta").setScale(.25).setDepth(y+3);
-    this.add.image(x+(i%2?-38:38),y+10,"p_farol").setScale(.28).setDepth(y+3);
-  });
-  // Cruces de piedra unen ambas mitades de la capital.
-  [610,900,1160,1350].forEach(y=>{
-    v11.fillStyle(0x555a56,.72); v11.fillRoundedRect(92,y-9,536,18,7);
-    v11.lineStyle(1,0x9b895d,.58); v11.strokeRoundedRect(92,y-9,536,18,7);
-  });
-  // Marcadores azules/dorados guían visualmente hacia Plaza Real y Puerta Sur.
-  [[315,520],[405,520],[315,1110],[405,1110],[315,1320],[405,1320]].forEach(([x,y],i)=>{
-    v11.fillStyle(0x315f91,.76); v11.fillCircle(x,y,7);
-    v11.lineStyle(2,0xd0ae57,.72); v11.strokeCircle(x,y,7);
-  });
-  // Dos zonas de descanso cerca de la salida.
-  [[205,1370],[515,1370]].forEach(([x,y],i)=>{
-    this.add.image(x,y,"p_banco").setScale(.30).setDepth(y+3);
-    this.add.image(x+(i?34:-34),y-9,"p_farol").setScale(.31).setDepth(y+4);
   });
   // CAPITAL PASS V12 — Plaza de los Fundadores y eje del templo.
   const v12=this.add.graphics().setDepth(143);
