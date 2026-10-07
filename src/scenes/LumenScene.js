@@ -20,11 +20,10 @@ export class LumenScene extends Phaser.Scene {
   // Base continua: elimina el efecto de mosaico/cuadricula del suelo.
   this.add.rectangle(360,890,720,1780,0x484d4a,1).setDepth(-30);
   // FINAL CITY RESET — lumen_master queda fuera: tenía horneado el diseño antiguo.
-  this.add.image(360,640,"t_suelo_01").setDisplaySize(720,1280).setAlpha(.72).setDepth(-29);
-  this.add.image(360,1510,"t_hierba").setDisplaySize(720,540).setAlpha(.62).setDepth(-29);
-  const finalRoad=this.add.graphics().setDepth(-27);
-  finalRoad.fillStyle(0x777266,.82); finalRoad.fillRect(255,0,210,1280);
-  finalRoad.lineStyle(3,0xb59655,.55); finalRoad.lineBetween(255,0,255,1280); finalRoad.lineBetween(465,0,465,1280);
+  // Ciudad encajada sin estiramiento vertical extremo.
+  this.add.image(360,545,"t_suelo_01").setDisplaySize(720,900).setAlpha(.90).setDepth(-29);
+  // Transición al exterior: la ciudad termina antes y las praderas ocupan el sur.
+  this.add.image(360,1335,"t_hierba").setDisplaySize(720,890).setAlpha(.76).setDepth(-29);
   // Plaza de Lumen limpia: colisión de fuente; el aspecto visual usa el asset dedicado.
   this.addObstacle(360,468,205,74);
   // Composición limpia con props independientes.
@@ -33,21 +32,21 @@ export class LumenScene extends Phaser.Scene {
   this.add.image(360,470,"p_estatua_fuente").setScale(.72).setDepth(470);
   // EDIFICIOS DE LUMEN — el mapa maestro aporta el arte; estas huellas conservan colisiones.
   [[118,300],[602,300],[125,760],[595,760],[360,190]].forEach(([x,y])=>this.addObstacle(x,y+45,175,78));
-  [["npc_mira",135,560,"Mira"],["npc_guardia",270,625,"Guardia"],["npc_aldric",585,560,"Aldric"],["npc_borin",135,850,"Borin"]].forEach(a=>{this.add.image(a[1],a[2],a[0]).setScale(.52).setDepth(a[2]);this.add.text(a[1],a[2]+62,a[3],{fontFamily:"Georgia",fontSize:"13px",color:"#fff2c7",stroke:"#000",strokeThickness:4}).setOrigin(.5).setDepth(a[2]+2)});
+  [["npc_mira",145,500,"Mira"],["npc_guardia",255,650,"Guardia"],["npc_aldric",575,500,"Aldric"],["npc_borin",145,760,"Borin"]].forEach(a=>{this.add.image(a[1],a[2],a[0]).setScale(.52).setDepth(a[2]);this.add.text(a[1],a[2]+62,a[3],{fontFamily:"Georgia",fontSize:"13px",color:"#fff2c7",stroke:"#000",strokeThickness:4}).setOrigin(.5).setDepth(a[2]+2)});
   this.playerShadow=this.add.ellipse(360,868,55,20,0x000000,.28).setDepth(798);
-  this.player=this.physics.add.sprite(360,830,"gabriel_idle_01").setScale(.92).setDepth(900);this.player.body.setSize(34,38).setOffset(24,62);this.player.setCollideWorldBounds(true);this.cameras.main.setBounds(0,0,720,1780);this.cameras.main.startFollow(this.player,true,.08,.08,0,150);this.cameras.main.setDeadzone(80,130);this.physics.add.collider(this.player,this.obstacles);
-  this.playerName=this.add.text(360,900,"Gabriel · Arquero",{fontFamily:"Georgia",fontSize:"15px",color:"#fff1c4",stroke:"#000",strokeThickness:4}).setOrigin(.5).setDepth(901);
+  this.player=this.physics.add.sprite(360,760,"gabriel_idle_01").setScale(.92).setDepth(900);this.player.body.setSize(34,38).setOffset(24,62);this.player.setCollideWorldBounds(true);this.cameras.main.setBounds(0,0,720,1780);this.cameras.main.startFollow(this.player,true,.08,.08,0,150);this.cameras.main.setDeadzone(80,130);this.physics.add.collider(this.player,this.obstacles);
+  this.playerName=this.add.text(360,830,"Gabriel · Arquero",{fontFamily:"Georgia",fontSize:"15px",color:"#fff1c4",stroke:"#000",strokeThickness:4}).setOrigin(.5).setDepth(901);
   this.anims.create({key:"gabriel_idle",frames:["gabriel_idle_01","gabriel_idle_02"].map(key=>({key})),frameRate:3,repeat:-1});
   this.anims.create({key:"gabriel_walk",frames:["gabriel_walk_01","gabriel_walk_02","gabriel_walk_03","gabriel_walk_04"].map(key=>({key})),frameRate:8,repeat:-1});
   this.player.play("gabriel_idle");this.move={x:0,y:0};this.questDone=false;this.slimeQuest=false;this.slimesKilled=0;this.level=1;this.xp=0;this.xpNeed=100;this.gold=0;this.playerHp=100;this.maxHp=100;this.attackReady=true;this.inventory={slimeGel:0};this.equipment={weapon:"Arco del Aprendiz",armor:"Cuero de Lumen"};this.attackPower=15;this.defense=2;this.potions=1;this.gearBonus={attack:0,defense:0};this.inventoryOpen=false;this.inventorySlots=20;this.maxInventorySlots=60;this.baseSlotPrice=100;this.inventoryItems=[];this.gearDrops=0;this.selectedItem=null;this.shopOpen=false;this.questRewardClaimed=false;this.secondQuest=false;this.secondRewardClaimed=false;this.wolvesKilled=0;this.thirdQuest=false;this.thirdRewardClaimed=false;this.goblinsKilled=0;this.fourthQuest=false;this.fourthRewardClaimed=false;this.skeletonsKilled=0;this.fifthQuest=false;this.orcsKilled=0;this.saveKey="etherial_save_v1";this.npcTargets=[];this.spawnSlimes();
-  this.npcTargets.push({name:"Aldric",x:560,y:555,r:88});this.questMarker=this.add.text(560,495,"!",{fontFamily:"Georgia",fontSize:"30px",color:"#ffd75a",stroke:"#4a3210",strokeThickness:4}).setOrigin(.5).setDepth(9000);this.tweens.add({targets:this.questMarker,y:487,duration:650,yoyo:true,repeat:-1});
-  this.add.rectangle(360,1270,720,70,0x283322,.72).setDepth(-5);
-  this.add.text(360,1248,"PUERTA SUR DE LUMEN",{fontFamily:"Georgia",fontSize:"17px",color:"#e8d5a5",stroke:"#1d2419",strokeThickness:4}).setOrigin(.5).setDepth(3000);
-  this.add.rectangle(170,1265,90,150,0x4b4432,.55).setDepth(-2);this.add.rectangle(550,1265,90,150,0x4b4432,.55).setDepth(-2);
-  this.add.text(360,1280,"⚔  Zona segura termina aquí  ⚔",{fontFamily:"Georgia",fontSize:"12px",color:"#d5c38e"}).setOrigin(.5).setDepth(3000);
-  this.zoneTitle=this.add.text(360,1320,"PRADERAS DE LUMEN",{fontFamily:"Georgia",fontSize:"25px",color:"#f0d69a",stroke:"#26301f",strokeThickness:5}).setOrigin(.5).setDepth(3000);
-  this.add.text(360,1360,"Zona de cacería · Nivel 1–10",{fontFamily:"Georgia",fontSize:"14px",color:"#d8dfc4",stroke:"#26301f",strokeThickness:3}).setOrigin(.5).setDepth(3000);
-  this.add.rectangle(360,1288,620,6,0x9f8a57,.45).setDepth(2999);
+  this.npcTargets.push({name:"Aldric",x:575,y:500,r:88});this.questMarker=this.add.text(575,438,"!",{fontFamily:"Georgia",fontSize:"30px",color:"#ffd75a",stroke:"#4a3210",strokeThickness:4}).setOrigin(.5).setDepth(9000);this.tweens.add({targets:this.questMarker,y:430,duration:650,yoyo:true,repeat:-1});
+  this.add.rectangle(360,1065,720,70,0x283322,.72).setDepth(-5);
+  this.add.text(360,1040,"PUERTA SUR DE LUMEN",{fontFamily:"Georgia",fontSize:"17px",color:"#e8d5a5",stroke:"#1d2419",strokeThickness:4}).setOrigin(.5).setDepth(3000);
+  this.add.rectangle(170,1060,90,150,0x4b4432,.55).setDepth(-2);this.add.rectangle(550,1060,90,150,0x4b4432,.55).setDepth(-2);
+  this.add.text(360,1085,"⚔  Zona segura termina aquí  ⚔",{fontFamily:"Georgia",fontSize:"12px",color:"#d5c38e"}).setOrigin(.5).setDepth(3000);
+  this.zoneTitle=this.add.text(360,1125,"PRADERAS DE LUMEN",{fontFamily:"Georgia",fontSize:"25px",color:"#f0d69a",stroke:"#26301f",strokeThickness:5}).setOrigin(.5).setDepth(3000);
+  this.add.text(360,1165,"Zona de cacería · Nivel 1–10",{fontFamily:"Georgia",fontSize:"14px",color:"#d8dfc4",stroke:"#26301f",strokeThickness:3}).setOrigin(.5).setDepth(3000);
+  this.add.rectangle(360,1095,620,6,0x9f8a57,.45).setDepth(2999);
   this.makeHud();this.makeControls();this.makeInteractButton();this.makeInventory();this.makeShop();this.makeZoneHud();this.seedInventory();this.loadProgress();this.time.addEvent({delay:5000,loop:true,callback:()=>this.saveProgress()});
  }
  removeSheetBackground(key){
