@@ -38,7 +38,7 @@ export class LumenScene extends Phaser.Scene {
   this.playerName=this.add.text(360,830,"Gabriel · Arquero",{fontFamily:"Georgia",fontSize:"15px",color:"#fff1c4",stroke:"#000",strokeThickness:4}).setOrigin(.5).setDepth(901);
   this.anims.create({key:"gabriel_idle",frames:["gabriel_idle_01","gabriel_idle_02"].map(key=>({key})),frameRate:3,repeat:-1});
   this.anims.create({key:"gabriel_walk",frames:["gabriel_walk_01","gabriel_walk_02","gabriel_walk_03","gabriel_walk_04"].map(key=>({key})),frameRate:8,repeat:-1});
-  this.player.play("gabriel_idle");this.move={x:0,y:0};this.questDone=false;this.slimeQuest=false;this.slimesKilled=0;this.level=1;this.xp=0;this.xpNeed=100;this.gold=0;this.playerHp=100;this.maxHp=100;this.attackReady=true;this.inventory={slimeGel:0};this.equipment={weapon:"Arco del Aprendiz",armor:"Cuero de Lumen"};this.attackPower=15;this.defense=2;this.potions=1;this.gearBonus={attack:0,defense:0};this.inventoryOpen=false;this.inventorySlots=20;this.maxInventorySlots=60;this.baseSlotPrice=100;this.inventoryItems=[];this.npcTargets=[];this.spawnSlimes();
+  this.player.play("gabriel_idle");this.move={x:0,y:0};this.questDone=false;this.slimeQuest=false;this.slimesKilled=0;this.level=1;this.xp=0;this.xpNeed=100;this.gold=0;this.playerHp=100;this.maxHp=100;this.attackReady=true;this.inventory={slimeGel:0};this.equipment={weapon:"Arco del Aprendiz",armor:"Cuero de Lumen"};this.attackPower=15;this.defense=2;this.potions=1;this.gearBonus={attack:0,defense:0};this.inventoryOpen=false;this.inventorySlots=20;this.maxInventorySlots=60;this.baseSlotPrice=100;this.inventoryItems=[];this.gearDrops=0;this.npcTargets=[];this.spawnSlimes();
   this.npcTargets.push({name:"Aldric",x:560,y:555,r:88});
   this.makeHud();this.makeControls();this.makeInteractButton();this.makeInventory();this.seedInventory();
  }
@@ -89,7 +89,7 @@ export class LumenScene extends Phaser.Scene {
   const crit=Phaser.Math.Between(1,100)<=12;const dmg=Math.floor((this.attackPower+Phaser.Math.Between(0,5))*(crit?1.75:1));this.fireArrow(target,dmg);if(crit)this.showCombatText(target.x,target.y-88,"¡CRÍTICO!","#ffe16b");
  }
  killSlime(s){
-  s.disableBody(true,true);s.hpBg.destroy();s.hpBar.destroy();this.slimesKilled++;this.gainXp(25);this.gold+=Phaser.Math.Between(4,9);if(Phaser.Math.Between(1,100)<=65){this.spawnLootDrop(s.x,s.y);}
+  s.disableBody(true,true);s.hpBg.destroy();s.hpBar.destroy();this.slimesKilled++;this.gainXp(25);this.gold+=Phaser.Math.Between(4,9);if(Phaser.Math.Between(1,100)<=65){this.spawnLootDrop(s.x,s.y);if(Phaser.Math.Between(1,100)<=18)this.spawnGearDrop(s.x+18,s.y);}
   this.goldText?.setText("Oro "+this.gold);this.updateInventoryHud();
   if(this.slimeQuest){this.questText.setText("PRIMERA CACERÍA\\nDerrota Slimes  "+Math.min(this.slimesKilled,3)+"/3"+(this.slimesKilled>=3?" ✓":""));if(this.slimesKilled===3)this.showDialogue("Misión completada: Primera Cacería. +75 EXP");}
  }
@@ -98,6 +98,19 @@ export class LumenScene extends Phaser.Scene {
   while(this.xp>=this.xpNeed){this.xp-=this.xpNeed;this.level++;this.xpNeed=Math.floor(this.xpNeed*1.35);this.maxHp+=15;this.playerHp=this.maxHp;this.hpBar.width=260;this.levelText?.setText("Gabriel · Nv."+this.level);this.showDialogue("¡Nivel "+this.level+" alcanzado! HP máximo +15");}
   this.xpText?.setText("EXP "+this.xp+"/"+this.xpNeed);
  }
+ rollGear(){
+  const r=Phaser.Math.Between(1,100),rarity=r<=2?"Legendario":r<=8?"Épico":r<=23?"Raro":r<=48?"Poco común":"Común";
+  const mult={"Común":1,"Poco común":1.25,"Raro":1.6,"Épico":2.05,"Legendario":2.7}[rarity];
+  const weapon=Phaser.Math.Between(0,1)===0;
+  return weapon?{id:"bow_"+Date.now()+Math.random(),name:rarity==="Común"?"Arco de Cazador":"Arco "+rarity+" de Lumen",type:"Arma",rarity,icon:"🏹",attack:Math.round(17*mult),equipped:false}:{id:"armor_"+Date.now()+Math.random(),name:rarity==="Común"?"Armadura de Cazador":"Armadura "+rarity+" de Lumen",type:"Armadura",rarity,icon:"🛡️",defense:Math.round(3*mult),equipped:false};
+ }
+ spawnGearDrop(x,y){
+  const item=this.rollGear(),drop=this.add.text(x,y-10,item.icon,{fontSize:"25px",stroke:"#111",strokeThickness:4}).setOrigin(.5).setDepth(y+10).setInteractive();
+  drop.setTint(this.rarityColor(item.rarity));this.tweens.add({targets:drop,y:y-24,duration:550,yoyo:true,repeat:-1});
+  const collect=()=>{if(!drop.active)return;if(this.getInventoryUsed()>=this.inventorySlots){this.showDialogue("Inventario lleno. Necesitas desbloquear otro espacio.");return}this.inventoryItems.push(item);this.gearDrops++;this.showCombatText(drop.x,drop.y-25,item.rarity+" · "+item.name,this.rarityCss(item.rarity));drop.destroy();this.updateInventoryHud();};
+  drop.on("pointerdown",collect);this.time.addEvent({delay:300,repeat:32,callback:()=>{if(drop.active&&Phaser.Math.Distance.Between(this.player.x,this.player.y,drop.x,drop.y)<55)collect()}});this.time.delayedCall(12000,()=>{if(drop.active)drop.destroy()});
+ }
+ rarityCss(r){return {"Común":"#d0d0d0","Poco común":"#72d98a","Raro":"#6faaf2","Épico":"#bd7df2","Legendario":"#ffc653"}[r]||"#ffffff";}
  spawnLootDrop(x,y){
   const drop=this.physics.add.image(x,y,"loot_gel").setDisplaySize(28,28).setDepth(y+5).setInteractive();
   this.tweens.add({targets:drop,y:y-10,duration:500,yoyo:true,repeat:-1});
@@ -157,7 +170,7 @@ export class LumenScene extends Phaser.Scene {
   this.attackPower=w?.attack||0;this.defense=a?.defense||0;this.statsText?.setText("ATQ "+this.attackPower+" · DEF "+this.defense);this.renderSlots();
  }
  syncInventoryItems(){if(!this.inventoryItems?.length)return;const p=this.inventoryItems.find(i=>i.id==="potion"),g=this.inventoryItems.find(i=>i.id==="gel");if(p)p.qty=this.potions;if(g)g.qty=this.inventory.slimeGel;this.renderSlots();}
- getInventoryUsed(){return 2+(this.potions>0?1:0)+(this.inventory.slimeGel>0?1:0);}
+ getInventoryUsed(){return this.inventoryItems.filter(i=>i.id!=="potion"&&i.id!=="gel").length+(this.potions>0?1:0)+(this.inventory.slimeGel>0?1:0);}
  getNextSlotPrice(){const unlocked=this.inventorySlots-20;return Math.floor(this.baseSlotPrice*Math.pow(1.18,unlocked));}
  buyInventorySlot(){
   if(this.inventorySlots>=this.maxInventorySlots){this.showDialogue("Tu mochila ya alcanzó el máximo de "+this.maxInventorySlots+" espacios.");return}
