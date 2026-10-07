@@ -15,7 +15,7 @@ export class LumenScene extends Phaser.Scene {
  }
  create(){
   this.physics.world.setBounds(0,0,720,1780);this.inHuntZone=false;this.safeZone=true;this.zoneName="Lumen";this.deathCount=0;this.respawnProtection=false; this.obstacles=this.physics.add.staticGroup();
-  // LUMEN CAPITAL V7 — estabilidad visual, identidad urbana y navegación.
+  // LUMEN CAPITAL V8 — ciudad jugable: zonas interactivas y feedback de proximidad.
    this.add.rectangle(360,890,720,1780,0x1d2422,1).setDepth(-30);
    this.add.image(360,1515,"t_hierba").setDisplaySize(720,530).setAlpha(.76).setDepth(-29);
    const city=this.add.graphics().setDepth(-28);
@@ -47,6 +47,16 @@ export class LumenScene extends Phaser.Scene {
    // Sombras suaves bajo NPCs para mejorar profundidad sin alterar gameplay.
    [[175,625],[305,720],[545,625],[175,900],[285,1200],[435,1200]].forEach(([x,y])=>this.add.ellipse(x,y,34,10,0x000000,.22).setDepth(y-2));
    [["npc_mira",175,610,"Mira"],["npc_guardia",305,705,"Guardia"],["npc_aldric",545,610,"Aldric"],["npc_borin",175,885,"Borin"]].forEach(a=>{this.add.image(a[1],a[2],a[0]).setScale(.38).setDepth(a[2]);this.add.text(a[1],a[2]+53,a[3],{fontFamily:"Georgia",fontSize:"13px",color:"#fff2c7",stroke:"#000",strokeThickness:3}).setOrigin(.5).setDepth(a[2]+2)});
+   // Puntos de interés reales: preparan entrada a edificios y mejoran exploración.
+   this.cityPOI=[
+    {name:"Templo de Lumen",x:360,y:315,r:105},
+    {name:"Posada",x:140,y:485,r:92},
+    {name:"Mercado",x:580,y:485,r:92},
+    {name:"Herrería",x:140,y:850,r:92},
+    {name:"Gremio",x:580,y:850,r:92},
+    {name:"Plaza de los Fundadores",x:360,y:555,r:145}
+   ];
+   this.poiHint=this.add.text(360,1080,"",{fontFamily:"Georgia",fontSize:"13px",color:"#ffe6a8",backgroundColor:"#111713dd",padding:{x:10,y:6},stroke:"#000",strokeThickness:2}).setOrigin(.5).setDepth(3500);
    this.playerShadow=this.add.ellipse(360,1002,48,15,0x000000,.24).setDepth(899);
     this.player=this.physics.add.sprite(360,968,"gabriel_idle_01").setScale(.68).setDepth(900);this.player.body.setSize(34,38).setOffset(24,62);this.player.setCollideWorldBounds(true);this.cameras.main.setBounds(0,0,720,1780);this.cameras.main.startFollow(this.player,true,.10,.10,0,135);this.cameras.main.setDeadzone(70,110);this.physics.add.collider(this.player,this.obstacles);
   this.playerName=this.add.text(360,1028,"Gabriel · Arquero",{fontFamily:"Georgia",fontSize:"14px",color:"#fff1c4",stroke:"#000",strokeThickness:3}).setOrigin(.5).setDepth(901);
@@ -342,6 +352,13 @@ export class LumenScene extends Phaser.Scene {
   [["gabriel_attack_01",610,1160],["gabriel_skill_01",520,1080],["gabriel_skill_02",600,1050],["gabriel_skill_03",675,1090]].forEach((a,i)=>{const b=this.add.circle(a[1],a[2],i?34:52,i?0x234c34:0x64251f,.9).setStrokeStyle(3,0xd1aa63,.8).setInteractive().setScrollFactor(0).setDepth(6000);this.add.image(a[1],a[2],a[0]).setDisplaySize(i?46:66,i?54:76).setScrollFactor(0).setDepth(6001);b.on("pointerdown",()=>{this.player.setTexture(a[0]);if(i===0)this.attackNearest()});b.on("pointerup",()=>this.player.play("gabriel_idle"))});
  }
  update(){
+  // Feedback de proximidad para que Lumen se sienta explorable.
+  if(this.player&&this.cityPOI&&this.poiHint){
+   let nearestPOI=null,nearestD=9999;
+   this.cityPOI.forEach(p=>{const d=Phaser.Math.Distance.Between(this.player.x,this.player.y,p.x,p.y);if(d<nearestD){nearestD=d;nearestPOI=p}});
+   if(nearestPOI&&nearestD<nearestPOI.r){this.poiHint.setText("◆ "+nearestPOI.name).setVisible(true).setPosition(360,1080);}
+   else this.poiHint.setVisible(false);
+  }
   if(!this.player)return;
   this.updateZoneState();
   const now=this.time.now;
