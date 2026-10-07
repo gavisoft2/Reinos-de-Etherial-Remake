@@ -173,6 +173,31 @@ export class LumenScene extends Phaser.Scene {
     const glow=this.add.circle(x,y,16,0xe8cf78,.10).setDepth(315);
     this.tweens.add({targets:glow,alpha:{from:.06,to:.20},scale:{from:.8,to:1.25},duration:1700,yoyo:true,repeat:-1});
   });
+  // VISUAL PASS SAFE V7 — capas de profundidad y vida urbana.
+  // Bordes de jardín bajos para separar circulación de decoración.
+  const edging=this.add.graphics().setDepth(405);
+  edging.lineStyle(3,0x8f7b4a,.48);
+  [[125,380,120,62],[475,380,120,62],[125,510,120,62],[475,510,120,62]].forEach(([x,y,w,h])=>{
+    edging.strokeRoundedRect(x,y,w,h,18);
+  });
+  // Pequeñas zonas de carga cerca del mercado/herrería.
+  [[72,735],[648,735]].forEach(([x,y],i)=>{
+    this.add.image(x,y,"p_carreta").setScale(.46).setDepth(y);
+    this.add.image(x+(i?35:-35),y+25,"p_caja").setScale(.34).setDepth(y+1);
+    this.add.image(x+(i?-28:28),y+30,"p_barril_01").setScale(.30).setDepth(y+2);
+  });
+  // Banderas ceremoniales cerca del templo.
+  [[285,300],[435,300],[275,355],[445,355]].forEach(([x,y])=>{
+    this.add.image(x,y,"p_bandera").setScale(.38).setDepth(y);
+  });
+  // Sombras ambientales de árboles/objetos para reforzar 2.5D.
+  [[175,760,70,22],[545,760,70,22],[175,980,70,22],[545,980,70,22],[115,1185,82,24],[605,1185,82,24]].forEach(([x,y,w,h])=>{
+    this.add.ellipse(x+7,y+16,w,h,0x17140f,.13).setDepth(y-2);
+  });
+  // Marcadores discretos de zonas de servicio.
+  [["COMERCIO",112,690],["ARTESANOS",608,690]].forEach(([t,x,y])=>{
+    this.add.text(x,y,t,{fontFamily:"Georgia",fontSize:"9px",color:"#745d31",stroke:"#f3e8d1",strokeThickness:3}).setOrigin(.5).setDepth(330);
+  });
   // Estatua monumental completa: pedestal + figura central, sin usar el recorte roto anterior.
   this.add.rectangle(360,432,72,72,0x8e8775,1).setStrokeStyle(3,0xd1c29b,.9).setDepth(438);
   const monument=this.add.image(360,365,"npc_guardia").setScale(1.15).setTint(0xc8c1ae).setDepth(439);
