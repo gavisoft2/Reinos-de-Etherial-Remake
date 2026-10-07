@@ -202,6 +202,7 @@ export class LumenScene extends Phaser.Scene {
   this.add.rectangle(360,432,72,72,0x8e8775,1).setStrokeStyle(3,0xd1c29b,.9).setDepth(438);
   const monument=this.add.image(360,365,"npc_guardia").setScale(1.15).setTint(0xc8c1ae).setDepth(439);
   this.add.text(360,505,"FUENTE DE LOS FUNDADORES",{fontFamily:"Georgia",fontSize:"12px",color:"#ead9aa",stroke:"#17140f",strokeThickness:4}).setOrigin(.5).setDepth(500);
+  // BUILDING MASK PASS — suaviza los fondos cuadrados sin alterar los PNG originales.
   [["b_posada",118,300],["b_mercado",602,300],["b_herreria",125,760],["b_gremio",595,760],["b_templo",360,190]].forEach(a=>{this.add.image(a[1],a[2],a[0]).setScale(1.42).setDepth(a[2]);this.addObstacle(a[1],a[2]+45,175,78)});
   [[45,390,"p_arbol_01"],[675,390,"p_arbol_02"],[50,780,"p_arbol_03"],[670,780,"p_arbol_01"],[65,940,"p_arbol_02"],[655,940,"p_arbol_03"]].forEach(a=>{this.add.image(a[0]+5,a[1]+13,a[2]).setTint(0x000000).setAlpha(.18).setScale(1.15,.42).setDepth(a[1]-2);this.add.image(a[0],a[1],a[2]).setScale(1.25).setDepth(a[1])});
   [["npc_mira",135,560,"Mira"],["npc_guardia",270,625,"Guardia"],["npc_aldric",585,560,"Aldric"],["npc_borin",135,850,"Borin"]].forEach(a=>{this.add.image(a[1],a[2],a[0]).setScale(.62).setDepth(a[2]);this.add.text(a[1],a[2]+62,a[3],{fontFamily:"Georgia",fontSize:"13px",color:"#fff2c7",stroke:"#000",strokeThickness:4}).setOrigin(.5).setDepth(a[2]+2)});
