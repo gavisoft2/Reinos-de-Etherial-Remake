@@ -86,10 +86,12 @@ export class LumenScene extends Phaser.Scene {
     urban.lineStyle(2,0x315f91,.30);
     urban.lineBetween(90,y+8,630,y+8);
   });
-  // Columnas ceremoniales simples en el eje principal.
-  [[300,690],[420,690],[300,890],[420,890],[300,1090],[420,1090]].forEach(([x,y])=>{
-    this.add.rectangle(x,y,18,42,0xd9cfb8,.96).setStrokeStyle(2,0x9f874d,.75).setDepth(y);
-    this.add.circle(x,y-23,11,0xe7ddc7,1).setStrokeStyle(2,0xb89545,.8).setDepth(y+1);
+  // Balizas ceremoniales con arte real: faroles y estandartes reemplazan columnas geométricas.
+  [[300,690],[420,690],[300,890],[420,890],[300,1090],[420,1090]].forEach(([x,y],i)=>{
+    this.add.image(x,y,"p_farol").setScale(.38).setDepth(y+2);
+    this.add.image(x+(i%2?-24:24),y+4,"p_bandera").setScale(.30).setDepth(y+1);
+    const lampGlow=this.add.circle(x,y-22,15,0xffd77a,.08).setDepth(y+1);
+    this.tweens.add({targets:lampGlow,alpha:{from:.05,to:.16},scale:{from:.85,to:1.12},duration:2000+i*90,yoyo:true,repeat:-1});
   });
   // Vegetación baja para dar continuidad entre jardines y calles.
   [[70,680],[650,680],[72,880],[648,880],[72,1080],[648,1080],[185,1160],[535,1160]].forEach(([x,y],i)=>{
