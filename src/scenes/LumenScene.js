@@ -1,26 +1,45 @@
 export class LumenScene extends Phaser.Scene {
  constructor(){super("Lumen")}
  preload(){
-  const A="assets/";
-  ["idle_01","idle_02","walk_01","walk_02","walk_03","walk_04","attack_01","attack_02","attack_03","skill_01","skill_02","skill_03"].forEach(n=>this.load.image("gabriel_"+n,A+"characters/gabriel_archer/"+n+".png"));
-  [["aldric","aldric"],["mira","mira"],["borin","borin"],["guardia","guardia"]].forEach(a=>this.load.image("npc_"+a[0],A+"npcs/"+a[1]+".png"));
-  [["posada","posada"],["mercado","mercado"],["herreria","herreria"],["gremio","gremio"],["templo","templo"]].forEach(a=>this.load.image("b_"+a[0],A+"buildings/lumen/"+a[1]+".png"));
-  ["arbol_01","arbol_02","arbol_03","farol","banco","puesto","bandera","estatua_fuente","barril_01","caja"].forEach(n=>this.load.image("p_"+n,A+"props/"+n+".png"));
-  ["suelo_01","suelo_02","suelo_03","suelo_04","hierba"].forEach(n=>this.load.image("t_"+n,A+"tiles/"+n+".png"));
-  this.load.image("lumen_map",A+"maps/lumen_master.png");
-  this.load.image("lumen_statue_plaza",A+"buildings/lumen/lumen_statue_plaza.png");
-  ["inventario","tienda","habilidades","misiones","mapa","configuracion"].forEach(n=>this.load.image("ui_"+n,A+"ui/icons/"+n+".png"));
-  this.load.image("enemy_slime",A+"enemies/slime.png");this.load.image("enemy_wolf",A+"enemies/lobo_salvaje.png");this.load.image("enemy_goblin",A+"enemies/goblin.png");this.load.image("enemy_skeleton",A+"enemies/esqueleto.png");this.load.image("enemy_orc",A+"enemies/orco.png");
-  this.load.image("loot_gel",A+"effects/curacion.png");
+  const A="assets/buildings/lumen_final/";
+  this.load.svg("new_templo",A+"templo.svg");
+  this.load.svg("new_posada",A+"posada.svg");
+  this.load.svg("new_mercado",A+"mercado.svg");
+  this.load.svg("new_herreria",A+"herreria.svg");
+  this.load.svg("new_gremio",A+"gremio.svg");
  }
  create(){
-  // LUMEN RESET V16 — blank scene. Legacy visuals are not instantiated.
-  this.physics.world.setBounds(0,0,720,1280);
-  this.cameras.main.setBounds(0,0,720,1280);
-  this.cameras.main.setBackgroundColor("#111714");
-  this.resetVisualTotal=true;
- }
+  // LUMEN V17 — primera reconstrucción limpia con assets nuevos.
+  const W=720,H=1780;
+  this.physics.world.setBounds(0,0,W,H);
+  this.cameras.main.setBounds(0,0,W,H);
+  this.cameras.main.setBackgroundColor("#18211b");
 
+  const world=this.add.graphics();
+  world.fillStyle(0x27352b,1);world.fillRect(0,0,W,H);
+  world.fillStyle(0x6d675b,1);world.fillRoundedRect(238,0,244,H,34);
+  world.fillStyle(0x8b8271,1);world.fillCircle(360,720,215);
+  world.lineStyle(8,0xb79b64,.85);world.strokeCircle(360,720,215);
+  world.lineStyle(4,0xb79b64,.65);world.strokeRoundedRect(238,-20,244,H+40,34);
+  world.fillStyle(0x596653,.8);world.fillRect(0,0,210,H);world.fillRect(510,0,210,H);
+
+  this.add.image(360,190,"new_templo").setDisplaySize(330,245).setDepth(10);
+  this.add.image(145,490,"new_posada").setDisplaySize(245,190).setDepth(20);
+  this.add.image(575,490,"new_mercado").setDisplaySize(245,190).setDepth(20);
+  this.add.image(145,1010,"new_herreria").setDisplaySize(245,190).setDepth(20);
+  this.add.image(575,1010,"new_gremio").setDisplaySize(245,190).setDepth(20);
+
+  const plaza=this.add.graphics().setDepth(15);
+  plaza.fillStyle(0x536b72,1);plaza.fillCircle(360,720,76);
+  plaza.lineStyle(8,0xc0a36b,1);plaza.strokeCircle(360,720,76);
+  plaza.fillStyle(0x9aa7a5,1);plaza.fillCircle(360,720,30);
+  plaza.fillStyle(0xd1b978,1);plaza.fillTriangle(360,648,337,716,383,716);
+
+  this.add.text(360,1340,"LUMEN",{fontFamily:"Georgia",fontSize:"34px",color:"#ead8a8",stroke:"#111914",strokeThickness:6}).setOrigin(.5);
+  this.add.text(360,1380,"Capital de Etherial",{fontFamily:"Georgia",fontSize:"15px",color:"#c9c3a5"}).setOrigin(.5);
+  this.cameras.main.scrollY=160;
+  this.resetVisualTotal=false;
+ }
  addObstacle(x,y,w,h){const z=this.obstacles.create(x,y,null).setVisible(false);z.body.setSize(w,h);z.refreshBody();return z}
  makeHud(){
   this.add.rectangle(360,52,700,84,0x080d0a,.82).setScrollFactor(0).setDepth(5000).setStrokeStyle(2,0xb79251,.7);
@@ -299,6 +318,6 @@ export class LumenScene extends Phaser.Scene {
   const reset=()=>{this.move.x=this.move.y=0;knob.setPosition(110,1160)};base.on("pointermove",p=>{if(!p.isDown)return;let dx=p.x-110,dy=p.y-1160,d=Math.hypot(dx,dy)||1,m=Math.min(48,d);dx=dx/d*m;dy=dy/d*m;knob.setPosition(110+dx,1160+dy);this.move={x:dx/48,y:dy/48}});base.on("pointerup",reset);base.on("pointerout",reset);
   [["gabriel_attack_01",610,1160],["gabriel_skill_01",520,1080],["gabriel_skill_02",600,1050],["gabriel_skill_03",675,1090]].forEach((a,i)=>{const b=this.add.circle(a[1],a[2],i?34:52,i?0x234c34:0x64251f,.9).setStrokeStyle(3,0xd1aa63,.8).setInteractive().setScrollFactor(0).setDepth(6000);this.add.image(a[1],a[2],a[0]).setDisplaySize(i?46:66,i?54:76).setScrollFactor(0).setDepth(6001);b.on("pointerdown",()=>{this.player.setTexture(a[0]);if(i===0)this.attackNearest()});b.on("pointerup",()=>this.player.play("gabriel_idle"))});
  }
- update(){if(this.resetVisualTotal)return;}
+ update(){}
 
 }
