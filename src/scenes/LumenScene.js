@@ -15,7 +15,7 @@ export class LumenScene extends Phaser.Scene {
  create(){
   // Limpia el fondo gris/cuadriculado heredado del sprite sheet.
   const transparentKeys=["gabriel_idle_01","gabriel_idle_02","gabriel_walk_01","gabriel_walk_02","gabriel_walk_03","gabriel_walk_04","gabriel_attack_01","gabriel_attack_02","gabriel_attack_03","npc_aldric","npc_mira","npc_borin","npc_guardia","enemy_slime","enemy_wolf","enemy_goblin"];transparentKeys.forEach(k=>this.removeSheetBackground(k));
-  this.physics.world.setBounds(0,0,720,1780);this.inHuntZone=false;this.safeZone=true;this.zoneName="Lumen";this.deathCount=0;this.respawnProtection=false;this.minimapEnemies=[]; this.obstacles=this.physics.add.staticGroup();
+  this.physics.world.setBounds(0,0,720,1780);this.inHuntZone=false;this.safeZone=true;this.zoneName="Lumen";this.deathCount=0;this.respawnProtection=false;this.minimapEnemies=[];this.skillReady=[true,true,true];this.mana=100;this.maxMana=100; this.obstacles=this.physics.add.staticGroup();
   // Base continua: elimina el efecto de mosaico/cuadricula del suelo.
   this.add.rectangle(360,890,720,1780,0x3f4938,1).setDepth(-30);
   this.add.image(360,640,"lumen_map").setDisplaySize(720,1280).setAlpha(.16).setDepth(-29);
@@ -41,7 +41,7 @@ export class LumenScene extends Phaser.Scene {
   this.zoneTitle=this.add.text(360,1320,"PRADERAS DE LUMEN",{fontFamily:"Georgia",fontSize:"25px",color:"#f0d69a",stroke:"#26301f",strokeThickness:5}).setOrigin(.5).setDepth(3000);
   this.add.text(360,1360,"Zona de cacería · Nivel 1–10",{fontFamily:"Georgia",fontSize:"14px",color:"#d8dfc4",stroke:"#26301f",strokeThickness:3}).setOrigin(.5).setDepth(3000);
   this.add.rectangle(360,1288,620,6,0x9f8a57,.45).setDepth(2999);
-  this.makeHud();this.makeControls();this.makeInteractButton();this.makeInventory();this.makeShop();this.makeZoneHud();this.makeMinimap();this.seedInventory();this.loadProgress();this.time.addEvent({delay:5000,loop:true,callback:()=>this.saveProgress()});
+  this.makeHud();this.makeControls();this.bindArcherSkills();this.makeInteractButton();this.makeInventory();this.makeShop();this.makeZoneHud();this.makeMinimap();this.seedInventory();this.loadProgress();this.time.addEvent({delay:5000,loop:true,callback:()=>this.saveProgress()});
  }
  removeSheetBackground(key){
   const tex=this.textures.get(key), src=tex?.getSourceImage(); if(!src) return;
@@ -186,6 +186,22 @@ export class LumenScene extends Phaser.Scene {
   this.showDialogue("Has caído. Los guardias te han llevado a la Puerta Sur de Lumen.");
   this.time.delayedCall(3000,()=>{this.respawnProtection=false;this.player.setAlpha(1);});
  }
+ bindArcherSkills(){
+  const skills=this.skillButtons||this.skills||[];if(!skills.length)return;
+  skills.slice(0,3).forEach((b,i)=>b?.setInteractive?.().on("pointerdown",()=>this.castArcherSkill(i)));
+ }
+ castArcherSkill(i){
+  if(!this.skillReady[i]||this.respawnProtection)return;const costs=[15,28,22],cd=[2500,6000,4500];if(this.mana<costs[i]){this.showDialogue("No tienes suficiente maná.");return;}
+  const groups=[this.slimes,this.wolves,this.goblins,this.skeletons,this.orcs],targets=[];groups.forEach(g=>g?.getChildren().forEach(e=>{if(e.active&&Phaser.Math.Distance.Between(this.player.x,this.player.y,e.x,e.y)<(i===1?285:245))targets.push(e)}));if(!targets.length){this.showDialogue("No hay enemigos al alcance.");return;}
+  this.mana-=costs[i];this.skillReady[i]=false;this.updateManaHud?.();this.time.delayedCall(cd[i],()=>this.skillReady[i]=true);
+  if(i===0){const t=targets.sort((a,b)=>Phaser.Math.Distance.Between(this.player.x,this.player.y,a.x,a.y)-Phaser.Math.Distance.Between(this.player.x,this.player.y,b.x,b.y))[0];this.skillHit(t,Math.floor(this.attackPower*1.65),"Disparo preciso");}
+  if(i===1){targets.slice(0,3).forEach((t,n)=>this.time.delayedCall(n*90,()=>this.skillHit(t,Math.floor(this.attackPower*1.15),"Lluvia de flechas")));}
+  if(i===2){const t=targets[0];this.skillHit(t,Math.floor(this.attackPower*1.35),"Flecha explosiva");targets.filter(e=>e!==t&&Phaser.Math.Distance.Between(t.x,t.y,e.x,e.y)<105).forEach(e=>this.skillHit(e,Math.floor(this.attackPower*.75),"Explosión"));}
+ }
+ skillHit(t,dmg,label){
+  if(!t?.active)return;this.showCombatText(t.x,t.y-82,label+" -"+dmg,"#ffd86a");t.hp=Math.max(1,t.hp-dmg);if(t.hpBar)t.hpBar.width=(t.maxHp===165?76:t.maxHp===115?70:62)*(t.hp/t.maxHp);
+ }
+ updateManaHud(){if(this.mpBar)this.mpBar.width=260*this.mana/this.maxMana;}
  makeMinimap(){
   this.minimap=this.add.container(630,185).setScrollFactor(0).setDepth(6200);
   const rim=this.add.circle(0,0,66,0x0b110d,.94).setStrokeStyle(3,0xc4a661,.9);
