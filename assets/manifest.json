@@ -1,0 +1,1424 @@
+{
+  "source": "SOURCE_master_sheet.png",
+  "asset_count": 109,
+  "note": "Crops extracted from the approved concept sheet. For final production animation, regenerate key sprites individually at higher resolution.",
+  "assets": [
+    {
+      "file": "characters/gabriel_archer/idle_01.png",
+      "source_box": [
+        8,
+        30,
+        91,
+        137
+      ],
+      "size": [
+        83,
+        107
+      ]
+    },
+    {
+      "file": "characters/gabriel_archer/idle_02.png",
+      "source_box": [
+        91,
+        30,
+        174,
+        137
+      ],
+      "size": [
+        83,
+        107
+      ]
+    },
+    {
+      "file": "characters/gabriel_archer/walk_01.png",
+      "source_box": [
+        174,
+        30,
+        256,
+        137
+      ],
+      "size": [
+        82,
+        107
+      ]
+    },
+    {
+      "file": "characters/gabriel_archer/walk_02.png",
+      "source_box": [
+        256,
+        30,
+        339,
+        137
+      ],
+      "size": [
+        83,
+        107
+      ]
+    },
+    {
+      "file": "characters/gabriel_archer/walk_03.png",
+      "source_box": [
+        339,
+        30,
+        422,
+        137
+      ],
+      "size": [
+        83,
+        107
+      ]
+    },
+    {
+      "file": "characters/gabriel_archer/walk_04.png",
+      "source_box": [
+        422,
+        30,
+        505,
+        137
+      ],
+      "size": [
+        83,
+        107
+      ]
+    },
+    {
+      "file": "characters/gabriel_archer/attack_01.png",
+      "source_box": [
+        8,
+        158,
+        91,
+        258
+      ],
+      "size": [
+        83,
+        100
+      ]
+    },
+    {
+      "file": "characters/gabriel_archer/attack_02.png",
+      "source_box": [
+        91,
+        158,
+        174,
+        258
+      ],
+      "size": [
+        83,
+        100
+      ]
+    },
+    {
+      "file": "characters/gabriel_archer/attack_03.png",
+      "source_box": [
+        174,
+        158,
+        256,
+        258
+      ],
+      "size": [
+        82,
+        100
+      ]
+    },
+    {
+      "file": "characters/gabriel_archer/skill_01.png",
+      "source_box": [
+        256,
+        158,
+        339,
+        258
+      ],
+      "size": [
+        83,
+        100
+      ]
+    },
+    {
+      "file": "characters/gabriel_archer/skill_02.png",
+      "source_box": [
+        339,
+        158,
+        422,
+        258
+      ],
+      "size": [
+        83,
+        100
+      ]
+    },
+    {
+      "file": "characters/gabriel_archer/skill_03.png",
+      "source_box": [
+        422,
+        158,
+        505,
+        258
+      ],
+      "size": [
+        83,
+        100
+      ]
+    },
+    {
+      "file": "characters/thoran_warrior/idle_01.png",
+      "source_box": [
+        520,
+        30,
+        602,
+        137
+      ],
+      "size": [
+        82,
+        107
+      ]
+    },
+    {
+      "file": "characters/thoran_warrior/idle_02.png",
+      "source_box": [
+        602,
+        30,
+        685,
+        137
+      ],
+      "size": [
+        83,
+        107
+      ]
+    },
+    {
+      "file": "characters/thoran_warrior/walk_01.png",
+      "source_box": [
+        685,
+        30,
+        768,
+        137
+      ],
+      "size": [
+        83,
+        107
+      ]
+    },
+    {
+      "file": "characters/thoran_warrior/walk_02.png",
+      "source_box": [
+        768,
+        30,
+        850,
+        137
+      ],
+      "size": [
+        82,
+        107
+      ]
+    },
+    {
+      "file": "characters/thoran_warrior/walk_03.png",
+      "source_box": [
+        850,
+        30,
+        932,
+        137
+      ],
+      "size": [
+        82,
+        107
+      ]
+    },
+    {
+      "file": "characters/thoran_warrior/walk_04.png",
+      "source_box": [
+        932,
+        30,
+        1015,
+        137
+      ],
+      "size": [
+        83,
+        107
+      ]
+    },
+    {
+      "file": "characters/thoran_warrior/attack_01.png",
+      "source_box": [
+        520,
+        158,
+        602,
+        258
+      ],
+      "size": [
+        82,
+        100
+      ]
+    },
+    {
+      "file": "characters/thoran_warrior/attack_02.png",
+      "source_box": [
+        602,
+        158,
+        685,
+        258
+      ],
+      "size": [
+        83,
+        100
+      ]
+    },
+    {
+      "file": "characters/thoran_warrior/attack_03.png",
+      "source_box": [
+        685,
+        158,
+        768,
+        258
+      ],
+      "size": [
+        83,
+        100
+      ]
+    },
+    {
+      "file": "characters/thoran_warrior/skill_01.png",
+      "source_box": [
+        768,
+        158,
+        850,
+        258
+      ],
+      "size": [
+        82,
+        100
+      ]
+    },
+    {
+      "file": "characters/thoran_warrior/skill_02.png",
+      "source_box": [
+        850,
+        158,
+        932,
+        258
+      ],
+      "size": [
+        82,
+        100
+      ]
+    },
+    {
+      "file": "characters/thoran_warrior/skill_03.png",
+      "source_box": [
+        932,
+        158,
+        1015,
+        258
+      ],
+      "size": [
+        83,
+        100
+      ]
+    },
+    {
+      "file": "characters/selene_mage/idle_01.png",
+      "source_box": [
+        1028,
+        30,
+        1112,
+        137
+      ],
+      "size": [
+        84,
+        107
+      ]
+    },
+    {
+      "file": "characters/selene_mage/idle_02.png",
+      "source_box": [
+        1112,
+        30,
+        1195,
+        137
+      ],
+      "size": [
+        83,
+        107
+      ]
+    },
+    {
+      "file": "characters/selene_mage/walk_01.png",
+      "source_box": [
+        1195,
+        30,
+        1279,
+        137
+      ],
+      "size": [
+        84,
+        107
+      ]
+    },
+    {
+      "file": "characters/selene_mage/walk_02.png",
+      "source_box": [
+        1279,
+        30,
+        1363,
+        137
+      ],
+      "size": [
+        84,
+        107
+      ]
+    },
+    {
+      "file": "characters/selene_mage/walk_03.png",
+      "source_box": [
+        1363,
+        30,
+        1446,
+        137
+      ],
+      "size": [
+        83,
+        107
+      ]
+    },
+    {
+      "file": "characters/selene_mage/walk_04.png",
+      "source_box": [
+        1446,
+        30,
+        1530,
+        137
+      ],
+      "size": [
+        84,
+        107
+      ]
+    },
+    {
+      "file": "characters/selene_mage/attack_01.png",
+      "source_box": [
+        1028,
+        158,
+        1112,
+        258
+      ],
+      "size": [
+        84,
+        100
+      ]
+    },
+    {
+      "file": "characters/selene_mage/attack_02.png",
+      "source_box": [
+        1112,
+        158,
+        1195,
+        258
+      ],
+      "size": [
+        83,
+        100
+      ]
+    },
+    {
+      "file": "characters/selene_mage/attack_03.png",
+      "source_box": [
+        1195,
+        158,
+        1279,
+        258
+      ],
+      "size": [
+        84,
+        100
+      ]
+    },
+    {
+      "file": "characters/selene_mage/skill_01.png",
+      "source_box": [
+        1279,
+        158,
+        1363,
+        258
+      ],
+      "size": [
+        84,
+        100
+      ]
+    },
+    {
+      "file": "characters/selene_mage/skill_02.png",
+      "source_box": [
+        1363,
+        158,
+        1446,
+        258
+      ],
+      "size": [
+        83,
+        100
+      ]
+    },
+    {
+      "file": "characters/selene_mage/skill_03.png",
+      "source_box": [
+        1446,
+        158,
+        1530,
+        258
+      ],
+      "size": [
+        84,
+        100
+      ]
+    },
+    {
+      "file": "npcs/aldric.png",
+      "source_box": [
+        8,
+        310,
+        102,
+        482
+      ],
+      "size": [
+        94,
+        172
+      ]
+    },
+    {
+      "file": "npcs/mira.png",
+      "source_box": [
+        102,
+        310,
+        194,
+        482
+      ],
+      "size": [
+        92,
+        172
+      ]
+    },
+    {
+      "file": "npcs/borin.png",
+      "source_box": [
+        194,
+        310,
+        286,
+        482
+      ],
+      "size": [
+        92,
+        172
+      ]
+    },
+    {
+      "file": "npcs/kael.png",
+      "source_box": [
+        286,
+        310,
+        378,
+        482
+      ],
+      "size": [
+        92,
+        172
+      ]
+    },
+    {
+      "file": "npcs/lyria.png",
+      "source_box": [
+        378,
+        310,
+        470,
+        482
+      ],
+      "size": [
+        92,
+        172
+      ]
+    },
+    {
+      "file": "npcs/capitan.png",
+      "source_box": [
+        470,
+        310,
+        570,
+        482
+      ],
+      "size": [
+        100,
+        172
+      ]
+    },
+    {
+      "file": "npcs/guardia.png",
+      "source_box": [
+        570,
+        310,
+        670,
+        482
+      ],
+      "size": [
+        100,
+        172
+      ]
+    },
+    {
+      "file": "enemies/slime.png",
+      "source_box": [
+        704,
+        318,
+        790,
+        405
+      ],
+      "size": [
+        86,
+        87
+      ]
+    },
+    {
+      "file": "enemies/lobo_salvaje.png",
+      "source_box": [
+        795,
+        312,
+        895,
+        405
+      ],
+      "size": [
+        100,
+        93
+      ]
+    },
+    {
+      "file": "enemies/orco.png",
+      "source_box": [
+        900,
+        310,
+        1002,
+        407
+      ],
+      "size": [
+        102,
+        97
+      ]
+    },
+    {
+      "file": "enemies/esqueleto.png",
+      "source_box": [
+        1007,
+        310,
+        1103,
+        408
+      ],
+      "size": [
+        96,
+        98
+      ]
+    },
+    {
+      "file": "enemies/goblin.png",
+      "source_box": [
+        704,
+        416,
+        790,
+        493
+      ],
+      "size": [
+        86,
+        77
+      ]
+    },
+    {
+      "file": "enemies/arana.png",
+      "source_box": [
+        795,
+        416,
+        895,
+        493
+      ],
+      "size": [
+        100,
+        77
+      ]
+    },
+    {
+      "file": "enemies/dragon.png",
+      "source_box": [
+        900,
+        410,
+        1110,
+        493
+      ],
+      "size": [
+        210,
+        83
+      ]
+    },
+    {
+      "file": "enemies/slime_animation/idle_01.png",
+      "source_box": [
+        1134,
+        312,
+        1232,
+        391
+      ],
+      "size": [
+        98,
+        79
+      ]
+    },
+    {
+      "file": "enemies/slime_animation/idle_02.png",
+      "source_box": [
+        1232,
+        312,
+        1330,
+        391
+      ],
+      "size": [
+        98,
+        79
+      ]
+    },
+    {
+      "file": "enemies/slime_animation/walk_01.png",
+      "source_box": [
+        1330,
+        312,
+        1428,
+        391
+      ],
+      "size": [
+        98,
+        79
+      ]
+    },
+    {
+      "file": "enemies/slime_animation/walk_02.png",
+      "source_box": [
+        1428,
+        312,
+        1530,
+        391
+      ],
+      "size": [
+        102,
+        79
+      ]
+    },
+    {
+      "file": "enemies/slime_animation/attack_01.png",
+      "source_box": [
+        1134,
+        411,
+        1232,
+        491
+      ],
+      "size": [
+        98,
+        80
+      ]
+    },
+    {
+      "file": "enemies/slime_animation/attack_02.png",
+      "source_box": [
+        1232,
+        411,
+        1330,
+        491
+      ],
+      "size": [
+        98,
+        80
+      ]
+    },
+    {
+      "file": "enemies/slime_animation/hurt.png",
+      "source_box": [
+        1330,
+        411,
+        1428,
+        491
+      ],
+      "size": [
+        98,
+        80
+      ]
+    },
+    {
+      "file": "enemies/slime_animation/die.png",
+      "source_box": [
+        1428,
+        411,
+        1530,
+        491
+      ],
+      "size": [
+        102,
+        80
+      ]
+    },
+    {
+      "file": "buildings/lumen/posada.png",
+      "source_box": [
+        8,
+        542,
+        157,
+        699
+      ],
+      "size": [
+        149,
+        157
+      ]
+    },
+    {
+      "file": "buildings/lumen/mercado.png",
+      "source_box": [
+        157,
+        542,
+        315,
+        699
+      ],
+      "size": [
+        158,
+        157
+      ]
+    },
+    {
+      "file": "buildings/lumen/herreria.png",
+      "source_box": [
+        315,
+        542,
+        470,
+        699
+      ],
+      "size": [
+        155,
+        157
+      ]
+    },
+    {
+      "file": "buildings/lumen/gremio.png",
+      "source_box": [
+        470,
+        542,
+        635,
+        699
+      ],
+      "size": [
+        165,
+        157
+      ]
+    },
+    {
+      "file": "buildings/lumen/templo.png",
+      "source_box": [
+        635,
+        542,
+        800,
+        699
+      ],
+      "size": [
+        165,
+        157
+      ]
+    },
+    {
+      "file": "buildings/lumen/sanador.png",
+      "source_box": [
+        800,
+        542,
+        955,
+        699
+      ],
+      "size": [
+        155,
+        157
+      ]
+    },
+    {
+      "file": "props/arbol_01.png",
+      "source_box": [
+        986,
+        542,
+        1060,
+        631
+      ],
+      "size": [
+        74,
+        89
+      ]
+    },
+    {
+      "file": "props/arbol_02.png",
+      "source_box": [
+        1060,
+        542,
+        1134,
+        631
+      ],
+      "size": [
+        74,
+        89
+      ]
+    },
+    {
+      "file": "props/arbol_03.png",
+      "source_box": [
+        1134,
+        542,
+        1208,
+        631
+      ],
+      "size": [
+        74,
+        89
+      ]
+    },
+    {
+      "file": "props/farol.png",
+      "source_box": [
+        1208,
+        542,
+        1282,
+        631
+      ],
+      "size": [
+        74,
+        89
+      ]
+    },
+    {
+      "file": "props/banco.png",
+      "source_box": [
+        1282,
+        542,
+        1362,
+        631
+      ],
+      "size": [
+        80,
+        89
+      ]
+    },
+    {
+      "file": "props/barril_01.png",
+      "source_box": [
+        1362,
+        542,
+        1434,
+        631
+      ],
+      "size": [
+        72,
+        89
+      ]
+    },
+    {
+      "file": "props/barril_02.png",
+      "source_box": [
+        1434,
+        542,
+        1530,
+        631
+      ],
+      "size": [
+        96,
+        89
+      ]
+    },
+    {
+      "file": "props/carreta.png",
+      "source_box": [
+        986,
+        641,
+        1060,
+        716
+      ],
+      "size": [
+        74,
+        75
+      ]
+    },
+    {
+      "file": "props/caja.png",
+      "source_box": [
+        1060,
+        641,
+        1134,
+        716
+      ],
+      "size": [
+        74,
+        75
+      ]
+    },
+    {
+      "file": "props/puesto.png",
+      "source_box": [
+        1134,
+        641,
+        1210,
+        716
+      ],
+      "size": [
+        76,
+        75
+      ]
+    },
+    {
+      "file": "props/bandera.png",
+      "source_box": [
+        1210,
+        641,
+        1286,
+        716
+      ],
+      "size": [
+        76,
+        75
+      ]
+    },
+    {
+      "file": "props/maceta.png",
+      "source_box": [
+        1286,
+        641,
+        1360,
+        716
+      ],
+      "size": [
+        74,
+        75
+      ]
+    },
+    {
+      "file": "props/valla.png",
+      "source_box": [
+        1360,
+        641,
+        1435,
+        716
+      ],
+      "size": [
+        75,
+        75
+      ]
+    },
+    {
+      "file": "props/estatua_fuente.png",
+      "source_box": [
+        1435,
+        641,
+        1530,
+        716
+      ],
+      "size": [
+        95,
+        75
+      ]
+    },
+    {
+      "file": "tiles/suelo_01.png",
+      "source_box": [
+        8,
+        765,
+        90,
+        843
+      ],
+      "size": [
+        82,
+        78
+      ]
+    },
+    {
+      "file": "tiles/suelo_02.png",
+      "source_box": [
+        90,
+        765,
+        174,
+        843
+      ],
+      "size": [
+        84,
+        78
+      ]
+    },
+    {
+      "file": "tiles/suelo_03.png",
+      "source_box": [
+        174,
+        765,
+        258,
+        843
+      ],
+      "size": [
+        84,
+        78
+      ]
+    },
+    {
+      "file": "tiles/suelo_04.png",
+      "source_box": [
+        258,
+        765,
+        342,
+        843
+      ],
+      "size": [
+        84,
+        78
+      ]
+    },
+    {
+      "file": "tiles/hierba.png",
+      "source_box": [
+        342,
+        765,
+        426,
+        843
+      ],
+      "size": [
+        84,
+        78
+      ]
+    },
+    {
+      "file": "tiles/tierra.png",
+      "source_box": [
+        426,
+        765,
+        490,
+        843
+      ],
+      "size": [
+        64,
+        78
+      ]
+    },
+    {
+      "file": "tiles/escalera.png",
+      "source_box": [
+        8,
+        866,
+        90,
+        960
+      ],
+      "size": [
+        82,
+        94
+      ]
+    },
+    {
+      "file": "tiles/puente.png",
+      "source_box": [
+        90,
+        866,
+        174,
+        960
+      ],
+      "size": [
+        84,
+        94
+      ]
+    },
+    {
+      "file": "tiles/agua.png",
+      "source_box": [
+        174,
+        866,
+        258,
+        960
+      ],
+      "size": [
+        84,
+        94
+      ]
+    },
+    {
+      "file": "tiles/borde.png",
+      "source_box": [
+        258,
+        866,
+        342,
+        960
+      ],
+      "size": [
+        84,
+        94
+      ]
+    },
+    {
+      "file": "tiles/pared.png",
+      "source_box": [
+        342,
+        866,
+        426,
+        960
+      ],
+      "size": [
+        84,
+        94
+      ]
+    },
+    {
+      "file": "tiles/esquina.png",
+      "source_box": [
+        426,
+        866,
+        490,
+        960
+      ],
+      "size": [
+        64,
+        94
+      ]
+    },
+    {
+      "file": "maps/lumen_master.png",
+      "source_box": [
+        495,
+        765,
+        995,
+        1012
+      ],
+      "size": [
+        500,
+        247
+      ]
+    },
+    {
+      "file": "effects/flecha.png",
+      "source_box": [
+        1005,
+        768,
+        1090,
+        834
+      ],
+      "size": [
+        85,
+        66
+      ]
+    },
+    {
+      "file": "effects/flecha_multiple.png",
+      "source_box": [
+        1090,
+        768,
+        1178,
+        834
+      ],
+      "size": [
+        88,
+        66
+      ]
+    },
+    {
+      "file": "effects/flecha_explosiva.png",
+      "source_box": [
+        1178,
+        768,
+        1266,
+        834
+      ],
+      "size": [
+        88,
+        66
+      ]
+    },
+    {
+      "file": "effects/espada_onda.png",
+      "source_box": [
+        1266,
+        768,
+        1352,
+        834
+      ],
+      "size": [
+        86,
+        66
+      ]
+    },
+    {
+      "file": "effects/espada_giro.png",
+      "source_box": [
+        1352,
+        768,
+        1442,
+        834
+      ],
+      "size": [
+        90,
+        66
+      ]
+    },
+    {
+      "file": "effects/escudo.png",
+      "source_box": [
+        1442,
+        768,
+        1530,
+        834
+      ],
+      "size": [
+        88,
+        66
+      ]
+    },
+    {
+      "file": "effects/bola_fuego.png",
+      "source_box": [
+        1005,
+        844,
+        1090,
+        916
+      ],
+      "size": [
+        85,
+        72
+      ]
+    },
+    {
+      "file": "effects/rayo.png",
+      "source_box": [
+        1090,
+        844,
+        1178,
+        916
+      ],
+      "size": [
+        88,
+        72
+      ]
+    },
+    {
+      "file": "effects/hielo.png",
+      "source_box": [
+        1178,
+        844,
+        1266,
+        916
+      ],
+      "size": [
+        88,
+        72
+      ]
+    },
+    {
+      "file": "effects/circulo_magico.png",
+      "source_box": [
+        1266,
+        844,
+        1352,
+        916
+      ],
+      "size": [
+        86,
+        72
+      ]
+    },
+    {
+      "file": "effects/curacion.png",
+      "source_box": [
+        1352,
+        844,
+        1442,
+        916
+      ],
+      "size": [
+        90,
+        72
+      ]
+    },
+    {
+      "file": "effects/explosion.png",
+      "source_box": [
+        1442,
+        844,
+        1530,
+        916
+      ],
+      "size": [
+        88,
+        72
+      ]
+    },
+    {
+      "file": "ui/icons/inventario.png",
+      "source_box": [
+        1006,
+        945,
+        1090,
+        1018
+      ],
+      "size": [
+        84,
+        67
+      ]
+    },
+    {
+      "file": "ui/icons/tienda.png",
+      "source_box": [
+        1090,
+        945,
+        1176,
+        1018
+      ],
+      "size": [
+        86,
+        65
+      ]
+    },
+    {
+      "file": "ui/icons/habilidades.png",
+      "source_box": [
+        1176,
+        945,
+        1263,
+        1018
+      ],
+      "size": [
+        87,
+        64
+      ]
+    },
+    {
+      "file": "ui/icons/misiones.png",
+      "source_box": [
+        1263,
+        945,
+        1350,
+        1018
+      ],
+      "size": [
+        87,
+        65
+      ]
+    },
+    {
+      "file": "ui/icons/mapa.png",
+      "source_box": [
+        1350,
+        945,
+        1440,
+        1018
+      ],
+      "size": [
+        90,
+        67
+      ]
+    },
+    {
+      "file": "ui/icons/configuracion.png",
+      "source_box": [
+        1440,
+        945,
+        1530,
+        1018
+      ],
+      "size": [
+        90,
+        65
+      ]
+    }
+  ]
+}
